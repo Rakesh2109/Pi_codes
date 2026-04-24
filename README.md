@@ -7,7 +7,55 @@ deployed on a **Raspberry Pi 5** (Cortex-A76, 2.4 GHz, single core).
 The core model is the **GLADE + Fuzzy-Pattern Tsetlin Machine** (FPTM):
 GLADE binarises continuous features into Boolean literals; the FPTM classifies
 using bit-parallel clause evaluation. The trained artefact is a self-contained
-`.fbz` file of 6–18 KB.
+`.fbz` file of 7–17 KB.
+
+---
+
+## Source Files
+
+### Python (inference + training)
+
+| File | Lines | Purpose |
+|------|------:|---------|
+| [glade_v2.py](glade_v2.py) | 14 KB | GLADE adaptive binariser — training only. Adaptive bit budget, gap-aware threshold placement, dead-bit elimination, local perturbation. |
+| [fcm_bitmask_zstd.py](fcm_bitmask_zstd.py) | 13 KB | FBZ format writer + reader + FPTM trainer. Serialises GLADE state + clause bitmasks into a single zstd-compressed binary. |
+| [tm_infer.py](tm_infer.py) | 15 KB | **TM Numba JIT inference benchmark.** Loads `.fbz`, runs H-specialised Numba kernels with SWAR popcount. Measures µs/sample on all 4 datasets. |
+| [tm_dt_bench.py](tm_dt_bench.py) | 17 KB | **Combined TM vs DT Numba head-to-head.** Runs both engines side-by-side: TM Numba (SWAR popcount) and DT Numba (pure tree traversal). |
+| [ml_numpy_infer.py](ml_numpy_infer.py) | 7.4 KB | **Pure-numpy ML inference benchmark.** Loads `.npz` models and runs all 13 model types (DT, RF, LR, SVM, GNB, MLP, kNN) with no sklearn dependency. |
+| [export_ml_to_npz.py](export_ml_to_npz.py) | 7.1 KB | Converts sklearn `.pkl` models → self-contained `.npz` bundles. Embeds scaler params so each file is fully portable. |
+
+### C (reference decoder)
+
+| File | Lines | Purpose |
+|------|------:|---------|
+| [tm_fbz_infer.c](tm_fbz_infer.c) | 7.5 KB | Portable C FBZ reader and FPTM inference engine (~150 lines of logic). Reads the same `.fbz` files as the Python runtime. No external dependencies. |
+
+### Shell scripts
+
+| File | Purpose |
+|------|---------|
+| [run_all.sh](run_all.sh) | Train all 4 datasets end-to-end (GLADE binarise → FPTM train → export `.fbz`) |
+| [run_ml_corr.sh](run_ml_corr.sh) | Run ML correlation/correction pipeline |
+
+### Julia (legacy training scripts)
+
+| File | Purpose |
+|------|---------|
+| [train_all_datasets.jl](train_all_datasets.jl) | Train FPTM on all 4 datasets |
+| [inference_benchmark.jl](inference_benchmark.jl) | Full inference benchmark (Julia runtime) |
+| [inference_all_datasets.jl](inference_all_datasets.jl) | Per-dataset inference + metrics |
+| [deploy_inference.jl](deploy_inference.jl) | Deployment inference loop |
+| [tm_fbz_bench.jl](tm_fbz_bench.jl) | TM FBZ file benchmark |
+| [export_tm_to_npz.jl](export_tm_to_npz.jl) | Export TM rules to numpy format |
+
+### Results
+
+| File | Contents |
+|------|---------|
+| [results/GLADE_FPTM_TII_final.tex](results/GLADE_FPTM_TII_final.tex) | IEEE TII journal paper (full, with all Pi 5 Numba results) |
+| [results/bare_jrnl_new_sample4.tex](results/bare_jrnl_new_sample4.tex) | Journal draft with complete model comparison table |
+| [results/full_comparison.txt](results/full_comparison.txt) | Full latency + F1 benchmark output |
+| [results/tm_inference_all_datasets.txt](results/tm_inference_all_datasets.txt) | TM per-dataset breakdown (clauses, bits, µs, throughput) |
 
 ---
 
@@ -39,9 +87,9 @@ All datasets use an 80/20 stratified split (seed=42), single-core evaluation.
 
 ## Per-Sample Inference Latency (µs) — Raspberry Pi 5
 
-> ML baselines: pure-NumPy implementation (no sklearn at inference time).  
-> TM and DT Numba: `@njit(cache=True)` Numba JIT kernel with SWAR popcount.  
-> Timing: 500-sample warm-up, 3000-sample timed loop. **Bold = best per dataset.**
+> ML baselines: pure-NumPy (no sklearn at inference time).  
+> TM and DT Numba: `@njit(cache=True)` kernel with SWAR popcount.  
+> 500-sample warm-up, 3000-sample timed loop. **Bold = best per dataset.**
 
 | Model | Runtime | TON-IoT | MedSec-25 | WUSTL | NSL-KDD |
 |-------|---------|--------:|----------:|------:|--------:|
@@ -69,8 +117,8 @@ All datasets use an 80/20 stratified split (seed=42), single-core evaluation.
 
 ## Model Size (KB)
 
-> GLADE+FPTM: compressed `.fbz` file (zstd clause bitmasks, fully self-contained).  
-> ML baselines: exported `.npz` arrays (no sklearn required at inference time).
+> GLADE+FPTM: compressed `.fbz` (zstd-22 clause bitmasks, fully self-contained).  
+> ML baselines: `.npz` arrays (no sklearn at inference time).
 
 | Model | NSL-KDD | TON-IoT | MedSec-25 | WUSTL |
 |-------|--------:|--------:|----------:|------:|
@@ -91,26 +139,41 @@ All datasets use an 80/20 stratified split (seed=42), single-core evaluation.
 | XGBoost | 1,266 | 2,508 | 1,701 | 615 |
 | XGBoost\_Cmatched | 1,161 | 1,899 | 939 | 388 |
 
----
+### FBZ internal size breakdown
+
+| Dataset | N bits | Clauses | GLADE state | Uncompressed bitmask | Compressed |
+|---------|-------:|--------:|:-----------:|:--------------------:|:----------:|
+| NSL-KDD | 253 | 450 | 2.0 KB | 28 KB | 11 KB |
+| TON-IoT | 122 | 1,000 | 1.0 KB | 32 KB | 15 KB |
+| MedSec-25 | 351 | 400 | 2.7 KB | 34 KB | 9 KB |
+| WUSTL | 247 | 180 | 1.9 KB | 11 KB | 5 KB |
+
+### Can the .fbz size be reduced?
+
+The clause bitmask (already at zstd level 22 = maximum) dominates the file.
+Three practical approaches:
+
+| Method | Saving | Tradeoff |
+|--------|--------|---------|
+| **Sparse literal indices** — store active literal indices (`int16`) instead of full bitmask. Saves ~40–60% when avg active literals < ⌈N/8⌉. | Large | Code change to reader/writer |
+| **Reduce clause count (lower C)** — halving C roughly halves the compressed block | Medium | Slight accuracy drop |
+| **float16 thresholds** — halves GLADE state (saves 0.5–1.4 KB) | Small | Negligible precision loss |
 
 ### What is inside a `.fbz` file?
-
-The `.fbz` (Fuzzy Bitmask, zstd) artefact is a single self-contained binary — no sklearn,
-no separate scaler, no config file needed at inference time.
 
 ```
 [Header 20 B]     magic "FBZ1", N (GLADE bits), K (classes), total_clauses
 [GLADE state]     feat_idx int32[N] + thresholds float32[N]  — the binariser
 [String table]    feature names + class names (UTF-8, for rule decoding)
-[zstd block]      clause bitmasks, compressed at level 22
+[zstd-22 block]   clause bitmasks (compressed)
                     per class × per polarity (positive / negative):
                       n_clauses  u16
                       per clause: clamp u8 | pos_mask uint8[⌈N/8⌉] | neg_mask uint8[⌈N/8⌉]
 ```
 
-At inference: raw feature vector → GLADE binarises to N bits → FPTM evaluates
-clause bitmasks via bitwise AND + popcount → class vote → prediction.
-The entire clause bank fits in the CPU L1d cache (14–57 KB uncompressed).
+At inference: raw features → GLADE binarises to N bits → FPTM clause bitmasks
+evaluated via bitwise AND + popcount → class vote → prediction.
+Entire model fits in L1d cache (14–57 KB uncompressed on Cortex-A76).
 
 ---
 
@@ -132,30 +195,6 @@ The entire clause bank fits in the CPU L1d cache (14–57 KB uncompressed).
 | MLP\_med | 0.9905 | 0.7173 | 0.8271 | 0.7734 | 0.9680 | 0.8590 | 0.9298 | 0.6603 |
 | MLP\_C | 0.9923 | 0.7245 | 0.9097 | 0.8570 | 0.9661 | 0.8453 | 0.9375 | 0.7465 |
 | MLP\_2C | 0.9924 | 0.7400 | 0.9352 | 0.8830 | 0.9660 | 0.8657 | **0.9485** | **0.8248** |
-
----
-
-## Repository Structure
-
-```
-pi_codes/
-├── glade_v2.py              # GLADE adaptive binariser (training)
-├── fcm_bitmask_zstd.py      # FCM-BM / FBZ format writer + TM trainer
-├── export_ml_to_npz.py      # Export sklearn .pkl models → .npz (no sklearn at inference)
-├── ml_numpy_infer.py        # Pure-numpy ML inference benchmark (all model types)
-├── tm_infer.py              # TM Numba JIT inference benchmark
-├── tm_dt_bench.py           # Combined TM Numba vs DT Numba head-to-head benchmark
-├── tm_fbz_infer.c           # C reference FBZ reader (~150 lines)
-├── run_all.sh               # Train all datasets end-to-end
-├── run_ml_corr.sh           # ML correction/correlation pipeline
-├── results/
-│   ├── GLADE_FPTM_TII_final.tex     # IEEE TII journal paper (full)
-│   ├── bare_jrnl_new_sample4.tex    # Journal draft with complete model comparison
-│   ├── full_comparison.txt          # Full latency + F1 benchmark output
-│   ├── tm_inference_all_datasets.txt # TM per-dataset breakdown
-│   └── *.md                         # Notes and result tables
-└── *.jl                     # Julia training/inference scripts (legacy)
-```
 
 ---
 
@@ -190,7 +229,7 @@ Model files are expected at `/home/reddy/pi_zero2w_deploy/ml_models/{dataset}/`.
 | | GLADE+FPTM (Numba) | DecisionTree (Numba) |
 |--|:-----------------:|:-------------------:|
 | Latency (Pi 5) | 4.10–7.42 µs | 1.37–1.39 µs |
-| Model size | 6.2–16.4 KB | 19.7–85.5 KB |
+| Model size | 7.3–16.1 KB | 19.7–85.5 KB |
 | Best macro-F1 | 0.9418 (TON-IoT) | 0.9210 (TON-IoT) |
 | Pi Zero 2W (projected) | 16–30 µs | ~5.5 µs |
 
