@@ -74,7 +74,7 @@ All datasets use an 80/20 stratified split (seed=42), single-core evaluation.
 
 | Model | NSL-KDD | TON-IoT | MedSec-25 | WUSTL |
 |-------|--------:|--------:|----------:|------:|
-| **GLADE+FPTM (.fbz)** | **12.6** | **16.4** | **10.5** | **6.2** |
+| **GLADE+FPTM (.fbz)** | **13.6** | **16.1** | **11.9** | **7.3** |
 | DecisionTree | 44.8 | 85.5 | 70.6 | 19.7 |
 | DecisionTree\_Lmatched | 11.4 | 9.9 | 7.3 | 7.1 |
 | RandomForest | 8,490 | 14,735 | 15,735 | 3,562 |
@@ -90,6 +90,27 @@ All datasets use an 80/20 stratified split (seed=42), single-core evaluation.
 | MLP\_2C | 1,205 | 915 | 702 | 350 |
 | XGBoost | 1,266 | 2,508 | 1,701 | 615 |
 | XGBoost\_Cmatched | 1,161 | 1,899 | 939 | 388 |
+
+---
+
+### What is inside a `.fbz` file?
+
+The `.fbz` (Fuzzy Bitmask, zstd) artefact is a single self-contained binary — no sklearn,
+no separate scaler, no config file needed at inference time.
+
+```
+[Header 20 B]     magic "FBZ1", N (GLADE bits), K (classes), total_clauses
+[GLADE state]     feat_idx int32[N] + thresholds float32[N]  — the binariser
+[String table]    feature names + class names (UTF-8, for rule decoding)
+[zstd block]      clause bitmasks, compressed at level 22
+                    per class × per polarity (positive / negative):
+                      n_clauses  u16
+                      per clause: clamp u8 | pos_mask uint8[⌈N/8⌉] | neg_mask uint8[⌈N/8⌉]
+```
+
+At inference: raw feature vector → GLADE binarises to N bits → FPTM evaluates
+clause bitmasks via bitwise AND + popcount → class vote → prediction.
+The entire clause bank fits in the CPU L1d cache (14–57 KB uncompressed).
 
 ---
 
