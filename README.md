@@ -17,36 +17,36 @@ using bit-parallel clause evaluation. The trained artefact is a self-contained
 
 | File | Lines | Purpose |
 |------|------:|---------|
-| [glade_v2.py](glade_v2.py) | 14 KB | GLADE adaptive binariser — training only. Adaptive bit budget, gap-aware threshold placement, dead-bit elimination, local perturbation. |
-| [fcm_bitmask_zstd.py](fcm_bitmask_zstd.py) | 13 KB | FBZ format writer + reader + FPTM trainer. Serialises GLADE state + clause bitmasks into a single zstd-compressed binary. |
-| [tm_infer.py](tm_infer.py) | 15 KB | **TM Numba JIT inference benchmark.** Loads `.fbz`, runs H-specialised Numba kernels with SWAR popcount. Measures µs/sample on all 4 datasets. |
-| [tm_dt_bench.py](tm_dt_bench.py) | 17 KB | **Combined TM vs DT Numba head-to-head.** Runs both engines side-by-side: TM Numba (SWAR popcount) and DT Numba (pure tree traversal). |
-| [ml_numpy_infer.py](ml_numpy_infer.py) | 7.4 KB | **Pure-numpy ML inference benchmark.** Loads `.npz` models and runs all 13 model types (DT, RF, LR, SVM, GNB, MLP, kNN) with no sklearn dependency. |
-| [export_ml_to_npz.py](export_ml_to_npz.py) | 7.1 KB | Converts sklearn `.pkl` models → self-contained `.npz` bundles. Embeds scaler params so each file is fully portable. |
+| [src/glade_v2.py](src/glade_v2.py) | 14 KB | GLADE adaptive binariser — training only. Adaptive bit budget, gap-aware threshold placement, dead-bit elimination, local perturbation. |
+| [src/fcm_bitmask_zstd.py](src/fcm_bitmask_zstd.py) | 13 KB | FBZ format writer + reader + FPTM trainer. Serialises GLADE state + clause bitmasks into a single zstd-compressed binary. |
+| [src/tm_infer.py](src/tm_infer.py) | 15 KB | **TM Numba JIT inference benchmark.** Loads `.fbz`, runs H-specialised Numba kernels with SWAR popcount. Measures µs/sample on all 4 datasets. |
+| [src/tm_dt_bench.py](src/tm_dt_bench.py) | 17 KB | **Combined TM vs DT Numba head-to-head.** Runs both engines side-by-side: TM Numba (SWAR popcount) and DT Numba (pure tree traversal). |
+| [src/ml_numpy_infer.py](src/ml_numpy_infer.py) | 7.4 KB | **Pure-numpy ML inference benchmark.** Loads `.npz` models and runs all 13 model types (DT, RF, LR, SVM, GNB, MLP, kNN) with no sklearn dependency. |
+| [src/export_ml_to_npz.py](src/export_ml_to_npz.py) | 7.1 KB | Converts sklearn `.pkl` models → self-contained `.npz` bundles. Embeds scaler params so each file is fully portable. |
 
 ### C (reference decoder)
 
 | File | Lines | Purpose |
 |------|------:|---------|
-| [tm_fbz_infer.c](tm_fbz_infer.c) | 7.5 KB | Portable C FBZ reader and FPTM inference engine (~150 lines of logic). Reads the same `.fbz` files as the Python runtime. No external dependencies. |
+| [src/tm_fbz_infer.c](src/tm_fbz_infer.c) | 7.5 KB | Portable C FBZ reader and FPTM inference engine (~150 lines of logic). Reads the same `.fbz` files as the Python runtime. No external dependencies. |
 
 ### Shell scripts
 
 | File | Purpose |
 |------|---------|
-| [run_all.sh](run_all.sh) | Train all 4 datasets end-to-end (GLADE binarise → FPTM train → export `.fbz`) |
-| [run_ml_corr.sh](run_ml_corr.sh) | Run ML correlation/correction pipeline |
+| [src/run_all.sh](src/run_all.sh) | Train all 4 datasets end-to-end (GLADE binarise → FPTM train → export `.fbz`) |
+| [src/run_ml_corr.sh](src/run_ml_corr.sh) | Run ML correlation/correction pipeline |
 
 ### Julia (legacy training scripts)
 
 | File | Purpose |
 |------|---------|
-| [train_all_datasets.jl](train_all_datasets.jl) | Train FPTM on all 4 datasets |
-| [inference_benchmark.jl](inference_benchmark.jl) | Full inference benchmark (Julia runtime) |
-| [inference_all_datasets.jl](inference_all_datasets.jl) | Per-dataset inference + metrics |
-| [deploy_inference.jl](deploy_inference.jl) | Deployment inference loop |
-| [tm_fbz_bench.jl](tm_fbz_bench.jl) | TM FBZ file benchmark |
-| [export_tm_to_npz.jl](export_tm_to_npz.jl) | Export TM rules to numpy format |
+| [src/train_all_datasets.jl](src/train_all_datasets.jl) | Train FPTM on all 4 datasets |
+| [src/inference_benchmark.jl](src/inference_benchmark.jl) | Full inference benchmark (Julia runtime) |
+| [src/inference_all_datasets.jl](src/inference_all_datasets.jl) | Per-dataset inference + metrics |
+| [src/deploy_inference.jl](src/deploy_inference.jl) | Deployment inference loop |
+| [src/tm_fbz_bench.jl](src/tm_fbz_bench.jl) | TM FBZ file benchmark |
+| [src/export_tm_to_npz.jl](src/export_tm_to_npz.jl) | Export TM rules to numpy format |
 
 ### Results
 
@@ -56,6 +56,32 @@ using bit-parallel clause evaluation. The trained artefact is a self-contained
 | [results/bare_jrnl_new_sample4.tex](results/bare_jrnl_new_sample4.tex) | Journal draft with complete model comparison table |
 | [results/full_comparison.txt](results/full_comparison.txt) | Full latency + F1 benchmark output |
 | [results/tm_inference_all_datasets.txt](results/tm_inference_all_datasets.txt) | TM per-dataset breakdown (clauses, bits, µs, throughput) |
+
+---
+
+## Repository Layout
+
+```
+Pi_codes/
+├── src/
+│   ├── glade_v2.py              Python — GLADE binariser (training)
+│   ├── fcm_bitmask_zstd.py      Python — FBZ writer + reader + FPTM trainer
+│   ├── tm_infer.py              Python — TM Numba JIT inference benchmark
+│   ├── tm_dt_bench.py           Python — TM vs DT Numba head-to-head
+│   ├── ml_numpy_infer.py        Python — pure-numpy ML inference benchmark
+│   ├── export_ml_to_npz.py      Python — sklearn .pkl → .npz exporter
+│   ├── tm_fbz_infer.c           C      — portable FBZ reader (~150 lines)
+│   ├── run_all.sh               Shell  — train all 4 datasets end-to-end
+│   ├── run_ml_corr.sh           Shell  — ML correction pipeline
+│   ├── train_all_datasets.jl    Julia  — FPTM training (legacy)
+│   ├── inference_benchmark.jl   Julia  — inference benchmark (legacy)
+│   └── *.jl                     Julia  — other legacy scripts
+└── results/
+    ├── GLADE_FPTM_TII_final.tex     IEEE TII journal paper
+    ├── bare_jrnl_new_sample4.tex    Journal draft
+    ├── full_comparison.txt          Full benchmark output
+    └── tm_inference_all_datasets.txt  TM detailed breakdown
+```
 
 ---
 
@@ -202,22 +228,22 @@ Entire model fits in L1d cache (14–57 KB uncompressed on Cortex-A76).
 
 **1 — Export sklearn models to numpy (.npz):**
 ```bash
-python export_ml_to_npz.py
+python src/export_ml_to_npz.py
 ```
 
 **2 — Run ML pure-numpy inference benchmark:**
 ```bash
-python ml_numpy_infer.py
+python src/ml_numpy_infer.py
 ```
 
 **3 — Run TM Numba inference benchmark:**
 ```bash
-python tm_infer.py
+python src/tm_infer.py
 ```
 
 **4 — Run combined TM vs DT Numba head-to-head:**
 ```bash
-python tm_dt_bench.py
+python src/tm_dt_bench.py
 ```
 
 Model files are expected at `/home/reddy/pi_zero2w_deploy/ml_models/{dataset}/`.
@@ -229,7 +255,7 @@ Model files are expected at `/home/reddy/pi_zero2w_deploy/ml_models/{dataset}/`.
 | | GLADE+FPTM (Numba) | DecisionTree (Numba) |
 |--|:-----------------:|:-------------------:|
 | Latency (Pi 5) | 4.10–7.42 µs | 1.37–1.39 µs |
-| Model size | 7.3–16.1 KB | 19.7–85.5 KB |
+| Model size (.fbz) | 7.3–16.1 KB | 19.7–85.5 KB (.npz) |
 | Best macro-F1 | 0.9418 (TON-IoT) | 0.9210 (TON-IoT) |
 | Pi Zero 2W (projected) | 16–30 µs | ~5.5 µs |
 
