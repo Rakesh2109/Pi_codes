@@ -1,0 +1,5 @@
+Dataset,Attempt 17 us,Dynamic dispatch us,Result
+WUSTL,0.090,0.094,slightly slower
+NSLKDD,0.148,0.151,tied/slower
+TonIoT,0.143,0.136,faster
+MedSec,0.166,0.179,slower

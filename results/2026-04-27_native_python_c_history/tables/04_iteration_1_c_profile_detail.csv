@@ -1,0 +1,9 @@
+Platform,Dataset,Binarize us,Score us,Profile total us
+Local i9-14900K,WUSTL,0.046,0.117,0.147
+Local i9-14900K,NSLKDD,0.051,0.400,0.408
+Local i9-14900K,TonIoT,0.019,0.358,0.378
+Local i9-14900K,MedSec,0.049,0.377,0.422
+Raspberry Pi 5,WUSTL,0.468,1.013,1.481
+Raspberry Pi 5,NSLKDD,0.460,3.132,3.582
+Raspberry Pi 5,TonIoT,0.201,3.249,3.458
+Raspberry Pi 5,MedSec,0.526,3.076,3.597

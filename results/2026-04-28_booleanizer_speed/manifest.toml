@@ -1,0 +1,14 @@
+schema_version = "1"
+format_id = "benchmark.table.v1"
+date = "2026-04-28"
+title = "Booleanizer Speed Benchmark"
+command_id = "local.exp.booleanizers"
+command = "uv run --with numpy --with numba --with zstandard fuzzy-tm-infer --compare-booleanizers --repeats 2"
+platform = "local"
+status = "accepted"
+exact = false
+raw_dir = "raw"
+experiment_type = "booleanizer_speed"
+tables = ["booleanizer_speed", "winners"]
+primary_csv = "tables/booleanizer_speed.csv"
+primary_latex = "latex/booleanizer_speed.tex"

@@ -1,0 +1,11 @@
+Target,Symbol,Size
+local AVX2,`score_class_delta2_avx2`,806 B
+local AVX2,`score_class_table2_avx2`,861 B
+local AVX2,`score_class_delta4_avx2`,1201 B
+local AVX2,`score_class_table4_avx2`,1269 B
+local AVX2,`tm17_predict_current_avx2`,13715 B
+RPi5 NEON,`score_class_delta4_neon`,952 B
+RPi5 NEON,`score_class_table4_neon`,956 B
+RPi5 NEON,`score_class_delta7_neon`,1600 B
+RPi5 NEON,`score_class_table7_neon`,1604 B
+RPi5 NEON,`tm17_predict_current_neon`,17716 B

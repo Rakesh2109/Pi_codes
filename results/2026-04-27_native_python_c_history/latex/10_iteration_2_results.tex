@@ -1,0 +1,14 @@
+\begin{tabular}{lrrrrrr}
+\toprule
+Platform & Dataset & Python us/sample & C us/sample & C speedup & Accuracy & Macro F1 \\
+\midrule
+Local i9-14900K & WUSTL & 1.467 & 0.106 & 13.8x & 0.9470 & 0.8157 \\
+Local i9-14900K & NSLKDD & 2.069 & 0.299 & 6.9x & 0.9946 & 0.9477 \\
+Local i9-14900K & TonIoT & 2.370 & 0.276 & 8.6x & 0.9703 & 0.9427 \\
+Local i9-14900K & MedSec & 2.306 & 0.362 & 6.4x & 0.9700 & 0.8692 \\
+Raspberry Pi 5 & WUSTL & 3.923 & 0.932 & 4.2x & 0.9470 & 0.8157 \\
+Raspberry Pi 5 & NSLKDD & 5.622 & 2.265 & 2.5x & 0.9946 & 0.9477 \\
+Raspberry Pi 5 & TonIoT & 8.960 & 1.990 & 4.5x & 0.9703 & 0.9427 \\
+Raspberry Pi 5 & MedSec & 7.246 & 2.273 & 3.2x & 0.9700 & 0.8692 \\
+\bottomrule
+\end{tabular}

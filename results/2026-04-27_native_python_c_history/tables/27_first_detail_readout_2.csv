@@ -1,0 +1,5 @@
+Dataset,Backend,Active bits avg,Nonzero bytes avg,Byteprep us,Blocks/row,Table bytes/row,Score core us
+WUSTL,table_neon,106.74,25.79,0.0068,12,"5,952",0.790
+NSLKDD,table_neon,56.11,15.57,0.0041,30,"15,360",1.825
+TonIoT,table_neon,24.41,7.37,0.0041,70,"17,920",1.749
+MedSec,table_neon,91.42,21.52,0.0047,25,"17,600",1.968

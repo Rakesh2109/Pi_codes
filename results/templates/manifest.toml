@@ -1,0 +1,14 @@
+schema_version = "1"
+format_id = "benchmark.table.v1"
+experiment_type = "generic"
+date = "YYYY-MM-DD"
+title = ""
+command_id = ""
+command = ""
+platform = ""
+status = "draft"
+exact = false
+raw_dir = "raw"
+tables = ["metrics"]
+primary_csv = "tables/metrics.csv"
+primary_latex = "latex/metrics.tex"

@@ -1,0 +1,5 @@
+dataset,booleanizer,transform_us_per_sample,n_bits
+WUSTL,thermo8,0.149,224
+NSLKDD,thermo8,0.715,826
+TonIoT,thermo8,0.198,266
+MedSec,thermo8,0.347,378

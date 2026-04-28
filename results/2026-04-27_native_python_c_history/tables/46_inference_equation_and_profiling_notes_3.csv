@@ -1,0 +1,5 @@
+Dataset,Active clauses/row,Percent active,Clauses always zero on sample
+WUSTL,24.4 / 180,13.6%,25
+NSLKDD,53.5 / 450,11.9%,34
+TonIoT,535.8 / 1000,53.6%,11
+MedSec,120.6 / 400,30.2%,0

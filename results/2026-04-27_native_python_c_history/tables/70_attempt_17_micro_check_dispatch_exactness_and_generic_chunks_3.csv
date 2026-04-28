@@ -1,0 +1,5 @@
+Dataset,Local AVX2 us,RPi5 NEON us
+WUSTL,0.092,0.585
+NSLKDD,0.169,0.877
+TonIoT,0.147,0.758
+MedSec,0.171,0.880

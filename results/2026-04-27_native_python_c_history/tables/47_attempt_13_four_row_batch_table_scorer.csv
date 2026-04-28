@@ -1,0 +1,5 @@
+Dataset,Single total us,Batch total us,Batch diffs
+WUSTL,0.108,0.116,0
+NSLKDD,0.205,0.313,0
+TonIoT,0.237,0.320,0
+MedSec,0.229,0.350,0

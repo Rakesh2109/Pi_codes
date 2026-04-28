@@ -1,0 +1,13 @@
+---
+tm_repo_local: "{{ playbook_dir }}/../.."
+tm_repo_name: "{{ tm_repo_local | realpath | basename }}"
+tm_remote_root: "{{ ansible_env.HOME }}/{{ tm_repo_name }}"
+tm_remote_venv: "{{ tm_remote_root }}/.venv"
+
+sync_assets: true
+run_native_benchmark: true
+run_python_benchmark: false
+run_compare_all: false
+run_booleanizer_benchmark: false
+
+tm_archflags: auto

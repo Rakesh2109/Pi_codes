@@ -1,0 +1,1302 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% GLADE: Gap-aware Lightweight Adaptive Discretisation Engine for
+%% Fuzzy-Pattern Tsetlin Machines on IoT/IoMT Intrusion Detection
+%%
+%% Target venue: IEEE Transactions on Industrial Informatics (TII)
+%% Template    : IEEEtran v1.8 (two-column, 10pt)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[journal,10pt]{IEEEtran}
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc,fit}
+\usepackage{multirow}
+\usepackage{booktabs}
+% \usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{longtable}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{GLADE: A Gap-Aware Unsupervised Adaptive Binariser \\
+       for Edge-Deployed Tsetlin Machines on \\
+       IoT and IoMT Intrusion Detection}
+
+\author{Rakesh~Reddy~Yakkati,~\IEEEmembership{Student~Member,~IEEE},
+        and~Co-Authors%
+\thanks{Manuscript submitted April 2026.}%
+\thanks{R. R. Yakkati is with the Department of \textit{[department]},
+\textit{[institution]} (e-mail: yrakesh2109@gmail.com).}}
+
+\markboth{IEEE Transactions on Industrial Informatics,
+          Vol.~XX, No.~X, Month~2026}%
+         {Yakkati \MakeLowercase{\textit{et al.}}: GLADE for Edge-Deployed Tsetlin Machines}
+
+\maketitle
+
+%% ========================================================================
+\begin{abstract}
+
+\end{abstract}
+
+\begin{IEEEkeywords}
+Tsetlin machine, fuzzy pattern, unsupervised binarisation,
+interpretable classification, intrusion detection, Internet of Things,
+Internet of Medical Things, edge computing, TinyML.
+\end{IEEEkeywords}
+
+
+
+%% ========================================================================
+\section{Introduction}
+\IEEEPARstart{T}{he} proliferation of connected devices in
+Internet-of-Things (IoT) and Internet-of-Medical-Things (IoMT)
+deployments has created an operational need for intrusion detection to
+be performed at the endpoint rather than in a remote gateway or cloud
+service. On-device operation is motivated by the latency budgets of
+bedside monitoring, by the privacy and regulatory constraints that
+govern clinical telemetry, by the cost and unreliability of continuous
+uplinks, and by the resilience benefits of keeping the decision loop
+local when network connectivity is degraded. As a consequence, the
+design space for such a detector is bounded not only by classification
+accuracy but also by flash storage, random-access memory, per-sample
+inference latency, and average power draw, so that model compactness
+and on-device interpretability are raised to first-class design
+constraints.
+
+Tree-ensemble methods such as XGBoost~\cite{chen2016xgboost} and random
+forests~\cite{breiman2001random}, together with feed-forward neural
+networks trained through scikit-learn~\cite{pedregosa2011scikit}, are
+routinely reported to dominate the public IoT intrusion-detection
+leaderboards. However, their trained artefacts are typically measured
+in megabytes, and their per-sample inference cost is not competitive
+with an integer rule set on constrained hardware. The Tsetlin Machine
+(TM) family, first introduced by Granmo~\cite{granmo2018tsetlin} and
+subsequently extended with convolutional~\cite{granmo2019convolutional},
+regression, coalesced and clause-sharing variants, has been studied as
+an interpretable and hardware-efficient alternative in which every
+class decision is expressed as a voting ensemble of conjunctive clauses
+over Boolean literals. This representation yields a compact integer
+artefact and a natural path to microcontroller deployment, as
+demonstrated by REDRESS~\cite{maheshwari2023redress} on an STM32 device.
+Further refinements, including sparse literal
+budgets~\cite{bhattarai2023concise} and drop-clause
+regularisation~\cite{sharma2023drop}, have progressively reduced the
+TM memory footprint. The most recent member of the family, the
+Fuzzy-Pattern Tsetlin Machine (FPTM) of Hnilov~\cite{hnilov2025fuzzy},
+replaces the all-or-nothing clause rule of earlier TMs with a graded
+fuzzy rule, and has been reported to reach comparable or superior
+accuracy with between $50\times$ and $400\times$ fewer clauses.
+
+A component of the TM pipeline that has attracted markedly less
+attention than the machine itself is the \emph{binariser}: the
+preprocessing stage in which continuous and categorical features are
+converted into the Boolean literals on which every TM clause operates.
+Because the information content of the literals lower-bounds the
+attainable training quality, any inefficiency introduced at the
+binarisation stage propagates directly into the trained clauses and
+therefore into the final model footprint. Existing schemes such as the
+\texttt{StandardBinarizer} shipped with the TMU library, the
+equal-frequency \texttt{KBinsDiscretizer} of scikit-learn, and the
+thermometer encoder, either assume a fixed bit width per feature,
+depend on class labels, or disregard the extreme sparsity that is
+characteristic of IoT traffic data. In the TON\_IoT
+dataset~\cite{moustafa2021ton}, for example, more than two thirds of
+the one-hot encoded columns contain above $80\%$ zero values after
+preprocessing, which causes equal-frequency binning to collapse most
+of the quantile edges onto the same value and to waste the entire bit
+budget of that column.
+
+\subsection{Contributions}
+The central observation of this paper is that the choice of
+binariser and the dynamics of fuzzy-pattern clause learning are not
+independent: a binariser that allocates its bit budget adaptively
+and that suppresses low-entropy thresholds shapes the literal
+distribution in a way that is specifically favourable to a
+downstream graded-vote learner. In other words, the learning
+behaviour that emerges from the pairing is not the concatenation of
+two unrelated stages but a joint design in which (i) the binariser
+exposes informative literals with bounded marginal entropy, (ii)
+the fuzzy clause evaluator absorbs the residual noise of those
+literals through a graded rather than all-or-nothing decision, and
+(iii) the two stages jointly produce short conjunctive rules whose
+inference cost is dominated by a small number of 64-bit
+bit-population counts. This joint design is the conceptual
+contribution of the present paper; the individual stages are
+separately well studied, but their behaviour \emph{together} is
+new. The specific technical contributions are:
+
+\begin{enumerate}
+  \item An unsupervised adaptive binariser is proposed in which a
+        per-feature bit budget is derived from the unique-value count
+        and the zero fraction of each column, thresholds are placed by
+        a conditional gap-aware procedure, low-entropy thresholds are
+        discarded by a dead-bit elimination step, and the remaining
+        thresholds are perturbed into high-variance neighbourhoods.
+        Only a single integer hyperparameter is exposed to the user,
+        and no cross-validation is required at fit time.
+  \item A self-describing persistent storage format, the Template
+        Binary Format (TBF), is introduced for the joint on-disk
+        representation of the fitted binariser and the trained FPTM
+        clauses. TBF is measured to reduce the on-disk model size by
+        $40$--$60\%$ relative to JSON without altering inference
+        semantics, and is designed to be readable by a portable
+        $\sim$$150$-line C deserialiser.
+  \item A strict single-core, fixed-hyperparameter benchmark is
+        reported on four public IoT and IoMT datasets
+        (NSL-KDD~\cite{tavallaee2009nslkdd},
+        TON\_IoT~\cite{moustafa2021ton},
+        WUSTL-EHMS-2020~\cite{hady2020wustl}, and MedSec-25) against
+        twelve classical and neural baselines. The benchmark is
+        accompanied by a binariser ablation, a GLADE-component
+        ablation, a single-hyperparameter sensitivity study, a
+        five-seed stability analysis, and a Wilcoxon signed-rank
+        statistical comparison.
+  \item An on-device deployment study on a Raspberry~Pi~5 is reported.
+        Every trained model is shown to fit in at most $56$~kilobytes
+        of on-disk storage. The GLADE+FPTM Numba JIT kernel predicts a
+        sample in $4.10$--$7.42$~$\mu$s and a Numba-compiled DecisionTree
+        reaches $1.37$--$1.39$~$\mu$s on a single Cortex-A76 core,
+        matching the server-side accuracy exactly.
+  \item The trained clauses are decoded into human-readable
+        conjunctive rules over discretised feature literals, and are
+        shown in several cases to reproduce the textbook description of
+        the attack class they were trained to detect, without any
+        post-hoc explainer.
+\end{enumerate}
+
+It is emphasised that the Fuzzy-Pattern Tsetlin Machine itself is
+\textbf{not} claimed as a contribution of this work: it is used without
+modification through the publicly released reference implementation of
+Hnilov~\cite{hnilov2025fuzzy}. The novelty of the present paper is
+concentrated on the binariser, on the persistent-storage format, and
+on the demonstration that, once these two components are placed in
+front of an unmodified FPTM, tree-ensemble accuracy can be matched on
+IoT and IoMT intrusion-detection benchmarks at an on-disk budget that
+is an order of magnitude smaller.
+
+The remainder of the paper is organised as follows.
+Section~\ref{sec:related} reviews the Tsetlin Machine family and the
+intrusion-detection benchmarks used in the study.
+Section~\ref{sec:binarisers} surveys the three binarisers in wide use
+for TMs and presents the proposed GLADE binariser in detail.
+Section~\ref{sec:fptm} describes the Fuzzy-Pattern Tsetlin Machine and
+its bit-parallel evaluation. Section~\ref{sec:setup} defines the
+experimental protocol, the preprocessing pipeline, and the twelve
+baselines. Section~\ref{sec:results} reports the main benchmark and
+all ablations. Section~\ref{sec:discussion} discusses limitations and
+failure modes, and Section~\ref{sec:conclusion} concludes.
+
+%% ========================================================================
+\section{Related Work}
+\label{sec:related}
+
+\subsection{The Tsetlin Machine family}
+In the Tsetlin Machine originally introduced by
+Granmo~\cite{granmo2018tsetlin}, each class is represented by a set of
+conjunctive clauses over Boolean literals, and the decision of the
+machine is computed as a voting sum over these clauses. Each literal
+is controlled by a dedicated Tsetlin automaton whose include/exclude
+action is adjusted through a reinforcement procedure driven by two
+forms of feedback. Three practical advantages have been consistently
+reported over neural-network alternatives in constrained deployments:
+rule-level interpretability, integer-only inference, and a training
+dynamic that is inherently robust to the vanishing-gradient problem.
+
+Several extensions have subsequently been published. A patch-based
+feedback scheme was proposed for two-dimensional images in the
+convolutional variant~\cite{granmo2019convolutional}. Sparse literal
+budgets have been investigated in several forms:
+Bhattarai~\emph{et~al.}~\cite{bhattarai2023concise} introduced a soft
+clause-size constraint under which literals are expelled once a clause
+grows beyond a target size, and drop-clause regularisation was
+proposed for the Sparse Tsetlin
+Machine~\cite{sharma2023drop}. For edge inference,
+Maheshwari~\emph{et~al.}~\cite{maheshwari2023redress} developed
+REDRESS, which combines include-encoding compression with a custom
+inference kernel and has been reported to deliver up to $5700\times$
+energy savings relative to binarised neural networks on an
+STM32F746G-DISCO microcontroller. The most recent variant, on which
+the present work builds, is the Fuzzy-Pattern Tsetlin Machine
+(FPTM)~\cite{hnilov2025fuzzy}, which is described in detail in
+Section~\ref{sec:fptm}.
+
+\subsection{Intrusion-detection benchmarks}
+The four public benchmarks used in this study have each been
+established as de-facto standards for IoT and IoMT IDS research.
+NSL-KDD was proposed by Tavallaee~\emph{et~al.}~\cite{tavallaee2009nslkdd}
+as a cleaner, de-duplicated replacement for the KDD-CUP-99 corpus.
+TON\_IoT~\cite{moustafa2021ton}, released by the University of New
+South Wales, provides multi-protocol IoT traffic over ten attack
+categories and is widely adopted in edge-IDS studies because of its
+protocol heterogeneity. WUSTL-EHMS-2020~\cite{hady2020wustl} was
+produced at Washington University in St.~Louis and is the first
+public dataset to combine network-flow metrics with patient biomedical
+readings; it is regarded as the most challenging of the four because
+of its small size and severe class imbalance. MedSec-25 is a more
+recent IoMT corpus that provides labelled flow records over five
+attack categories and is included here to probe generalisation to a
+newly proposed benchmark.
+
+%% ========================================================================
+\section{Binarisation for Tsetlin Machines}
+\label{sec:binarisers}
+\label{sec:glade}
+
+Because every Tsetlin Machine variant operates on Boolean literals,
+every continuous and categorical feature of a dataset must first be
+mapped to one or more bits. Only a handful of binarisation schemes
+are in wide use. The three that are encountered most often in the TM
+literature are briefly reviewed below, after which the proposed GLADE
+binariser is presented in detail.
+
+\subsection{TMU \texttt{StandardBinarizer}}
+\label{sec:bin-standard}
+The reference binariser shipped with the Tsetlin Machine Unified
+library~\cite{cair2024tmu}, denoted \texttt{StandardBinarizer} in the
+reference code, implements the continuous-input scheme originally
+proposed by Abeyrathna \emph{et~al.}~\cite{abeyrathna2019continuous} and
+later refined into an adaptive sparse variant~\cite{abeyrathna2021adaptive}.
+A threshold is placed at every distinct value observed in the training
+column, subject to a user-specified cap
+\texttt{max\_bits\_per\_feature}. The scheme is fully unsupervised, and
+it has been adopted as the default encoder in several convolutional-TM
+studies~\cite{granmo2019convolutional,bhattarai2023concise}. Two
+limitations have been reported when the scheme is applied to IoT/IoMT
+traffic data: the per-feature cap is shared across columns, so that
+near-constant columns waste bits while high-cardinality columns are
+under-resolved; and sparse columns in which zero dominates the mass
+inherit the cap unchanged, which inflates the total bit count without
+delivering a proportional gain in macro F1.
+
+\subsection{K-bin quantile discretisation}
+\label{sec:bin-kbins}
+Equal-frequency quantile binning, available in scikit-learn as
+\texttt{KBinsDiscretizer} with \texttt{strategy="quantile"}, places a
+fixed number of thresholds at evenly spaced quantiles of each
+training column and emits one bit per interior edge. The scheme is
+label-free, compact, and has been adopted as the default encoder in
+REDRESS~\cite{maheshwari2023redress} and in a number of subsequent
+TM studies targeting tabular data. Its principal weakness is that the
+quantile edges of sparse columns collapse onto the same value: on a
+column in which $80\%$ of the samples are zero, every inner quantile
+falls below the non-zero region, and a single effective threshold is
+produced instead of the requested $n_\text{bins}$ thresholds. The
+resulting bit budget is wasted, and the TM is required to compensate
+through additional clauses.
+
+\subsection{Thermometer encoding}
+\label{sec:bin-thermo}
+In a thermometer encoder, a fixed number of evenly spaced thresholds
+are placed between the training minimum and maximum of each feature,
+and the successive sign bits are concatenated so that bit $k$
+indicates whether the feature exceeds the $k$-th threshold. Order
+information is therefore preserved across bits, and the scheme has
+been used in early TM applications because of its simplicity. The
+practical limitation observed on IoT datasets is that the total bit
+count grows linearly in both the number of features and in the
+per-feature resolution: on the benchmarks of
+Section~\ref{sec:results}, the thermometer encoder has been measured
+to emit between $570$ and $1770$ bits, which is two to ten times the
+output of the other schemes, so that the memory footprint of the
+downstream TM is no longer competitive with tree-ensemble baselines.
+
+\subsection{Proposed: the GLADE binariser}
+\label{sec:glade-intro}
+The proposed binariser, GLADE, is designed to remedy the three
+limitations noted above simultaneously. Four design constraints are
+imposed from the outset:
+\begin{enumerate}
+  \item \textbf{Unsupervised.} No class labels are read during the
+        fitting procedure; every threshold is derived from the
+        statistics of the training features only.
+  \item \textbf{Single knob.} A single integer hyperparameter
+        $n_\text{bins}$ is exposed to the user, and the same value is
+        used for every feature of every dataset.
+  \item \textbf{Adaptive per feature.} The number of bits actually
+        allocated to a column is permitted to fall below $n_\text{bins}$
+        when the column does not carry enough information to justify
+        the full budget.
+  \item \textbf{MCU-portable.} The fitted state is stored with
+        \texttt{float32} thresholds and \texttt{int32} feature
+        indices, so that a C reader on a 32-bit microcontroller can
+        memory-map the file directly from flash.
+\end{enumerate}
+The single-knob requirement is enforced throughout the paper: for
+every experiment and every dataset, $n_\text{bins}$ is set to $15$
+and is never tuned. The next four subsections describe the four stages
+of the binariser in turn: the adaptive bit budget
+(Sec.~\ref{sec:glade-budget}), the conditional gap-aware threshold
+placement (Sec.~\ref{sec:glade-gap}), the entropy-based dead-bit
+elimination (Sec.~\ref{sec:glade-dead}), and the local gap
+perturbation (Sec.~\ref{sec:glade-perturb}). The transform at
+inference time and the TBF persistent-storage format are given in
+Sec.~\ref{sec:glade-transform} and Sec.~\ref{sec:glade-tbf}.
+
+\subsection{Adaptive bit budget}
+\label{sec:glade-budget}
+Let $c$ denote a feature column and let $u(c)$ be the number of
+distinct values observed in the training sample of that column. For
+columns with $u(c) \le n_\text{bins}$, the column is treated as a
+categorical one-hot feature and exactly $u(c) - 1$ thresholds are
+placed at the midpoints between successive unique values. For
+columns with $u(c) > n_\text{bins}$, the budget is computed under a
+\emph{hybrid} rule. Let $z(c) \in [0,1]$ denote the fraction of
+training samples at which the column takes the value zero, and let
+$u_{nz}(c)$ denote the number of distinct values among the non-zero
+samples.
+
+\emph{Case 1 --- dense continuous features} ($z(c) \le 0.3$ and
+$u(c) > n_\text{bins}$). These columns typically hold genuine
+continuous measurements such as packet rates, inter-arrival times or
+biomedical readings. They receive the full
+KBinsQuantile-equivalent budget
+\begin{equation}
+  b(c) \;=\; n_\text{bins},
+  \label{eq:dense-budget}
+\end{equation}
+so that the per-feature resolution matches the strongest
+quantile-based baseline. This case was added in the v2 revision of
+the binariser after the v1 log-budget was observed to under-resolve
+dense continuous features and to lose
+0.02--0.03 macro F1 on the smaller WUSTL-EHMS-2020 dataset.
+
+\emph{Case 2 --- sparse or near-categorical features}
+($z(c) > 0.3$). These columns are typical of IoT traffic data, where
+one-hot flag encodings and byte-count features concentrate a large
+proportion of mass on zero. An effective unique count is defined as
+\begin{equation}
+  \mathrm{eff}(c) \;=\; \max \bigl(\, u_{nz}(c)\,(1 - z(c))^2,\; 2\bigr),
+  \label{eq:effunique}
+\end{equation}
+and the bit budget is
+\begin{equation}
+  b(c) \;=\; \mathrm{clip}\Bigl(\lceil \log_2 \mathrm{eff}(c)\rceil + 2,\;
+             1,\; n_\text{bins}\Bigr).
+  \label{eq:budget}
+\end{equation}
+The term $(1 - z(c))^2$ penalises columns that are both sparse and
+skewed: a feature that is zero 95\% of the time and takes two other
+values rarely is assigned a budget close to $1$. The constant $+2$
+term grants two additional bits to any sparse column so that the
+zero versus non-zero distinction is always representable and so that
+rare non-zero values remain discriminable.
+
+The hybrid rule guarantees that GLADE allocates at least as many
+bits as KBinsQuantile on every dense continuous feature, while
+retaining the adaptive budget behaviour that is important on the
+sparse one-hot flag columns of IoT datasets. This hybridisation is
+the single most important change between v1 and v2 of the binariser
+and is examined in the GLADE-component ablation of
+Section~\ref{sec:ablation}.
+
+\subsection{Conditional gap-aware threshold placement}
+\label{sec:glade-gap}
+Once $b(c)$ has been selected, $b(c)$ thresholds are placed along the
+value range of the column. The default choice is evenly spaced
+quantiles. This default can be biased when the data contain
+structural gaps, that is, intervals of the value axis that are empty
+or nearly empty due to protocol boundaries, sensor resolution or
+categorical substructure hidden inside a nominally continuous column.
+On such features, a threshold that falls inside a structural gap is
+wasteful because it produces the same bit for every sample on either
+side of the gap. Conversely, on smooth continuous features a naive
+snap to the nearest gap introduces floating-point bias and leaves the
+thresholds clustered unevenly.
+
+A conditional nudge is therefore used. Let $U(c) = \{u_1,\dots,u_k\}$
+be the sorted vector of unique non-zero values and let
+$g_i = u_{i+1} - u_i$ be the vector of successive gaps. The column is
+declared to possess structural gaps when
+\begin{equation}
+  \max_i g_i \;>\; 5 \cdot \mathrm{median}_i\,g_i,
+  \label{eq:structural}
+\end{equation}
+and only in that case are the candidate quantile edges snapped to
+the midpoints $(u_i + u_{i+1})/2$ of the largest gaps that lie in
+their neighbourhood. Features for which
+Eq.~\ref{eq:structural} fails retain their quantile edges unchanged.
+The factor of five is selected empirically and is kept fixed across
+all datasets in Section~\ref{sec:results}.
+
+\subsection{Dead-bit elimination}
+\label{sec:glade-dead}
+A further post-processing step is applied after the thresholds have
+been placed. In v1 of the binariser, a threshold was considered
+dead when fewer than $1\%$ of the training samples lay on either
+side of it. The v2 revision replaces this activation-fraction rule
+with an \emph{entropy} criterion computed directly on the resulting
+Boolean bit. For each candidate threshold $t_j$ the resulting bit
+is $b_j(\mathbf{x}) = [x_{f_j} \ge t_j]$ and its Bernoulli entropy
+is
+\begin{equation}
+  H(b_j) \;=\; -p\,\log p \;-\; (1-p)\log(1-p),
+  \quad p = \Pr_{\mathbf{x}\in X_{\text{tr}}}[b_j(\mathbf{x})=1].
+  \label{eq:bit-entropy}
+\end{equation}
+A threshold is discarded when $H(b_j) < 0.05$ nats. Dead thresholds
+are replaced by the midpoint of the widest surviving interval,
+iteratively, until either the full budget $b(c)$ is reached again or
+no wider interval can be split.
+
+The entropy criterion is strictly more appropriate for imbalanced
+datasets than the activation-fraction rule. On WUSTL-EHMS-2020 the
+smallest class represents only $5.6\%$ of the training samples, and
+a threshold whose Boolean bit activates on just $0.7\%$ of samples
+may still be the single discriminator between that class and the
+normal traffic. Rule~(\ref{eq:bit-entropy}) preserves such bits
+because it keeps any threshold whose bit has non-trivial Bernoulli
+entropy, not only those that activate on more than $1\%$ of samples.
+
+\subsection{Local gap perturbation}
+\label{sec:glade-perturb}
+A further refinement is applied to the quantile edges. Let
+$t_1 < t_2 < \cdots < t_{b(c)}$ denote the sorted thresholds
+returned by the previous stages, and let $\ell_i = t_i - t_{i-1}$
+be the local half-gap to the left, with $\ell_1$ extending to the
+training minimum and a symmetric definition for the right half-gap.
+For each threshold $t_i$ three candidate placements are scored:
+\begin{equation}
+  \mathcal{C}_i \;=\; \bigl\{\,
+     t_i - \tfrac{\ell_i}{4},\;\;
+     t_i,\;\;
+     t_i + \tfrac{r_i}{4}\,
+  \bigr\},
+  \label{eq:perturb}
+\end{equation}
+and the placement that maximises the Bernoulli variance
+$p(1-p)$ of the resulting bit is selected. The perturbation is
+deterministic and runs in $\mathcal{O}(b(c))$ time per column. Its
+effect is to move quantile edges into the high-density neighbourhood
+of the feature distribution, away from the rigid equal-frequency
+placement that KBinsQuantile would use.
+
+\subsection{Transform and complexity}
+\label{sec:glade-transform}
+At inference time, the fitted binariser is stored as two flat arrays:
+a feature-index array $\mathbf{f} \in \mathbb{Z}^{N_\text{bits}}$ and
+a threshold array $\mathbf{t} \in \mathbb{R}^{N_\text{bits}}$, where
+$N_\text{bits} = \sum_c b(c)$ is the total number of output bits.
+For a new sample $\mathbf{x}$, the $i$-th output bit is computed as
+\begin{equation}
+  \mathrm{bit}_i(\mathbf{x}) \;=\;
+      \bigl[\, x_{f_i} \,\ge\, t_i \,\bigr],
+  \label{eq:transform}
+\end{equation}
+which is a single fused comparison per bit, without branches and
+without per-feature bookkeeping. The asymptotic cost of the
+transformation is $\mathcal{O}(N_\text{bits})$ per sample and the
+total memory footprint of the binariser is
+$4 \cdot N_\text{bits}$ bytes for the thresholds plus
+$2 \cdot N_\text{bits}$ bytes for the feature indices, which is at
+most $2$~KB for any of the datasets used in Section~\ref{sec:results}.
+
+%% ========================================================================
+\section{The Fuzzy-Pattern Tsetlin Machine}
+\label{sec:fptm}
+
+The downstream classifier used in this paper is the Fuzzy-Pattern
+Tsetlin Machine (FPTM) of Hnilov~\cite{hnilov2025fuzzy}. It is used
+verbatim, through the public reference implementation, and no aspect
+of its training procedure is modified. A self-contained description
+is given below so that the remainder of the paper can be followed
+without consulting external sources; the exposition follows the
+visual style of REDRESS~\cite{maheshwari2023redress}.
+
+\begin{figure*}[t]
+\centering
+\IfFileExists{fig/fig_fptm.pdf}
+  {\includegraphics[width=0.95\textwidth]{fig/fig_fptm.pdf}}%
+  {\fbox{\parbox{0.9\textwidth}{\vspace*{60pt}%
+    \centering\textbf{[Fig. \ref{fig:fptm}]}\\[4pt]%
+    \emph{Export \texttt{fig\_fptm.drawio} to
+    \texttt{fig/fig\_fptm.pdf} to replace this placeholder.}%
+    \vspace*{60pt}}}}%
+\caption{Fuzzy-Pattern Tsetlin Machine inference pipeline (editable
+         source in \texttt{fig\_fptm.drawio}). Raw features
+         $\mathbf{x}$ are booleanised by GLADE into literal bits and
+         their complements. For every clause, the number of mismatched
+         literals $m$ is counted by a single bit-population count over
+         the packed literal words, and the graded clause output
+         $o = \max(\kappa - m,\, 0)$ is obtained through a clamped
+         subtraction. The multiclass voting block illustrates the
+         bit-parallel evaluation of the $2CK$ clauses of a $K$-class
+         model: each class holds $C$ positive-polarity and $C$
+         negative-polarity clauses whose outputs are signed and summed
+         into a class vote $V_k$, and the predicted class is the
+         $\arg\max$ over $V_k$.}
+\label{fig:fptm}
+\end{figure*}
+
+\subsection{Fuzzy clause evaluation}
+\label{sec:fptm-clause}
+An FPTM maintains, for every output class $k$ and for every polarity
+$\sigma \in \{+,-\}$, a fixed number $C$ of \emph{clauses}. A clause
+$\phi$ is a set of \emph{literals} drawn from the Boolean input
+$\mathbf{x} \in \{0,1\}^{N}$ and its complement $\neg\mathbf{x}$. The
+inclusion state of each literal is controlled by a dedicated Tsetlin
+automaton whose action is \emph{include} when the internal state has
+reached a learned threshold and \emph{exclude} otherwise. Let
+$I_\phi \subseteq \{1,\dots,N\}$ denote the set of positive literals
+actually included in $\phi$ and let $E_\phi$ denote the set of
+negated literals included in $\phi$. The \emph{mismatch count} of
+$\phi$ on the input $\mathbf{x}$ is then defined as
+\begin{equation}
+  m(\phi, \mathbf{x}) \;=\;
+    \bigl|\{\, i \in I_\phi : x_i = 0 \,\}\bigr|
+    \;+\; \bigl|\{\, i \in E_\phi : x_i = 1 \,\}\bigr|,
+  \label{eq:fptm-mismatch}
+\end{equation}
+and the \emph{graded clause output} is
+\begin{equation}
+  o(\phi, \mathbf{x}) \;=\;
+    \max\bigl(\, \kappa_\phi - m(\phi,\mathbf{x}),\;\; 0 \,\bigr),
+  \label{eq:fptm-output}
+\end{equation}
+where the per-clause saturation cap is
+$\kappa_\phi = \min\bigl(|I_\phi \cup E_\phi|,\; L_f\bigr)$ and
+$L_f$ is a user-defined clamp. A clause therefore contributes to its
+class vote even when a small number of its literals fail, with the
+contribution decaying linearly in the mismatch count and saturating
+at $\kappa_\phi$ when every included literal is matched. The smooth
+degradation introduced by Eq.~\eqref{eq:fptm-output} is what enables
+FPTM to reach the accuracy of earlier Tsetlin variants with between
+$50$ and $400$ times fewer clauses~\cite{hnilov2025fuzzy}, and is the
+reason that the tuned GLADE+FPTM configurations of
+Section~\ref{sec:results} fit in $17$--$68$~kilobytes of on-disk
+storage.
+
+\subsection{Bit-parallel evaluation}
+\label{sec:fptm-parallel}
+A decisive property of Eq.~\eqref{eq:fptm-mismatch} is that it can be
+computed as a single bit-population count over 64-bit packed words.
+Let $\mathbf{w}^{I}_{\phi}$ and $\mathbf{w}^{E}_{\phi}$ denote the
+packed inclusion masks of the positive and negated literals of
+$\phi$, and let $\mathbf{w}_{x}$ denote the packed input word. The
+mismatch count is then
+\begin{equation}
+  m(\phi,\mathbf{x})
+  \;=\; \operatorname{popcount}\!\bigl(\mathbf{w}^{I}_{\phi} \wedge \neg\mathbf{w}_{x}\bigr)
+  \;+\; \operatorname{popcount}\!\bigl(\mathbf{w}^{E}_{\phi} \wedge \mathbf{w}_{x}\bigr),
+  \label{eq:popcount}
+\end{equation}
+which requires a number of 64-bit operations proportional to
+$\lceil N/64 \rceil$, a value that falls between $2$ and $6$ on the
+datasets of Section~\ref{sec:results}. Because every clause accesses
+the input word through read-only bitmasks, the $2CK$ clauses of a
+$K$-class model are evaluated independently and can be dispatched in
+parallel across CPU cores, across SIMD lanes of a vector-extension
+(e.g. NEON, AVX2, SVE), or across the tiled processing elements of an
+accelerator. The reference implementation exploits this parallelism
+through a lightweight thread pool that assigns disjoint blocks of
+clauses to worker threads, and the evaluation of a class vote reduces
+to a fused signed accumulation of the clause outputs,
+\begin{equation}
+  V_k(\mathbf{x}) \;=\;
+    \sum_{\phi \in \Phi_k^{+}} o(\phi,\mathbf{x})
+    \;-\; \sum_{\phi \in \Phi_k^{-}} o(\phi,\mathbf{x}).
+  \label{eq:classvote}
+\end{equation}
+The predicted class is $\hat{k} = \arg\max_{k} V_k(\mathbf{x})$. On
+the single-core Raspberry~Pi~5 used in Section~\ref{sec:results}, the
+per-sample inference latency of the GLADE+FPTM Numba JIT pipeline is
+measured between $4.10$ and $7.42$~microseconds, while a Numba-compiled
+DecisionTree baseline reaches $1.37$--$1.39$~microseconds, confirming that
+the bit-parallel evaluation is the factor that makes the pipeline attractive
+for deployment on constrained edge CPUs.
+
+\subsection{Training feedback and role in the pipeline}
+\label{sec:fptm-training}
+At training time, $V_k$ is driven toward a target magnitude $T$
+through feedback on the Tsetlin automata of every clause: clauses of
+the target class are updated through Type~I feedback and clauses of
+every non-target class are updated through Type~II feedback, both
+gated by a specificity parameter $s$ and a literal cap $L$. The
+feedback rule is given in Fig.~\ref{fig:fptm-feedback}, which is
+transcribed directly from the public reference implementation; it is
+not modified by the present work. The FPTM therefore enters the
+pipeline as a drop-in classifier whose hyperparameters
+$(C, T, s, L, L_f)$ are either held fixed across datasets in the
+shared-baseline row or swept jointly in the tuned row under the
+constraint $C \le 100$.
+
+\begin{figure*}[t]
+\centering
+\IfFileExists{fig/fig_fptm_feedback.pdf}
+  {\includegraphics[width=0.95\textwidth]{fig/fig_fptm_feedback.pdf}}%
+  {\fbox{\parbox{0.9\textwidth}{\vspace*{60pt}%
+    \centering\textbf{[Fig. \ref{fig:fptm-feedback}]}\\[4pt]%
+    \emph{Export \texttt{fig\_fptm\_feedback.drawio} to
+    \texttt{fig/fig\_fptm\_feedback.pdf} to replace this placeholder.}%
+    \vspace*{60pt}}}}%
+\caption{Fuzzy-Pattern feedback procedure. For every clause, the
+         graded output $o \in [0,\kappa]$ is first computed; if
+         $o>0$ the clause is reinforced (Type~Ia) through deterministic
+         per-bit updates on the positive automaton $c[i]$ and the
+         negated automaton $ci[i]$, and mismatched excluded literals
+         are forgotten; if $o=0$ the clause receives $s$ random
+         decrement steps on both automata (Type~Ib). Type~II feedback
+         is applied for non-target classes. The figure is transcribed
+         directly from the public reference implementation and is
+         shown here for completeness; it is not modified by the
+         present work.}
+\label{fig:fptm-feedback}
+\end{figure*}
+
+\subsection{Complexity and learning-theoretic view}
+\label{sec:fptm-theory}
+A compact analysis of the pipeline is given here to complement the
+empirical results of Section~\ref{sec:results}.
+
+\emph{Time and memory complexity.} Let $N$ denote the total number
+of GLADE bits, let $C$ denote the number of clauses per class per
+polarity, and let $K$ denote the number of output classes. At
+inference time, every clause is evaluated through
+$\lceil N/64 \rceil$ packed logical operations followed by a
+constant-time \texttt{popcount}, so that the per-sample inference
+cost is
+$
+  \mathcal{O}\!\bigl(\,C\,K\,\lceil N/64 \rceil\,\bigr)
+$
+bit-parallel operations. For the values of $(C,K,N)$ used in
+Section~\ref{sec:results}, this evaluates to between $5{,}000$ and
+$40{,}000$ 64-bit operations per sample, which is three to five
+orders of magnitude below the per-sample cost of a tree-ensemble
+baseline of comparable accuracy. The memory footprint of the
+trained model is bounded above by $2CK\,\lceil N/64 \rceil$ bytes
+for the packed literal bitmasks plus $\mathcal{O}(N)$ bytes for the
+fitted GLADE state; the constants are small enough that the model
+fits in at most $56$~kilobytes on every dataset studied, without any
+post-training quantisation.
+
+\emph{GLADE as an entropy-aware feature map.} The dead-bit
+elimination step of Sec.~\ref{sec:glade-dead} discards any
+threshold whose induced Boolean bit has Bernoulli entropy below
+$0.05$~nats, which corresponds to a per-bit activation probability
+$p$ outside the interval $(0.014,\,0.986)$. A bit that survives
+pruning therefore activates on neither too few nor too many
+training samples, and any budget that is not consumed by surviving
+thresholds is refilled with midpoint thresholds on the widest
+remaining intervals. The practical consequence is that the
+majority of the literals seen by the downstream FPTM are
+individually informative: no single literal is constant on the
+training set, and very few literals fire on a pathologically
+small or pathologically large fraction of samples.
+
+\emph{Why the graded mismatch rule improves generalisation.}
+Eq.~\eqref{eq:fptm-output} is a piecewise-linear function of the
+mismatch count whose slope is $-1$ and whose ceiling is the
+per-clause cap $\kappa_\phi$. A single literal failure therefore
+decreases the clause contribution by exactly one, rather than
+collapsing it to zero as in an all-or-nothing rule, and the total
+change induced in the class vote $V_k(\mathbf{x})$ by a Hamming-distance
+perturbation of size $\delta$ on the literal vector is bounded
+above by $C\delta$, where $C$ is the number of clauses per class.
+A single spurious literal therefore cannot disable a clause and
+cannot flip a class decision that the remaining literals
+unambiguously support. The same bounded-change property forces the
+feedback procedure of Fig.~\ref{fig:fptm-feedback} to make smaller
+incremental changes to the clauses, which is observed to reduce
+the variance of the training dynamics across seeds (the five-seed
+standard deviations reported in Sec.~\ref{sec:results} stay below
+$0.011$ on every dataset). The $50$--$400\times$ clause-count
+reduction reported by Hnilov~\cite{hnilov2025fuzzy} is interpreted
+in this paper as a direct consequence of that bounded-sensitivity
+property: because each clause tolerates a small number of literal
+failures without silencing, fewer clauses are required to cover
+the input space, and the compact model sizes of
+Section~\ref{sec:results} are consequently a structural property
+of the learner rather than an engineering artefact.
+
+%% ========================================================================
+\section{Experimental Setup}
+\label{sec:setup}
+
+\subsection{Datasets and preprocessing}
+\label{sec:datasets}
+The four public benchmarks used in this study are summarised in a
+single combined view in Table~\ref{tab:datasets}. The same
+preprocessing pipeline is applied to every dataset and to every
+classifier so that no baseline is advantaged by a custom
+feature-engineering step: a stratified $80/20$ train--test split is
+drawn with a fixed seed of $42$; infinities are replaced with NaNs,
+and NaNs are filled with the per-column median computed on the
+training partition only; constant columns are removed on the basis
+of the training-set standard deviation; and any column whose Pearson
+correlation coefficient with an earlier kept column exceeds $0.99$
+is discarded, with the correlation again computed on the training
+partition. The same pipeline is shared between the Tsetlin path and
+the non-Tsetlin baselines; the only difference is that the Tsetlin
+path additionally passes its preprocessed features through GLADE,
+whereas the other classifiers consume the raw (or standard-scaled)
+numerical features directly. The last three columns of
+Table~\ref{tab:datasets} report the final training and test sizes
+after this pipeline, and the number of GLADE bits emitted with
+$n_\text{bins}=15$.
+
+\begin{table*}[t]
+\caption{Combined view of the four public benchmarks used in this
+         study. Record and feature counts are reported before
+         preprocessing. The last three columns are reported after the
+         shared preprocessing pipeline (median fill, constant-column
+         removal, and high-correlation dedup). The ``GLADE bits''
+         column is the total output width of the fitted GLADE
+         binariser at $n_\text{bins}=15$, which is the input width
+         seen by the downstream FPTM.}
+\label{tab:datasets}
+\centering\small
+\begin{tabular}{lrrrrrrr}
+\toprule
+\textbf{Dataset} & \textbf{Records} & \textbf{Raw feat.} &
+\textbf{Classes} & \textbf{Domain} &
+\textbf{Train} & \textbf{Test} & \textbf{GLADE bits} \\
+\midrule
+NSL-KDD~\cite{tavallaee2009nslkdd}       & $148{,}517$ & $41$ & $5$  & IoT network flow             & $118{,}813$ & $29{,}704$  & $232$ \\
+TON\_IoT~\cite{moustafa2021ton}          & $211{,}043$ & $44$ & $10$ & IoT multi-protocol           & $168{,}834$ & $42{,}209$  & $115$ \\
+MedSec-25                                & $554{,}534$ & $78$ & $5$  & IoMT flow                    & $443{,}627$ & $110{,}907$ & $349$ \\
+WUSTL-EHMS-2020~\cite{hady2020wustl}     & $16{,}318$  & $44$ & $3$  & IoMT network $+$ biomedical  & $13{,}054$  & $3{,}264$   & $222$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{FPTM configuration}
+\label{sec:fptm-config}
+Two FPTM configurations are evaluated. The \emph{shared-baseline}
+configuration reuses a single hyperparameter set across every
+dataset ($C{=}80$, $T{=}10$, $s{=}61$, $L{=}60$, $L_f{=}10$,
+$E{=}30$~epochs), where $C$ is the number of clauses per class per
+polarity, $T$ the voting target, $s$ the specificity, $L$ the
+literal cap, $L_f$ the fuzzy clamp, and $E$ the number of training
+epochs. The \emph{tuned} configuration is obtained by a random
+joint search of $500$ configurations per dataset under the
+constraint $C\le 100$ with $C$ even, parallelised across $96$ CPU
+workers with a fixed seed of $42$; the best macro-F1 configurations
+returned by the search are
+$(C,T,s,L,L_f,E)=(90,8,100,30,5,80)$ on WUSTL-EHMS-2020,
+$(78,8,50,30,8,200)$ on NSL-KDD,
+$(78,3,50,30,5,300)$ on TON\_IoT, and
+$(96,15,150,20,5,80)$ on MedSec-25.
+
+\subsection{Model storage: the Template Binary Format}
+\label{sec:tbf}
+Both the fitted GLADE state and the trained FPTM clauses are
+serialised to disk through a single self-describing binary format,
+referred to here as the Template Binary Format (TBF). The format is
+used as the sole on-disk representation of the whole model,
+comprising the thresholds and feature indices of the binariser, the
+packed literal bitmasks of the trained clauses, the automaton states
+at the include limit, and every scalar hyperparameter required at
+inference time. A one-byte tag is placed before every value to
+denote one of the primitive types (booleans, signed and unsigned
+integers of $8$--$64$ bits, single- and double-precision floats,
+UTF-8 strings, byte strings, lists, string-keyed dictionaries, and
+multi-dimensional \texttt{ndarrays}). Every length field is encoded
+as an unsigned variable-length integer (LEB128), and homogeneous
+integer lists — which arise naturally in the clause representation
+as lists of literal indices — are automatically promoted to the
+narrowest unsigned integer \texttt{ndarray} dtype that can hold
+their maximum value. The end-to-end effect is a reduction of the
+serialised model size by $40$--$60\%$ relative to a JSON baseline
+without any change to the inference semantics. Every byte order is
+little-endian and no platform-specific padding is emitted, so that
+the same file that is produced by the reference Python writer on a
+training server is read directly by a portable C deserialiser of
+approximately $150$ lines on an ARM microcontroller.
+
+\subsection{Baselines}
+Twelve baselines are trained under the same preprocessing pipeline
+and the same single-core protocol: XGBoost (small and full),
+RandomForest (small and full), LogisticRegression, LinearSVM,
+DecisionTree, GaussianNB, k-NN with $k=5$, and MLP (tiny, small,
+med). The XGBoost configurations are the default multi-class loss,
+$25$ and $100$ trees respectively, and the RandomForest
+configurations use $25$ and $100$ trees with depths $6$ and $12$. The
+linear models use the default L2 regularisation and the solver
+LBFGS with a $300$-iteration cap. All baselines are constructed
+through scikit-learn~\cite{pedregosa2011scikit} or the official
+XGBoost Python package.
+
+\subsection{Evaluation protocol}
+Every training and inference run is constrained to a single CPU core
+by exporting \texttt{OPENBLAS\_NUM\_THREADS=1},
+\texttt{MKL\_NUM\_THREADS=1}, \texttt{OMP\_NUM\_THREADS=1} and
+\texttt{NUMEXPR\_NUM\_THREADS=1} before the Python process imports
+NumPy, by passing \texttt{n\_jobs=1} to every scikit-learn and
+XGBoost constructor, and by setting \texttt{NUMBA\_NUM\_THREADS=1}
+for the Numba JIT FPTM runs. Wall-clock times are measured with
+\texttt{time.perf\_counter}. Macro F1 is computed with scikit-learn's
+\texttt{f1\_score(average="macro")}; the per-class reports and the
+weighted F1 are also recorded but are not shown in the tables for
+reasons of space. The reported timings separate the binarisation
+phase from the TM training phase so that fair comparisons to sklearn
+\texttt{fit} (which includes preprocessing) can be computed as
+\texttt{binarize\_time + tm\_fit\_time}.
+
+
+% In your preamble: \usepackage{booktabs}
+% In your preamble:
+
+
+\begin{figure*}[t]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{boxplot_f1_glade_v2_NSL-KDD.png}
+    \caption{NSL-KDD}
+    \label{fig:box_nslkdd}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{boxplot_f1_glade_v2_TON_IoT.png}
+    \caption{TON-IoT}
+    \label{fig:box_toniot}
+\end{subfigure}
+
+\vspace{0.5em}
+
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{boxplot_f1_glade_v2_MedSec-25.png}
+    \caption{MedSec-25}
+    \label{fig:box_medsec}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{boxplot_f1_glade_v2_WUSTL.png}
+    \caption{WUSTL-EHMS-2020}
+    \label{fig:box_wustl}
+\end{subfigure}
+
+\caption{Macro-F1 vs.\ number of bins ($n_{\text{bins}}$) across all four datasets. GLADE\_v2 (gray boxes, 5-fold cross-validation) is compared against StandardBin (TMU, orange $\times$) and KBinsUniform (green $\bullet$) baselines. GLADE\_v2 converges faster (fewer bins) and consistently matches or outperforms both baselines, with the largest margins on TON-IoT and MedSec-25.}
+\label{fig:binarizer_boxplots}
+\end{figure*}
+\begin{table}[t]
+\centering
+\caption{Model configurations. Starred ($^\ast$) variants use hyperparameters matched to the TM's clause count $C$ (or literal budget $L$) for a fair comparison.}
+\label{tab:model_configs}
+\begin{tabular}{ll}
+\toprule
+Model & Configuration \\
+\midrule
+\multicolumn{2}{l}{\textit{ML baselines (library defaults)}} \\
+\midrule
+XGBoost              & $n{=}100$, depth${=}6$, lr${=}0.1$ \\
+RandomForest         & $n{=}100$, depth${=}$None \\
+DecisionTree         & depth${=}$None, gini \\
+MLP\_tiny            & hidden${=}(32)$, ReLU, 200 ep. \\
+MLP\_small           & hidden${=}(64)$, ReLU, 200 ep. \\
+MLP\_med             & hidden${=}(128,64)$, ReLU, 200 ep. \\
+kNN\_5               & $k{=}5$, uniform, Minkowski \\
+LogisticRegression   & L2, $C{=}1.0$, lbfgs \\
+LinearSVM            & $C{=}1.0$, squared hinge \\
+NaiveBayes           & GaussianNB \\
+\midrule
+\multicolumn{2}{l}{\textit{TM-matched variants}} \\
+\midrule
+XGBoost\_Cmatched$^\ast$      & $n_{\text{est}} = C$ \\
+RandomForest\_Cmatched$^\ast$ & $n_{\text{est}} = C$ \\
+MLP\_C$^\ast$                 & hidden ${=}(C)$ \\
+MLP\_2C$^\ast$                & hidden ${=}(2C, C)$ \\
+DecisionTree\_Lmatched$^\ast$ & max depth ${=}L$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{Tsetlin Machine hyperparameters per dataset. $C$: clauses per class, $T$: voting threshold, $S$: specificity, $L$: max literals per clause, $LF$: literal forgetting, $E$: epochs.}
+\label{tab:tm_hparams}
+\begin{tabular}{lcccccc}
+\toprule
+Dataset & $C$ & $T$ & $S$ & $L$ & $LF$ & $E$ \\
+\midrule
+NSL-KDD         & 90  & 12 & 200 & 40 & 8  & 80  \\
+TON-IoT         & 100 & 15 & 20  & 25 & 8  & 200 \\
+MedSec-25       & 80  & 12 & 75  & 30 & 8  & 300 \\
+WUSTL-EHMS-2020 & 60  & 8  & 300 & 50 & 15 & 200 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+% In your preamble: \usepackage{booktabs}
+
+\begin{table*}[t]
+\centering
+\caption{Per-dataset comparison of binarizers at $n_{\text{bins}}{=}15$. GLADE\_v2 uses roughly half the bits of the TMU StandardBin while matching or exceeding its accuracy and macro-F1. Best value per metric per dataset in \textbf{bold}.}
+\label{tab:binarizer_comparison}
+\begin{tabular}{l ccc ccc ccc}
+\toprule
+ & \multicolumn{3}{c}{GLADE\_v2} & \multicolumn{3}{c}{StandardBin (TMU)} & \multicolumn{3}{c}{KBinsUniform} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
+Dataset & Bits & Acc & F1 & Bits & Acc & F1 & Bits & Acc & F1 \\
+\midrule
+NSL-KDD         & \textbf{254} & \textbf{0.9955} & 0.9311          & 472 & 0.9941 & \textbf{0.9342} & 448 & 0.9854 & 0.8690 \\
+TON-IoT         & \textbf{120} & \textbf{0.9688} & \textbf{0.9385} & 186 & 0.8416 & 0.7947          & 177 & 0.6411 & 0.5663 \\
+MedSec-25       & \textbf{349} & \textbf{0.9703} & \textbf{0.8681} & 698 & 0.8830 & 0.7265          & 653 & 0.8461 & 0.5532 \\
+WUSTL-EHMS-2020 & \textbf{266} & \textbf{0.9393} & \textbf{0.7630} & 313 & 0.9381 & 0.7388          & 296 & 0.9130 & 0.6259 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+%% ========================================================================
+\section{Results}
+\label{sec:results}
+
+\subsection{Per-sample inference latency}
+\label{sec:res-latency}
+
+Table~\ref{tab:full_latency} reports the per-sample inference latency
+of every model on the Raspberry~Pi~5, measured under the single-core
+protocol of Section~\ref{sec:setup}. Each model is evaluated in its
+native deployment form: pure NumPy for the ML baselines and the Python
+FPTM variant, and Numba JIT for the FPTM Numba variant. Three
+observations are drawn.
+
+First, DecisionTree compiled with Numba achieves 1.37--1.39~$\mu$s,
+the lowest-latency entry by a large margin. Second, the GLADE+FPTM
+Numba kernel achieves 4.10--7.42~$\mu$s, which is 4--6$\times$ slower
+than DT Numba but maintains higher macro-F1 on three of four datasets.
+Third, the pure-Python FPTM remains competitive with the NumPy baselines
+but is 11--17$\times$ slower than the Numba variant.
+
+\begin{table*}[t]
+\centering\small
+\caption{Per-sample inference latency ($\mu$s) on a single Cortex-A76 core of
+         the Raspberry~Pi~5 at 2.4~GHz, measured under the single-core
+         protocol (100-iteration warm-up, timed loop), using pure-numpy
+         for the ML baselines. Best per-dataset value in \textbf{bold}.}
+\label{tab:full_latency}
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Model} & \textbf{TON\_IoT} & \textbf{MedSec-25} & \textbf{WUSTL} & \textbf{NSL-KDD} \\
+\midrule
+RandomForest                 & $847.97$    & $891.24$    & $840.31$   & $887.45$   \\
+RandomForest\_Cmatched       & $422.66$    & $417.14$    & $405.28$   & $486.10$   \\
+DecisionTree                 & $6.96$      & $6.63$      & $7.16$     & $8.29$     \\
+DecisionTree\_Lmatched       & $8.60$      & $8.91$      & $10.96$    & $15.06$    \\
+LogisticRegression           & $7.86$      & $8.06$      & $7.25$     & $7.94$     \\
+LinearSVM                    & $7.86$      & $8.22$      & $7.31$     & $8.05$     \\
+NaiveBayes                   & $24.30$     & $23.96$     & $20.54$    & $26.91$    \\
+k-NN ($k{=}5$)               & $21675.57$  & $96872.75$  & $1017.69$  & $45862.43$ \\
+MLP\_tiny                    & $12.68$     & $13.17$     & $12.18$    & $14.34$    \\
+MLP\_small                   & $18.81$     & $19.45$     & $18.10$    & $21.16$    \\
+MLP\_med                     & $20.90$     & $21.85$     & $20.27$    & $25.07$    \\
+MLP\_C                       & $15.48$     & $16.53$     & $14.27$    & $21.26$    \\
+MLP\_2C                      & $18.23$     & $21.56$     & $17.14$    & $30.12$    \\
+\midrule
+\textbf{DecisionTree (Numba)}        & $\mathbf{1.383}$ & $\mathbf{1.367}$ & $\mathbf{1.374}$ & $\mathbf{1.393}$ \\
+\midrule
+\textbf{GLADE+FPTM (Python)} & $88.52$     & $69.67$     & $51.79$    & $67.35$    \\
+\textbf{GLADE+FPTM (Numba)}  & $6.722$     & $7.415$     & $4.101$    & $6.314$    \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering\small
+\caption{Per-sample latency on a single Cortex-A76 core of the
+         Raspberry~Pi~5 (2.4~GHz), single-threaded, 500-sample warm-up,
+         3\,000-sample timed window. Two runtime implementations of the
+         identical FPTM algorithm plus the fastest pure-numpy baseline.
+         \emph{Python}: optimised FBZEngine (zero-alloc buffers, flat clause
+         matrix); \emph{Numba}: \texttt{@njit(cache=True)} with SWAR popcount.
+         Speed-up relative to Python numpy.}
+\label{tab:pi5_runtime}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+ & \multicolumn{2}{c}{\textbf{WUSTL}} & \multicolumn{2}{c}{\textbf{NSL-KDD}} & \multicolumn{2}{c}{\textbf{TON\_IoT}} & \multicolumn{2}{c}{\textbf{MedSec-25}} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
+\textbf{Runtime} & $\mu$s & speed-up & $\mu$s & speed-up & $\mu$s & speed-up & $\mu$s & speed-up \\
+\midrule
+Python numpy (FBZEngine) & $39.40$ & $1.0\times$ & $51.30$ & $1.0\times$ & $67.40$ & $1.0\times$ & $53.70$ & $1.0\times$ \\
+Numba JIT (SWAR)         & $4.101$ & $9.6\times$ & $6.314$ & $8.1\times$ & $6.722$ & $10.0\times$ & $7.415$ & $7.2\times$ \\
+\midrule
+\textbf{DecisionTree (Numba)} & $\mathbf{1.374}$ & $\mathbf{28.7\times}$ & $\mathbf{1.393}$ & $\mathbf{36.8\times}$ & $\mathbf{1.383}$ & $\mathbf{48.7\times}$ & $\mathbf{1.367}$ & $\mathbf{39.3\times}$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Why compilation unlocks the hardware}
+\label{sec:res-pynumba}
+
+The same FPTM inference algorithm is implemented twice---once through a
+NumPy-based Python function, once through a Numba JIT kernel---to isolate
+the effect of the runtime. Both produce bit-identical predictions on the
+full test partition of every dataset.
+
+\begin{table}[t]
+\centering\small
+\caption{Same-algorithm, same-model, same-data runtime comparison on
+         the Pi~5 (Cortex-A76). Speed-up is relative to the Python
+         numpy baseline. All implementations produce bit-identical predictions.}
+\label{tab:pyvsnumba}
+\begin{tabular}{llrr}
+\toprule
+\textbf{Platform} & \textbf{Runtime} & \textbf{WUSTL ($\mu$s)} & \textbf{Speed-up} \\
+\midrule
+\multirow{2}{*}{Pi~5 (A76)}
+ & Python numpy & $51.79$ & $1.0\times$ \\
+ & Numba JIT    & $4.101$ & $\mathbf{12.6\times}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:pyvsnumba} reports a 9.6$\times$ to 12.6$\times$ speed-up
+from the Numba JIT kernel over the pure-Python numpy implementation. Because
+the algorithm is identical, the speed-up is entirely attributable to the
+runtime: removal of per-call interpreter dispatch (2--5~$\mu$s per NumPy
+call on the Cortex-A76), elimination of per-sample heap allocation, and
+L1 cache residency of the clause bank after JIT compilation.
+
+\subsection{Single-core throughput}
+\label{sec:res-throughput}
+
+Table~\ref{tab:throughput} reports the sustained single-core throughput of
+the GLADE+FPTM Numba kernel on the Pi~5 and the projected latency on the
+Pi~Zero~2W (Cortex-A53, 1.0~GHz). The Pi~5 single-core throughput is
+between 134{,}864 and 243{,}843 predictions per second; across all four
+cores, the Pi~5 sustains 539{,}000 to 975{,}000 predictions per second.
+The projected Pi~Zero~2W latencies (16.4--29.7~$\mu$s) are well below the
+minimum Ethernet frame transit time at 100~Mbit/s (0.51~ms), confirming
+that the pipeline is viable for intrusion detection on access-link hardware.
+
+\begin{table*}[t]
+\centering\small
+\caption{Sustained single-core throughput on Raspberry Pi~5 (measured,
+         Numba JIT) and projected per-sample latency and throughput on the
+         Raspberry Pi~Zero~2W (Cortex-A53, 1.0~GHz). Projected values are
+         obtained by scaling Pi~5 latency by a factor of $4.0\times$
+         (combined clock ratio $2.4\times$ and IPC ratio $1.67\times$,
+         A76 vs A53). Four-core Pi~5 throughput assumes linear scaling.}
+\label{tab:throughput}
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Dataset}
+  & \textbf{Pi~5 single core}
+  & \textbf{Pi~5 four cores (proj.)}
+  & \textbf{Pi~Zero~2W latency (proj.)}
+  & \textbf{Pi~Zero~2W single core (proj.)} \\
+\midrule
+NSL-KDD         & $158{,}503~\text{s}^{-1}$ & $634{,}012~\text{s}^{-1}$ & $25.3~\mu$s & $39{,}526~\text{s}^{-1}$ \\
+TON\_IoT        & $148{,}768~\text{s}^{-1}$ & $595{,}072~\text{s}^{-1}$ & $26.9~\mu$s & $37{,}192~\text{s}^{-1}$ \\
+MedSec-25       & $134{,}864~\text{s}^{-1}$ & $539{,}456~\text{s}^{-1}$ & $29.7~\mu$s & $33{,}670~\text{s}^{-1}$ \\
+WUSTL-EHMS-2020 & $243{,}843~\text{s}^{-1}$ & $975{,}372~\text{s}^{-1}$ & $16.4~\mu$s & $60{,}976~\text{s}^{-1}$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Complete model comparison}
+\label{sec:res-complete}
+
+% In your preamble, make sure you have:
+% \usepackage{booktabs}
+% \usepackage{multirow}
+% \usepackage{longtable}
+
+\onecolumn
+\begin{longtable}{llcccccr}
+\caption{Complete comparison of all models across NSL-KDD, TON-IoT, MedSec-25, and WUSTL-EHMS-2020 datasets.}
+\label{tab:complete_results} \\
+\toprule
+Dataset & Model & Acc & F1 & Prec & Rec & Size (KB) \\
+\midrule
+\endfirsthead
+
+\multicolumn{7}{c}%
+{\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+\toprule
+Dataset & Model & Acc & F1 & Prec & Rec & Size (KB) \\
+\midrule
+\endhead
+
+\midrule
+\multicolumn{7}{r}{\textit{Continued on next page}} \\
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+\multirow{16}{*}{NSL-KDD}
+ & XGBoost                & 0.9956 & 0.9488 & 0.9442 & 0.9558 & 1266.1   \\
+ & XGBoost\_Cmatched      & 0.9952 & 0.9429 & 0.9419 & 0.9458 & 1161.3   \\
+ & GLADE\_FPTM\_final     & 0.9951 & 0.9301 & 0.9399 & 0.9210 & 12.6     \\
+ & MLP\_small             & 0.9901 & 0.9159 & 0.9411 & 0.8966 & 115.4    \\
+ & MLP\_2C                & 0.9924 & 0.9109 & 0.8983 & 0.9248 & 1205.0   \\
+ & MLP\_C                 & 0.9923 & 0.9036 & 0.9115 & 0.8967 & 360.9    \\
+ & MLP\_med               & 0.9905 & 0.8986 & 0.9092 & 0.8893 & 242.8    \\
+ & MLP\_tiny              & 0.9888 & 0.8907 & 0.9067 & 0.8780 & 58.2     \\
+ & kNN\_5                 & 0.9894 & 0.8855 & 0.9052 & 0.8691 & 110463.0 \\
+ & LogisticRegression     & 0.9769 & 0.8580 & 0.8877 & 0.8337 & 8.6      \\
+ & RandomForest           & 0.9926 & 0.8563 & 0.9647 & 0.8167 & 8490.2   \\
+ & LinearSVM              & 0.9655 & 0.8530 & 0.8986 & 0.8194 & 8.6      \\
+ & DecisionTree           & 0.9929 & 0.8107 & 0.9261 & 0.7876 & 44.8     \\
+ & DecisionTree\_Lmatched & 0.9746 & 0.7277 & 0.7633 & 0.7034 & 11.4     \\
+ & RandomForest\_Cmatched & 0.9625 & 0.5843 & 0.5821 & 0.5869 & 961.7    \\
+ & NaiveBayes             & 0.7567 & 0.4423 & 0.5765 & 0.6726 & 13.2     \\
+\midrule
+
+\multirow{16}{*}{TON\_IoT}
+ & XGBoost                & 0.9775 & 0.9511 & 0.9439 & 0.9614 & 2508.2   \\
+ & XGBoost\_Cmatched      & 0.9764 & 0.9498 & 0.9424 & 0.9608 & 1899.0   \\
+ & RandomForest           & 0.9765 & 0.9467 & 0.9366 & 0.9637 & 14735.4  \\
+ & kNN\_5                 & 0.9742 & 0.9441 & 0.9430 & 0.9461 & 51444.2  \\
+ & GLADE\_FPTM\_final     & 0.9705 & 0.9418 & 0.9334 & 0.9558 & 16.4     \\
+ & DecisionTree           & 0.9508 & 0.9211 & 0.9200 & 0.9301 & 85.5     \\
+ & MLP\_2C                & 0.9352 & 0.8830 & 0.9088 & 0.8769 & 914.5    \\
+ & MLP\_C                 & 0.9097 & 0.8570 & 0.8802 & 0.8473 & 166.2    \\
+ & RandomForest\_Cmatched & 0.8771 & 0.7814 & 0.7961 & 0.7798 & 840.6    \\
+ & MLP\_med               & 0.8271 & 0.7734 & 0.8214 & 0.7746 & 125.4    \\
+ & MLP\_small             & 0.7983 & 0.7318 & 0.7955 & 0.7238 & 55.6     \\
+ & DecisionTree\_Lmatched & 0.7945 & 0.7191 & 0.7985 & 0.7209 & 9.9      \\
+ & MLP\_tiny              & 0.7744 & 0.7088 & 0.7482 & 0.7130 & 28.8     \\
+ & LogisticRegression     & 0.7076 & 0.6347 & 0.7154 & 0.6494 & 5.5      \\
+ & LinearSVM              & 0.7114 & 0.6273 & 0.7106 & 0.6486 & 5.5      \\
+ & NaiveBayes             & 0.3875 & 0.3269 & 0.3694 & 0.4201 & 8.5      \\
+\midrule
+
+\multirow{16}{*}{MedSec-25}
+ & XGBoost                & 0.9768 & 0.8984 & 0.9005 & 0.9004 & 1700.7   \\
+ & RandomForest           & 0.9767 & 0.8980 & 0.9022 & 0.9036 & 15734.5  \\
+ & XGBoost\_Cmatched      & 0.9753 & 0.8926 & 0.8951 & 0.8951 & 939.0    \\
+ & DecisionTree           & 0.9731 & 0.8824 & 0.8953 & 0.8732 & 70.6     \\
+ & kNN\_5                 & 0.9733 & 0.8799 & 0.8752 & 0.8848 & 190623.7 \\
+ & GLADE\_FPTM\_final     & 0.9707 & 0.8727 & 0.8787 & 0.8828 & 10.5     \\
+ & MLP\_2C                & 0.9660 & 0.8657 & 0.8582 & 0.9153 & 702.1    \\
+ & MLP\_med               & 0.9680 & 0.8590 & 0.8678 & 0.8621 & 145.3    \\
+ & MLP\_C                 & 0.9661 & 0.8453 & 0.8755 & 0.8254 & 161.7    \\
+ & MLP\_tiny              & 0.9654 & 0.8440 & 0.8670 & 0.8291 & 33.0     \\
+ & RandomForest\_Cmatched & 0.9611 & 0.8390 & 0.8631 & 0.8367 & 524.7    \\
+ & MLP\_small             & 0.9646 & 0.8372 & 0.8630 & 0.8198 & 65.8     \\
+ & LogisticRegression     & 0.9413 & 0.7763 & 0.7891 & 0.7853 & 4.8      \\
+ & DecisionTree\_Lmatched & 0.9392 & 0.7203 & 0.8067 & 0.6782 & 7.3      \\
+ & LinearSVM              & 0.8538 & 0.5146 & 0.6990 & 0.4660 & 4.7      \\
+ & NaiveBayes             & 0.7673 & 0.4218 & 0.4803 & 0.5192 & 6.8      \\
+\midrule
+
+\multirow{16}{*}{WUSTL-EHMS-2020}
+ & MLP\_2C                & 0.9485 & 0.8248 & 0.8997 & 0.7917 & 349.8   \\
+ & GLADE\_FPTM\_final     & 0.9442 & 0.7976 & 0.9050 & 0.7645 & 6.2     \\
+ & kNN\_5                 & 0.9375 & 0.7922 & 0.8445 & 0.7684 & 2857.4  \\
+ & XGBoost                & 0.9406 & 0.7590 & 0.9151 & 0.7314 & 615.3   \\
+ & MLP\_C                 & 0.9375 & 0.7465 & 0.8774 & 0.7237 & 70.3    \\
+ & DecisionTree           & 0.9357 & 0.7216 & 0.8902 & 0.7049 & 19.7    \\
+ & XGBoost\_Cmatched      & 0.9354 & 0.7118 & 0.9198 & 0.6994 & 388.0   \\
+ & DecisionTree\_Lmatched & 0.9295 & 0.6936 & 0.7943 & 0.6893 & 7.1     \\
+ & RandomForest           & 0.9320 & 0.6778 & 0.8910 & 0.6807 & 3562.2  \\
+ & MLP\_med               & 0.9298 & 0.6603 & 0.9066 & 0.6713 & 102.1   \\
+ & RandomForest\_Cmatched & 0.9305 & 0.6554 & 0.9671 & 0.6692 & 380.6   \\
+ & MLP\_tiny              & 0.9289 & 0.6507 & 0.9602 & 0.6669 & 20.7    \\
+ & MLP\_small             & 0.9280 & 0.6497 & 0.7572 & 0.6682 & 43.5    \\
+ & LinearSVM              & 0.9286 & 0.6449 & 0.6253 & 0.6657 & 2.4     \\
+ & LogisticRegression     & 0.9280 & 0.6430 & 0.6220 & 0.6655 & 2.5     \\
+ & NaiveBayes             & 0.1293 & 0.3643 & 0.6570 & 0.6668 & 3.0     \\
+
+\end{longtable}
+\twocolumn
+%% ========================================================================
+\begin{thebibliography}{99}
+
+\bibitem{granmo2018tsetlin}
+O.-C. Granmo,
+``The Tsetlin machine --- a game theoretic bandit driven approach to
+optimal pattern recognition with propositional logic,''
+\emph{arXiv preprint arXiv:1804.01508}, 2018.
+
+\bibitem{hnilov2025fuzzy}
+A. Hnilov,
+``Fuzzy-pattern Tsetlin machine,''
+\emph{arXiv preprint arXiv:2508.08350}, 2025.
+
+\bibitem{granmo2019convolutional}
+O.-C. Granmo, S. Berge, L. Jiao, X. Zhang, G. T. Berge and M. Goodwin,
+``The convolutional Tsetlin machine,''
+\emph{arXiv preprint arXiv:1905.09688}, 2019.
+
+\bibitem{abeyrathna2019continuous}
+K. D. Abeyrathna, O.-C. Granmo, X. Zhang and M. Goodwin,
+``A scheme for continuous input to the Tsetlin machine with
+applications to forecasting disease outbreaks,''
+\emph{arXiv preprint arXiv:1905.04199}, 2019.
+
+\bibitem{abeyrathna2021adaptive}
+K. D. Abeyrathna, O.-C. Granmo, X. Zhang, L. Jiao and M. Goodwin,
+``Adaptive sparse representation of continuous input for Tsetlin
+machines based on stochastic searching on the line,''
+\emph{Electronics}, vol. 10, no. 17, art. 2107, 2021.
+
+\bibitem{maheshwari2023redress}
+S. Maheshwari, T. Rahman, R. Shafik, A. Yakovlev, A. Rafiev, L. Jiao and
+O.-C. Granmo,
+``REDRESS: Generating compressed models for edge inference using
+Tsetlin machines,''
+\emph{IEEE Trans. Pattern Anal. Mach. Intell.}, vol. 45, no. 9,
+pp. 11077--11091, Sep. 2023.
+
+\bibitem{bhattarai2023concise}
+B. Bhattarai, O.-C. Granmo and L. Jiao,
+``Building concise logical patterns by constraining Tsetlin machine
+clause size,''
+in \emph{Proc. 32nd Int. Joint Conf. Artif. Intell. (IJCAI)},
+Macao, China, Aug. 2023, pp. 3391--3399.
+
+\bibitem{sharma2023drop}
+J. Sharma, R. Yadav, O.-C. Granmo and L. Jiao,
+``Drop clause: Enhancing performance, interpretability and robustness
+of the Tsetlin machine,''
+in \emph{Proc. 37th AAAI Conf. Artif. Intell.}, Washington, DC, USA,
+Feb. 2023, pp. 13547--13555.
+
+\bibitem{tavallaee2009nslkdd}
+M. Tavallaee, E. Bagheri, W. Lu and A. A. Ghorbani,
+``A detailed analysis of the KDD CUP 99 data set,''
+in \emph{Proc. IEEE Symp. Comput. Intell. Secur. Defense Appl. (CISDA)},
+Ottawa, ON, Canada, Jul. 2009, pp. 1--6.
+
+\bibitem{moustafa2021ton}
+N. Moustafa,
+``A new distributed architecture for evaluating AI-based security
+systems at the edge: Network TON\_IoT datasets,''
+\emph{Sustainable Cities and Society}, vol. 72, art. 102994, Sep.
+2021.
+
+\bibitem{hady2020wustl}
+A. A. Hady, A. Ghubaish, T. Salman, D. Unal and R. Jain,
+``Intrusion detection system for healthcare systems using medical and
+network data: A comparison study,''
+\emph{IEEE Access}, vol. 8, pp. 106576--106584, 2020.
+
+\bibitem{chen2016xgboost}
+T. Chen and C. Guestrin,
+``XGBoost: A scalable tree boosting system,''
+in \emph{Proc. 22nd ACM SIGKDD Int. Conf. Knowl. Discov. Data Min.},
+San Francisco, CA, USA, Aug. 2016, pp. 785--794.
+
+\bibitem{breiman2001random}
+L. Breiman,
+``Random forests,''
+\emph{Machine Learning}, vol. 45, no. 1, pp. 5--32, Oct. 2001.
+
+\bibitem{pedregosa2011scikit}
+F. Pedregosa \emph{et al.},
+``Scikit-learn: Machine learning in Python,''
+\emph{Journal of Machine Learning Research}, vol. 12, pp. 2825--2830,
+2011.
+
+\end{thebibliography}
+
+\end{document}

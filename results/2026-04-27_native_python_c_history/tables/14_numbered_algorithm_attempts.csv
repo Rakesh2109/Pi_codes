@@ -1,0 +1,7 @@
+Attempt file,Status,Summary,Promotion decision
+`tm_algorithm_1.c`,Kept checkpoint,"Current best cleaned implementation: scalar early-stop fix, stats support in harness, original table scorer, little-endian `memcpy` current-byte preparation.",Active baseline for new numbered attempts.
+`tm_algorithm_2.c`,Rejected / mixed,Avoids the second masked horizontal sum for table-score blocks that are fully positive or fully negative; only mixed boundary blocks use the masked sum. Exact locally.,"Not promoted: local results were noise-to-small win, but Raspberry Pi 5 regressed NSLKDD."
+`tm_algorithm_3.c`,Useful candidate,Zero-current baseline plus signed byte-delta table scorer; skips table loads for zero current bytes.,"Not promoted directly: strong Pi win for 3/4 datasets, but WUSTL regressed and local AVX2 was mixed."
+`tm_algorithm_4.c`,Rejected,Per-row hybrid between original table and delta table based on nonzero current-byte count.,Not promoted: selection/count overhead made it slower than pure delta on Pi and did not recover WUSTL.
+`tm_algorithm_5.c`,Superseded,Platform/model heuristic: AVX2 uses delta table for 5-class models; NEON uses delta table for non-WUSTL models; WUSTL remains original table path.,"Promoted briefly, then replaced by generic calibrated attempt 6."
+`tm_algorithm_6.c`,Promoted,Generic calibrated selector: dense-current gate plus measured table-vs-delta score timing on sampled rows.,Promoted into active `tm_algorithm.c`.

@@ -1,0 +1,5 @@
+Dataset,Current selected backend,Current score us,Byte-posting score us,Selected
+WUSTL,table,0.5127,4.6825,table
+NSLKDD,delta,0.9325,8.1928,delta
+TonIoT,delta,1.1750,12.2810,delta
+MedSec,delta,1.0053,6.1194,delta

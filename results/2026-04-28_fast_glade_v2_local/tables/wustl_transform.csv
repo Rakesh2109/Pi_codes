@@ -1,0 +1,3 @@
+dataset,backend,packed,python_us_per_sample,native_us_per_sample,native_speedup,exact
+WUSTL,avx2,false,0.270,0.108,2.51,true
+WUSTL,avx2,true,0.313,0.109,2.87,true

@@ -1,0 +1,5 @@
+dataset,decision_tree_us_per_sample,python_tm_us_per_sample,speed_ratio,decision_tree_macro_f1,python_tm_macro_f1,winner
+TON_IoT,63.30,88.52,0.72,0.9210,0.9436,DecisionTree
+MedSec,69.45,69.67,1.00,0.8861,0.8694,DecisionTree
+WUSTL,62.77,51.79,1.21,0.7608,0.8055,Python_TM
+NSL-KDD,62.98,67.35,0.94,0.7965,0.9380,DecisionTree

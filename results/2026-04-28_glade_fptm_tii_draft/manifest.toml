@@ -1,0 +1,11 @@
+schema_version = "1"
+format_id = "analysis.note.v1"
+date = "2026-04-28"
+title = "GLADE FPTM TII Draft"
+command_id = "legacy.analysis"
+command = ""
+platform = "legacy"
+status = "accepted"
+exact = false
+raw_dir = "raw"
+experiment_type = "analysis_note"

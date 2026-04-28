@@ -1,0 +1,5 @@
+Dataset,Attempt 15 us,Attempt 17 us,Speedup,Correct
+WUSTL,0.093,0.090,1.03x,yes
+NSLKDD,0.145,0.148,0.98x,yes
+TonIoT,0.155,0.143,1.08x,yes
+MedSec,0.172,0.166,1.04x,yes

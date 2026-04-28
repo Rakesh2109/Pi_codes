@@ -1,0 +1,9 @@
+Platform,Dataset,Python us/sample,C us/sample,C speedup,Accuracy,Macro F1
+Local i9-14900K,WUSTL,1.464,0.111,13.2x,0.9470,0.8157
+Local i9-14900K,NSLKDD,2.130,0.293,7.3x,0.9946,0.9477
+Local i9-14900K,TonIoT,2.425,0.293,8.3x,0.9703,0.9427
+Local i9-14900K,MedSec,2.337,0.334,7.0x,0.9700,0.8692
+Raspberry Pi 5,WUSTL,3.929,0.958,4.1x,0.9470,0.8157
+Raspberry Pi 5,NSLKDD,5.610,2.323,2.4x,0.9946,0.9477
+Raspberry Pi 5,TonIoT,9.001,1.976,4.6x,0.9703,0.9427
+Raspberry Pi 5,MedSec,7.305,2.612,2.8x,0.9700,0.8692

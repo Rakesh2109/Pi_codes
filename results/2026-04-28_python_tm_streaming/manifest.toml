@@ -1,0 +1,14 @@
+schema_version = "1"
+format_id = "benchmark.table.v1"
+date = "2026-04-28"
+title = "Python TM Streaming"
+command_id = "legacy.python_tm_streaming"
+command = ""
+platform = "Pi-style single-threaded streaming"
+status = "accepted"
+exact = false
+raw_dir = "raw"
+experiment_type = "python_tm_streaming"
+tables = ["python_tm_streaming"]
+primary_csv = "tables/python_tm_streaming.csv"
+primary_latex = "latex/python_tm_streaming.tex"

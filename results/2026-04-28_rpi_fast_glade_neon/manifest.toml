@@ -1,0 +1,14 @@
+schema_version = "1"
+format_id = "benchmark.table.v1"
+date = "2026-04-28"
+title = "RPI Fast GLADE NEON Booleanizer Benchmark"
+command_id = "rpi.exp.booleanizers"
+command = "PYTHONPATH=src uv run --with ansible python -m fuzzy_tm_infer.scripts.rpi_ansible --booleanizer-benchmark --no-native-benchmark"
+platform = "Raspberry Pi 5 Model B Rev 1.1, NEON, -mcpu=cortex-a76"
+status = "accepted"
+exact = true
+raw_dir = "raw"
+experiment_type = "booleanizer_comparison"
+tables = ["rpi_booleanizers", "fast_glade_detail"]
+primary_csv = "tables/rpi_booleanizers.csv"
+primary_latex = "latex/rpi_booleanizers.tex"

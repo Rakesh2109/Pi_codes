@@ -1,0 +1,5 @@
+Dataset,Attempt 17 us,Branch-split us,Result
+WUSTL,0.090,0.096,slower
+NSLKDD,0.148,0.166,slower
+TonIoT,0.143,0.185,slower
+MedSec,0.166,0.196,slower

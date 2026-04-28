@@ -1,0 +1,5 @@
+Dataset,Attempt 1 C us,Attempt 4 C us,Change
+WUSTL,0.928,0.966,+4.1%
+NSLKDD,2.259,1.701,-24.7%
+TonIoT,1.912,1.631,-14.7%
+MedSec,2.296,1.777,-22.6%

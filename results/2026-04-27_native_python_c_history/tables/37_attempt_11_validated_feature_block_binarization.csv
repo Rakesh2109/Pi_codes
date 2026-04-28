@@ -1,0 +1,5 @@
+Dataset,Literal binarize us,Feature-block us,Blocks,Selected
+WUSTL,0.0418,0.1676,32,literal
+NSLKDD,0.0440,0.1771,115,literal
+TonIoT,0.0209,0.0699,38,literal
+MedSec,0.0534,0.1651,53,literal

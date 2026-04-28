@@ -1,0 +1,5 @@
+Dataset,Attempt 17 us,Kept row-setup us,Result
+WUSTL,0.574,0.577,tied
+NSLKDD,0.883,0.884,tied
+TonIoT,0.708,0.706,tied/slightly faster
+MedSec,0.855,0.857,tied

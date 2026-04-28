@@ -1,0 +1,14 @@
+\begin{tabular}{lrrrrrrrrrrrrr}
+\toprule
+platform & dataset & n\_rows & n\_features & n\_bits & fast\_glade\_transform\_us & python\_glade\_transform\_us & speedup\_vs\_python\_glade & next\_best\_booleanizer & next\_best\_transform\_us & speedup\_vs\_next\_best & fast\_glade\_packed\_us & python\_glade\_packed\_us & packed\_speedup\_vs\_python\_glade \\
+\midrule
+local\_avx2 & MedSec & 110907 & 54 & 353 & 0.068 & 1.357 & 19.96 & thermo8 & 0.345 & 5.07 & 0.048 & 1.411 & 29.40 \\
+local\_avx2 & NSLKDD & 29704 & 118 & 247 & 0.049 & 0.799 & 16.31 & thermo8 & 0.594 & 12.12 & 0.041 & 0.801 & 19.54 \\
+local\_avx2 & TonIoT & 42209 & 38 & 116 & 0.015 & 0.322 & 21.47 & thermo8 & 0.192 & 12.80 & 0.016 & 0.356 & 22.25 \\
+local\_avx2 & WUSTL & 3264 & 32 & 236 & 0.026 & 0.273 & 10.50 & thermo8 & 0.142 & 5.46 & 0.032 & 0.465 & 14.53 \\
+rpi5\_neon & MedSec & 110907 & 54 & 353 & 0.287 & 4.557 & 15.88 & thermo8 & 0.906 & 3.16 & 0.229 & 4.775 & 20.85 \\
+rpi5\_neon & NSLKDD & 29704 & 118 & 247 & 0.220 & 1.984 & 9.02 & thermo8 & 1.803 & 8.20 & 0.219 & 2.184 & 9.97 \\
+rpi5\_neon & TonIoT & 42209 & 38 & 116 & 0.094 & 1.281 & 13.63 & thermo8 & 0.577 & 6.14 & 0.093 & 1.389 & 14.94 \\
+rpi5\_neon & WUSTL & 3264 & 32 & 236 & 0.162 & 1.555 & 9.60 & thermo8 & 0.459 & 2.83 & 0.163 & 1.777 & 10.90 \\
+\bottomrule
+\end{tabular}

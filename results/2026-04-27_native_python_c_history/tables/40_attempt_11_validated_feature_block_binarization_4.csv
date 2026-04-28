@@ -1,0 +1,5 @@
+Dataset,Attempt 10 Pi us/sample,Attempt 11 Pi us/sample,Result
+WUSTL,0.798,0.799,unchanged
+NSLKDD,1.297,1.285,similar/slightly faster
+TonIoT,1.302,1.257,faster
+MedSec,1.444,1.403,"faster, feature-block binarizer selected"

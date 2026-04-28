@@ -1,0 +1,184 @@
+---
+- name: Deploy and test Fuzzy TM local inference on Raspberry Pi
+  hosts: "{{ tm_rpi_host | default('rpi') }}"
+  gather_facts: true
+
+  vars:
+    tm_remote_src: "{{ tm_remote_root }}/src/fuzzy_tm_infer"
+    tm_python: "{{ tm_remote_venv }}/bin/python"
+    tm_pip: "{{ tm_remote_venv }}/bin/pip"
+    tm_cli: "{{ tm_remote_venv }}/bin/fuzzy-tm-infer"
+
+  tasks:
+    - name: Install system dependencies
+      become: true
+      ansible.builtin.apt:
+        name:
+          - build-essential
+          - gcc
+          - make
+          - rsync
+          - python3
+          - python3-venv
+          - python3-pip
+          - zstd
+          - libzstd-dev
+        state: present
+        update_cache: true
+
+    - name: Ensure remote repo root exists
+      ansible.builtin.file:
+        path: "{{ tm_remote_root }}"
+        state: directory
+        mode: "0755"
+
+    - name: Read Raspberry Pi model
+      ansible.builtin.shell:
+        cmd: "tr -d '\\0' </proc/device-tree/model"
+      changed_when: false
+      register: rpi_model
+
+    - name: Select native C architecture flags
+      ansible.builtin.set_fact:
+        tm_effective_archflags: >-
+          {{
+            tm_archflags
+            if tm_archflags != 'auto'
+            else '-mcpu=cortex-a76'
+            if 'Raspberry Pi 5' in rpi_model.stdout
+            else '-mcpu=cortex-a72'
+            if 'Raspberry Pi 4' in rpi_model.stdout
+            else '-mcpu=native'
+          }}
+
+    - name: Show detected Raspberry Pi build target
+      ansible.builtin.debug:
+        msg:
+          - "model={{ rpi_model.stdout }}"
+          - "ARCHFLAGS={{ tm_effective_archflags }}"
+
+    - name: Sync repo to Raspberry Pi
+      ansible.posix.synchronize:
+        src: "{{ tm_repo_local }}/"
+        dest: "{{ tm_remote_root }}/"
+        delete: true
+        recursive: true
+        rsync_opts:
+          - "--exclude=.git/"
+          - "--exclude=.venv/"
+          - "--exclude=build/"
+          - "--exclude=*.egg-info/"
+          - "--exclude=__pycache__/"
+          - "--exclude=*.pyc"
+          - "--exclude=tm_infer_c"
+          - "--exclude=libfuzzy_tm_infer.so"
+          - "--exclude=src/fuzzy_tm_infer/assets/ml_models/"
+          - "{{ '--exclude=src/fuzzy_tm_infer/assets/' if not (sync_assets | bool) else '--include=src/fuzzy_tm_infer/assets/***' }}"
+
+    - name: Create virtual environment
+      ansible.builtin.command:
+        cmd: "python3 -m venv {{ tm_remote_venv }}"
+        creates: "{{ tm_python }}"
+
+    - name: Upgrade Python packaging tools
+      ansible.builtin.command:
+        cmd: "{{ tm_pip }} install --upgrade pip setuptools wheel"
+      changed_when: false
+
+    - name: Install fuzzy-tm-infer base package
+      ansible.builtin.command:
+        cmd: "{{ tm_pip }} install -e {{ tm_remote_root }}"
+      changed_when: false
+
+    - name: Install Decision Tree comparison dependencies
+      ansible.builtin.command:
+        cmd: "{{ tm_pip }} install -e {{ tm_remote_root }}[dt]"
+      changed_when: false
+      when: (run_compare_all | bool) or (run_python_benchmark | bool)
+
+    - name: Extract Fuzzy TM assets
+      ansible.builtin.command:
+        cmd: >-
+          {{ tm_python }} -c
+          "from fuzzy_tm_infer.assets import ensure_assets; ensure_assets()"
+        chdir: "{{ tm_remote_root }}"
+      changed_when: false
+
+    - name: Build native v17 for Raspberry Pi
+      ansible.builtin.command:
+        cmd: "make clean all lib ARCHFLAGS='{{ tm_effective_archflags }}'"
+        chdir: "{{ tm_remote_src }}/algorithms/c/fuzzy_tm/v17"
+
+    - name: Build native v19 for Raspberry Pi
+      ansible.builtin.command:
+        cmd: "make clean all lib ARCHFLAGS='{{ tm_effective_archflags }}'"
+        chdir: "{{ tm_remote_src }}/algorithms/c/fuzzy_tm/v19"
+
+    - name: Verify native backends against Python reference
+      ansible.builtin.command:
+        cmd: "{{ tm_python }} scripts/verify_native.py"
+        chdir: "{{ tm_remote_src }}"
+      changed_when: false
+
+    - name: Build fast GLADE v2 transform for Raspberry Pi
+      ansible.builtin.command:
+        cmd: "make -C algorithms/c/booleanizers/glade_v2 clean lib ARCHFLAGS='{{ tm_effective_archflags }}'"
+        chdir: "{{ tm_remote_src }}"
+
+    - name: Verify fast GLADE v2 transform against Python reference
+      ansible.builtin.command:
+        cmd: "{{ tm_python }} scripts/verify_fast_glade.py"
+        chdir: "{{ tm_remote_src }}"
+      changed_when: false
+
+    - name: Run native v17 profile benchmark
+      ansible.builtin.command:
+        cmd: "./tm_infer_c --profile --stats"
+        chdir: "{{ tm_remote_src }}/algorithms/c/fuzzy_tm/v17"
+      changed_when: false
+      register: native_v17_profile
+      when: run_native_benchmark | bool
+
+    - name: Show native v17 profile benchmark
+      ansible.builtin.debug:
+        var: native_v17_profile.stdout_lines
+      when: run_native_benchmark | bool
+
+    - name: Run Python Fuzzy TM benchmark
+      ansible.builtin.command:
+        cmd: "{{ tm_cli }}"
+        chdir: "{{ tm_remote_root }}"
+      changed_when: false
+      register: python_benchmark
+      when: run_python_benchmark | bool
+
+    - name: Show Python Fuzzy TM benchmark
+      ansible.builtin.debug:
+        var: python_benchmark.stdout_lines
+      when: run_python_benchmark | bool
+
+    - name: Run full Python/native/Decision Tree comparison
+      ansible.builtin.command:
+        cmd: "{{ tm_cli }} --compare-all"
+        chdir: "{{ tm_remote_root }}"
+      changed_when: false
+      register: compare_all
+      when: run_compare_all | bool
+
+    - name: Show full comparison
+      ansible.builtin.debug:
+        var: compare_all.stdout_lines
+      when: run_compare_all | bool
+
+    - name: Run booleanizer speed benchmark
+      ansible.builtin.command:
+        cmd: "{{ tm_cli }} --compare-booleanizers"
+        chdir: "{{ tm_remote_root }}"
+      changed_when: false
+      register: booleanizer_benchmark
+      when: run_booleanizer_benchmark | bool
+
+    - name: Show booleanizer speed benchmark
+      ansible.builtin.debug:
+        var: booleanizer_benchmark.stdout_lines
+      when: run_booleanizer_benchmark | bool

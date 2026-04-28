@@ -1,0 +1,9 @@
+brotli
+blosc2
+cramjam
+isal
+lz4
+matplotlib
+python-snappy
+zopfli
+zstandard

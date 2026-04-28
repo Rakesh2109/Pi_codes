@@ -1,0 +1,5 @@
+Dataset,Selected backend,C us/sample,Binarize us,Score us
+WUSTL,table,0.927,0.451,0.499
+NSLKDD,delta,1.697,0.449,1.208
+TonIoT,delta,1.620,0.192,1.412
+MedSec,delta,1.755,0.525,1.194

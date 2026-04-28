@@ -1,0 +1,14 @@
+schema_version = "1"
+format_id = "benchmark.table.v1"
+date = "2026-04-28"
+title = "GLADE v2 Booleanizer Comparison"
+command_id = "local.exp.booleanizers"
+command = "make -C src/fuzzy_tm_infer clean-fast-glade native-glade-v2 && uv run --with numpy --with numba --with zstandard fuzzy-tm-infer --compare-booleanizers --repeats 3"
+platform = "local x86_64 AVX2 and Raspberry Pi 5 NEON"
+status = "accepted"
+exact = true
+raw_dir = "raw"
+experiment_type = "booleanizer_comparison"
+tables = ["local_booleanizers", "rpi_booleanizers", "gladev2_summary"]
+primary_csv = "tables/local_booleanizers.csv"
+primary_latex = "latex/local_booleanizers.tex"

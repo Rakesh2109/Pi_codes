@@ -1,0 +1,2 @@
+backend=avx2 pack=False python_us=0.270 native_us=0.108 speedup=2.51x
+backend=avx2 pack=True python_us=0.313 native_us=0.109 speedup=2.87x

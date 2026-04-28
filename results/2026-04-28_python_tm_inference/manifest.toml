@@ -1,0 +1,14 @@
+schema_version = "1"
+format_id = "benchmark.table.v1"
+date = "2026-04-28"
+title = "Python TM Inference"
+command_id = "legacy.python_tm_inference"
+command = ""
+platform = "single-threaded legacy run"
+status = "accepted"
+exact = false
+raw_dir = "raw"
+experiment_type = "python_tm_batching"
+tables = ["python_tm_batching"]
+primary_csv = "tables/python_tm_batching.csv"
+primary_latex = "latex/python_tm_batching.tex"

@@ -1,0 +1,5 @@
+Dataset,Current density,Best posting touches avg,Dirty clauses avg,Table vector row loads,Dense word checks
+WUSTL,0.432,3970.8,180.0 / 180,186,720
+NSLKDD,0.222,4962.3,445.5 / 450,480,1800
+TonIoT,0.201,5839.3,952.6 / 1000,512,2000
+MedSec,0.256,3139.7,377.5 / 400,572,2400

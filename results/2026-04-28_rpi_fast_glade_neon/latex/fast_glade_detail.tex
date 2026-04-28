@@ -1,0 +1,14 @@
+\begin{tabular}{lrrrrrr}
+\toprule
+dataset & packed & backend & transform\_into\_us & kernel\_us & total\_us & exact \\
+\midrule
+WUSTL & false & neon & 0.157765 & 0.148874 & 0.148897 & true \\
+WUSTL & true & neon & 0.159064 & 0.151184 & 0.151206 & true \\
+NSLKDD & false & neon & 0.217823 & 0.216198 & 0.216214 & true \\
+NSLKDD & true & neon & 0.194614 & 0.192946 & 0.192948 & true \\
+TonIoT & false & neon & 0.092260 & 0.091269 & 0.091270 & true \\
+TonIoT & true & neon & 0.092701 & 0.091745 & 0.091749 & true \\
+MedSec & false & neon & 0.241341 & 0.240895 & 0.240898 & true \\
+MedSec & true & neon & 0.231277 & 0.230532 & 0.230534 & true \\
+\bottomrule
+\end{tabular}

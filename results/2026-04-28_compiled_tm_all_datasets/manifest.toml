@@ -1,0 +1,14 @@
+schema_version = "1"
+format_id = "benchmark.table.v1"
+date = "2026-04-28"
+title = "Compiled TM All Datasets"
+command_id = "legacy.compiled_tm_all_datasets"
+command = ""
+platform = "Pi-style single-threaded"
+status = "accepted"
+exact = false
+raw_dir = "raw"
+experiment_type = "compiled_tm_all_datasets"
+tables = ["compiled_tm_summary", "compiled_tm_detail"]
+primary_csv = "tables/compiled_tm_summary.csv"
+primary_latex = "latex/compiled_tm_summary.tex"

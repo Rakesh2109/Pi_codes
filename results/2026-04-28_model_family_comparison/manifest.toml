@@ -1,0 +1,14 @@
+schema_version = "1"
+format_id = "benchmark.table.v1"
+date = "2026-04-28"
+title = "Model Family Comparison"
+command_id = "legacy.model_family"
+command = ""
+platform = "Raspberry Pi 5 / Pi-style single-threaded"
+status = "accepted"
+exact = false
+raw_dir = "raw"
+experiment_type = "model_family_matrix"
+tables = ["latency_us_per_sample", "macro_f1", "python_tm_stage_breakdown", "python_tm_vs_decision_tree"]
+primary_csv = "tables/latency_us_per_sample.csv"
+primary_latex = "latex/latency_us_per_sample.tex"

@@ -1,0 +1,5 @@
+Dataset,v2 us/sample,Binarize us,Score us,Backend
+WUSTL,0.104,0.041,0.063,table_avx2
+NSLKDD,0.206,0.053,0.153,delta_table_avx2
+TonIoT,0.223,0.021,0.207,delta_table_avx2
+MedSec,0.245,0.058,0.175,delta_table_avx2

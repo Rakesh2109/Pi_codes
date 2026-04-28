@@ -1,0 +1,5 @@
+Dataset,Total us,Binarize us,Score us,Backend
+WUSTL,0.808,0.294,0.503,table_neon
+NSLKDD,1.314,0.321,0.961,delta_table_neon
+TonIoT,1.311,0.149,1.150,delta_table_neon
+MedSec,1.465,0.391,1.038,delta_table_neon

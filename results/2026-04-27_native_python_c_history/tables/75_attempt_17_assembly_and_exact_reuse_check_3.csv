@@ -1,0 +1,5 @@
+Dataset,Raw total us,Cached timed us,Cached full-output us,Timed hit rate,Output hit rate,Correct
+WUSTL,0.086,0.163,0.127,12.6%,13.1%,yes
+NSLKDD,0.146,0.270,0.792,9.6%,27.6%,yes
+TonIoT,0.132,0.101,0.067,82.1%,94.4%,yes
+MedSec,0.164,0.178,0.121,72.6%,89.0%,yes

@@ -1,0 +1,5 @@
+Dataset,Scalar C us/sample,Binarize us,Score us,Profile total us
+WUSTL,0.396,0.049,0.322,0.362
+NSLKDD,1.263,0.054,1.180,1.252
+TonIoT,0.802,0.021,0.768,0.823
+MedSec,1.037,0.050,0.948,1.010

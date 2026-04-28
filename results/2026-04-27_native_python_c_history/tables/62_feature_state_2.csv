@@ -1,0 +1,5 @@
+Dataset,Attempt 17 us,Blocked byte us,Nibble us,Feature-state us
+WUSTL,0.574,1.364,1.185,0.784
+NSLKDD,0.883,3.280,1.802,4.765
+TonIoT,0.708,3.732,2.434,3.929
+MedSec,0.855,3.934,1.985,2.165

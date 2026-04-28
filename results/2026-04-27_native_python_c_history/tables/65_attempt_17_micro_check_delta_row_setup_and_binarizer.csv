@@ -1,0 +1,5 @@
+Dataset,Attempt 17 us,Kept row-setup us,Result
+WUSTL,0.090,0.098,noisy/slower
+NSLKDD,0.148,0.165,noisy/slower
+TonIoT,0.143,0.149,roughly tied
+MedSec,0.166,0.183,noisy/slower

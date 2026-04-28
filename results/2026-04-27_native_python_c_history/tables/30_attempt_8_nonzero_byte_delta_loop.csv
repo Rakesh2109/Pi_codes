@@ -1,0 +1,5 @@
+Dataset,Attempt 7 local us/sample,Attempt 8 local us/sample,Result
+WUSTL,0.102,0.102,"unchanged, table backend"
+NSLKDD,0.266,0.203,faster
+TonIoT,0.271,0.221,faster
+MedSec,0.298,0.223,faster
