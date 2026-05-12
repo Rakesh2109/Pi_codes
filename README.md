@@ -165,3 +165,7 @@ python -m paper_2.atlas serve                    # serves results/atlas/ -> http
   and JIT caches are git-ignored — regenerate them with the commands above. Text results
   (metrics JSON, CSV tables, LaTeX tables, reports) under `results/` are tracked.
 - `archives/` holds retired code (e.g. the superseded, since-broken `compare_binarizers_chosen.py`).
+
+## License
+
+MIT — see [LICENSE](LICENSE).
