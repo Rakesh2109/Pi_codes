@@ -1,0 +1,6 @@
+# Treat the model-viewer HTML as documentation, not as a source language,
+# so GitHub Linguist reports Python (the actual codebase) as primary.
+src/paper_2/atlas/viewer.html linguist-documentation
+*.html linguist-detectable=false
+# Generated artefacts under results/ shouldn't skew language stats.
+results/** linguist-generated

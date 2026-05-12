@@ -52,3 +52,6 @@ src/paper_2/*.bib
 .vscode/
 .idea/
 *.swp
+
+# generated atlas HTML (regenerate with `python -m paper_2.atlas --html`)
+results/atlas/*.html
