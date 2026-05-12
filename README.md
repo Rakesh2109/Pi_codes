@@ -28,7 +28,7 @@ src/paper_2/            Python package (run modules with `python -m paper_2.<nam
   verify_fbz.py / verify_tm_inference.py    correctness checks (byte-exact round-trips)
   plot_*.py             figure generation
   atlas/                TMAtlas-style structured export of a trained GLADE+FPTM model (tool)
-  ieee_tii_v2.tex, references.bib, figures/   the paper sources (also mirrored in ../overleaf_upload/)
+  figures/              figures produced by plot_*.py
 pi_bench/               Raspberry-Pi-5 binarisation/inference latency benchmark (`pi_bench/assets/` is gitignored)
 results/                generated reports / tables / metrics JSON (model binaries are gitignored)
 archives/               retired scripts and legacy outputs

@@ -42,6 +42,11 @@ Datasets/
 *.fdb_latexmk
 *.fls
 
+# --- Paper LaTeX (kept locally; not part of this code repo) ---
+overleaf_upload/
+src/paper_2/*.tex
+src/paper_2/*.bib
+
 # --- Editor / OS ---
 .DS_Store
 .vscode/
