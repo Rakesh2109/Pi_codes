@@ -1,0 +1,71 @@
+{
+  "model": "XGBoost_Cmatched",
+  "metrics": {
+    "accuracy": 0.995152168058174,
+    "macro_f1": 0.9429358881293686,
+    "weighted_f1": 0.9951050885964815,
+    "per_class": [
+      {
+        "class": "DoS",
+        "precision": 0.9984948259642521,
+        "recall": 0.9995291458706093,
+        "f1": 0.9990117181985034,
+        "support": 10619
+      },
+      {
+        "class": "Normal",
+        "precision": 0.994518604501193,
+        "recall": 0.9968972204266322,
+        "f1": 0.995706491913355,
+        "support": 15470
+      },
+      {
+        "class": "Probe",
+        "precision": 0.9911598302687411,
+        "recall": 0.9957371225577265,
+        "f1": 0.9934432039695198,
+        "support": 2815
+      },
+      {
+        "class": "R2L",
+        "precision": 0.9845505617977528,
+        "recall": 0.9033505154639175,
+        "f1": 0.9422043010752689,
+        "support": 776
+      },
+      {
+        "class": "U2R",
+        "precision": 0.7407407407407407,
+        "recall": 0.8333333333333334,
+        "f1": 0.7843137254901961,
+        "support": 24
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 9.257919331081212,
+    "predict_time": 0.14703242713585496,
+    "per_sample_predict_us": 4.949920116343083,
+    "total_train_time": 9.257919331081212
+  },
+  "size_kb": 1161.2802734375,
+  "extra": {
+    "kind": "xgboost",
+    "feature_space": "raw",
+    "tm_source": {
+      "C": 90,
+      "T": 12,
+      "s": 200,
+      "L": 40,
+      "Lf": 8,
+      "E": 80
+    },
+    "derived_hp": {
+      "n_estimators": 90,
+      "max_depth": 6,
+      "max_iter": 80,
+      "hidden_layer_sizes": "(180, 90)"
+    },
+    "scaling": "no"
+  }
+}

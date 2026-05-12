@@ -1,0 +1,92 @@
+{
+  "model": "LinearSVM",
+  "metrics": {
+    "accuracy": 0.7114359496789784,
+    "macro_f1": 0.6272717382490721,
+    "weighted_f1": 0.6901339083490551,
+    "per_class": [
+      {
+        "class": "backdoor",
+        "precision": 0.4528751275944199,
+        "recall": 0.99825,
+        "f1": 0.6230787235702583,
+        "support": 4000
+      },
+      {
+        "class": "ddos",
+        "precision": 0.7583018074821354,
+        "recall": 0.902,
+        "f1": 0.8239324046585979,
+        "support": 4000
+      },
+      {
+        "class": "dos",
+        "precision": 0.8799019607843137,
+        "recall": 0.08975,
+        "f1": 0.1628856624319419,
+        "support": 4000
+      },
+      {
+        "class": "injection",
+        "precision": 0.7054986020503262,
+        "recall": 0.757,
+        "f1": 0.7303424987940184,
+        "support": 4000
+      },
+      {
+        "class": "mitm",
+        "precision": 0.3950617283950617,
+        "recall": 0.15311004784688995,
+        "f1": 0.2206896551724138,
+        "support": 209
+      },
+      {
+        "class": "normal",
+        "precision": 0.8510288966725044,
+        "recall": 0.7775,
+        "f1": 0.8126045150501672,
+        "support": 10000
+      },
+      {
+        "class": "password",
+        "precision": 0.6913075780089153,
+        "recall": 0.46525,
+        "f1": 0.5561864913329349,
+        "support": 4000
+      },
+      {
+        "class": "ransomware",
+        "precision": 0.6998769987699877,
+        "recall": 0.8535,
+        "f1": 0.7690921378688894,
+        "support": 4000
+      },
+      {
+        "class": "scanning",
+        "precision": 0.8028391167192429,
+        "recall": 0.7635,
+        "f1": 0.7826755509994875,
+        "support": 4000
+      },
+      {
+        "class": "xss",
+        "precision": 0.8689799581214478,
+        "recall": 0.72625,
+        "f1": 0.7912297426120114,
+        "support": 4000
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 737.1287398668937,
+    "predict_time": 0.005477780941873789,
+    "per_sample_predict_us": 0.12977755791119877,
+    "total_train_time": 737.1287398668937
+  },
+  "size_kb": 5.4345703125,
+  "extra": {
+    "kind": "svm",
+    "params": "{'C': 1.0, 'loss': 'squared_hinge', 'max_iter': 1000, 'dual': False}",
+    "scaling": "yes"
+  }
+}

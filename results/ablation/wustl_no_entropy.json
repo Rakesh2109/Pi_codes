@@ -1,0 +1,12 @@
+{
+  "dataset": "WUSTL-EHMS-2020",
+  "variant": "no_entropy",
+  "disable": [
+    "entropy"
+  ],
+  "bits": 256,
+  "ok": true,
+  "wall": 12.622548770625144,
+  "acc": 0.9420955882352942,
+  "macro_f1": 0.7867826842013163
+}

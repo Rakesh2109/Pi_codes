@@ -1,0 +1,92 @@
+{
+  "model": "XGBoost",
+  "metrics": {
+    "accuracy": 0.9775403349996447,
+    "macro_f1": 0.9510579283233171,
+    "weighted_f1": 0.9777891739570125,
+    "per_class": [
+      {
+        "class": "backdoor",
+        "precision": 1.0,
+        "recall": 0.99925,
+        "f1": 0.9996248593222459,
+        "support": 4000
+      },
+      {
+        "class": "ddos",
+        "precision": 0.9912506433350489,
+        "recall": 0.963,
+        "f1": 0.9769211260461578,
+        "support": 4000
+      },
+      {
+        "class": "dos",
+        "precision": 0.9916179832359665,
+        "recall": 0.976,
+        "f1": 0.9837470076855235,
+        "support": 4000
+      },
+      {
+        "class": "injection",
+        "precision": 0.9853958493466565,
+        "recall": 0.9615,
+        "f1": 0.9733012779956979,
+        "support": 4000
+      },
+      {
+        "class": "mitm",
+        "precision": 0.631768953068592,
+        "recall": 0.8373205741626795,
+        "f1": 0.720164609053498,
+        "support": 209
+      },
+      {
+        "class": "normal",
+        "precision": 0.9900635930047694,
+        "recall": 0.9964,
+        "f1": 0.9932216905901117,
+        "support": 10000
+      },
+      {
+        "class": "password",
+        "precision": 0.997181655137074,
+        "recall": 0.973,
+        "f1": 0.9849424269264836,
+        "support": 4000
+      },
+      {
+        "class": "ransomware",
+        "precision": 0.9226260257913247,
+        "recall": 0.98375,
+        "f1": 0.9522081064730793,
+        "support": 4000
+      },
+      {
+        "class": "scanning",
+        "precision": 0.9826775550606286,
+        "recall": 0.99275,
+        "f1": 0.987688098495212,
+        "support": 4000
+      },
+      {
+        "class": "xss",
+        "precision": 0.9463922764227642,
+        "recall": 0.93125,
+        "f1": 0.9387600806451613,
+        "support": 4000
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 12.949254144914448,
+    "predict_time": 0.41320904809981585,
+    "per_sample_predict_us": 9.789595775778054,
+    "total_train_time": 12.949254144914448
+  },
+  "size_kb": 2508.1318359375,
+  "extra": {
+    "kind": "xgboost",
+    "params": "{'n_estimators': 100, 'max_depth': 6, 'learning_rate': 0.1}",
+    "scaling": "no"
+  }
+}

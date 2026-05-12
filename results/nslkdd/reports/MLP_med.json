@@ -1,0 +1,59 @@
+{
+  "model": "MLP_med",
+  "metrics": {
+    "accuracy": 0.992829248586049,
+    "macro_f1": 0.9210245730599025,
+    "weighted_f1": 0.9928365288755693,
+    "per_class": [
+      {
+        "class": "DoS",
+        "precision": 0.9985881024096386,
+        "recall": 0.9990582917412185,
+        "f1": 0.9988231417408088,
+        "support": 10619
+      },
+      {
+        "class": "Normal",
+        "precision": 0.9944962444962445,
+        "recall": 0.992824822236587,
+        "f1": 0.9936598304975092,
+        "support": 15470
+      },
+      {
+        "class": "Probe",
+        "precision": 0.986930413281526,
+        "recall": 0.9925399644760213,
+        "f1": 0.989727240524265,
+        "support": 2815
+      },
+      {
+        "class": "R2L",
+        "precision": 0.911651728553137,
+        "recall": 0.9175257731958762,
+        "f1": 0.9145793192035967,
+        "support": 776
+      },
+      {
+        "class": "U2R",
+        "precision": 0.7083333333333334,
+        "recall": 0.7083333333333334,
+        "f1": 0.7083333333333334,
+        "support": 24
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 62.66632913099602,
+    "predict_time": 0.053380084689706564,
+    "per_sample_predict_us": 1.7970672195565096,
+    "total_train_time": 62.66632913099602
+  },
+  "size_kb": 756.4775390625,
+  "extra": {
+    "kind": "mlp",
+    "params": "{'hidden_layer_sizes': (128, 64), 'activation': 'relu', 'max_iter': 200}",
+    "n_neural_params": 23813,
+    "param_size_kb_float32": "93.02",
+    "param_size_kb_int8": "23.25"
+  }
+}

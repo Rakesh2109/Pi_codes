@@ -1,0 +1,33 @@
+===========================================================================
+  MODEL: XGBoost_Cmatched
+===========================================================================
+
+Accuracy:         97.53%
+Macro F1:         0.8926
+Weighted F1:      0.9753
+
+Timing:
+  fit_time               29.3604s
+  predict_time           0.3771s
+  per_sample_predict_us  3.3999s
+  total_train_time       29.3604s
+
+Model size:       938.97 KB
+
+Extra:
+  kind: xgboost
+  feature_space: raw
+  tm_source: {'C': 80, 'T': 12, 's': 75, 'L': 30, 'Lf': 8, 'E': 300}
+  derived_hp: {'n_estimators': 80, 'max_depth': 5, 'max_iter': 300, 'hidden_layer_sizes': '(160, 80)'}
+  scaling: no
+
+===========================================================================
+  PER-CLASS REPORT
+===========================================================================
+Class                      Precision     Recall         F1    Support
+----------------------------------------------------------------------
+Benign                        0.9273     0.9862     0.9558       2469
+Exfiltration                  0.9281     0.7640     0.8381       5183
+Initial access                0.9937     0.9956     0.9947      20418
+Lateral movement              0.6395     0.7388     0.6856       2500
+Reconnaissance                0.9867     0.9908     0.9888      80337

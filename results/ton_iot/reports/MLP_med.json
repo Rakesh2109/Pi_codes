@@ -1,0 +1,94 @@
+{
+  "model": "MLP_med",
+  "metrics": {
+    "accuracy": 0.9266507143026369,
+    "macro_f1": 0.8812347730811159,
+    "weighted_f1": 0.926478694708744,
+    "per_class": [
+      {
+        "class": "backdoor",
+        "precision": 0.8931843575418994,
+        "recall": 0.99925,
+        "f1": 0.9432448377581121,
+        "support": 4000
+      },
+      {
+        "class": "ddos",
+        "precision": 0.8464285714285714,
+        "recall": 0.948,
+        "f1": 0.8943396226415095,
+        "support": 4000
+      },
+      {
+        "class": "dos",
+        "precision": 0.9479349186483104,
+        "recall": 0.94675,
+        "f1": 0.9473420888055034,
+        "support": 4000
+      },
+      {
+        "class": "injection",
+        "precision": 0.9829306722689075,
+        "recall": 0.93575,
+        "f1": 0.9587602459016393,
+        "support": 4000
+      },
+      {
+        "class": "mitm",
+        "precision": 0.7708333333333334,
+        "recall": 0.35406698564593303,
+        "f1": 0.4852459016393443,
+        "support": 209
+      },
+      {
+        "class": "normal",
+        "precision": 0.9841150584952237,
+        "recall": 0.9169,
+        "f1": 0.949319252471916,
+        "support": 10000
+      },
+      {
+        "class": "password",
+        "precision": 0.8485566566135286,
+        "recall": 0.98475,
+        "f1": 0.9115945383013191,
+        "support": 4000
+      },
+      {
+        "class": "ransomware",
+        "precision": 0.975087061344763,
+        "recall": 0.91,
+        "f1": 0.9414198887883098,
+        "support": 4000
+      },
+      {
+        "class": "scanning",
+        "precision": 0.9454446262956901,
+        "recall": 0.8665,
+        "f1": 0.9042525436994521,
+        "support": 4000
+      },
+      {
+        "class": "xss",
+        "precision": 0.8771578684013009,
+        "recall": 0.8765,
+        "f1": 0.8768288108040515,
+        "support": 4000
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 186.91970145888627,
+    "predict_time": 0.3293749471195042,
+    "per_sample_predict_us": 7.803429295162269,
+    "total_train_time": 186.91970145888627
+  },
+  "size_kb": 445.5849609375,
+  "extra": {
+    "kind": "mlp",
+    "params": "{'hidden_layer_sizes': (128, 64), 'activation': 'relu', 'max_iter': 200}",
+    "n_neural_params": 13898,
+    "param_size_kb_float32": "54.29",
+    "param_size_kb_int8": "13.57"
+  }
+}

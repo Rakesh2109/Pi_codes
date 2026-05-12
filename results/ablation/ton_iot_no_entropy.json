@@ -1,0 +1,12 @@
+{
+  "dataset": "TON_IoT",
+  "variant": "no_entropy",
+  "disable": [
+    "entropy"
+  ],
+  "bits": 122,
+  "ok": true,
+  "wall": 261.1761008151807,
+  "acc": 0.9707645288919424,
+  "macro_f1": 0.9409537481010342
+}

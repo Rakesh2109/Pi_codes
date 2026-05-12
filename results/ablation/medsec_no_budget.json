@@ -1,0 +1,12 @@
+{
+  "dataset": "MedSec-25",
+  "variant": "no_budget",
+  "disable": [
+    "budget"
+  ],
+  "bits": 613,
+  "ok": true,
+  "wall": 644.7566927489825,
+  "acc": 0.9727699784504135,
+  "macro_f1": 0.8797298091876844
+}

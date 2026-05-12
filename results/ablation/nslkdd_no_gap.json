@@ -1,0 +1,12 @@
+{
+  "dataset": "NSL-KDD",
+  "variant": "no_gap",
+  "disable": [
+    "gap"
+  ],
+  "bits": 254,
+  "ok": true,
+  "wall": 34.18998203705996,
+  "acc": 0.9947481820630218,
+  "macro_f1": 0.9232723466494519
+}

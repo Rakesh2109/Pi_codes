@@ -1,0 +1,12 @@
+{
+  "dataset": "WUSTL-EHMS-2020",
+  "variant": "no_perturb",
+  "disable": [
+    "perturb"
+  ],
+  "bits": 256,
+  "ok": true,
+  "wall": 12.657191191799939,
+  "acc": 0.9448529411764706,
+  "macro_f1": 0.7889263018335261
+}

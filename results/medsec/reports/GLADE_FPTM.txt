@@ -1,0 +1,37 @@
+===========================================================================
+  MODEL: GLADE_FPTM
+===========================================================================
+
+Accuracy:         97.05%
+Macro F1:         0.8687
+Weighted F1:      0.9707
+
+Timing:
+  binarize_fit_time      0.9967s
+  tm_fit_time            87.2461s
+  tm_predict_time        0.1831s
+  tm_predict_us_per_sample 1.6512s
+  total_train_time       88.2428s
+
+Model size:       82.67 KB
+
+Extra:
+  n_bits: 351
+  glade_size_kb: 5.37
+  tm_rules_json_kb: 77.31
+  tm_rules_pkl_kb: 37.63
+  tm_rules_pkl_zst_kb: 16.54
+  tm_rules_zst_kb: 16.54
+  total_size_kb: 82.67
+  hyperparameters: {"CLAUSES": 80, "T": 12, "S": 75, "L": 30, "LF": 8, "EPOCHS": 300, "STATES_NUM": 256, "INCLUDE_LIMIT": 200}
+
+===========================================================================
+  PER-CLASS REPORT
+===========================================================================
+Class                      Precision     Recall         F1    Support
+----------------------------------------------------------------------
+Benign                        0.9145     0.9785     0.9454       2469
+Exfiltration                  0.9540     0.7278     0.8257       5183
+Initial access                0.9905     0.9931     0.9918      20418
+Lateral movement              0.5347     0.6664     0.5933       2500
+Reconnaissance                0.9849     0.9896     0.9873      80337

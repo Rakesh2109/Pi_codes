@@ -1,0 +1,72 @@
+{
+  "model": "MLP_C",
+  "metrics": {
+    "accuracy": 0.9922906005925128,
+    "macro_f1": 0.903557084047247,
+    "weighted_f1": 0.9922751795430493,
+    "per_class": [
+      {
+        "class": "DoS",
+        "precision": 0.9977435125987213,
+        "recall": 0.999340804218853,
+        "f1": 0.9985415196424371,
+        "support": 10619
+      },
+      {
+        "class": "Normal",
+        "precision": 0.9944916078024756,
+        "recall": 0.9919844861021332,
+        "f1": 0.9932364648393256,
+        "support": 15470
+      },
+      {
+        "class": "Probe",
+        "precision": 0.9834390415785764,
+        "recall": 0.9914742451154529,
+        "f1": 0.9874402971873342,
+        "support": 2815
+      },
+      {
+        "class": "R2L",
+        "precision": 0.9151670951156813,
+        "recall": 0.9175257731958762,
+        "f1": 0.9163449163449163,
+        "support": 776
+      },
+      {
+        "class": "U2R",
+        "precision": 0.6666666666666666,
+        "recall": 0.5833333333333334,
+        "f1": 0.6222222222222222,
+        "support": 24
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 31.80645359819755,
+    "predict_time": 0.03288593189790845,
+    "per_sample_predict_us": 1.107121327023581,
+    "total_train_time": 31.80645359819755
+  },
+  "size_kb": 360.77734375,
+  "extra": {
+    "kind": "mlp",
+    "feature_space": "raw",
+    "tm_source": {
+      "C": 90,
+      "T": 12,
+      "s": 200,
+      "L": 40,
+      "Lf": 8,
+      "E": 80
+    },
+    "derived_hp": {
+      "n_estimators": 90,
+      "max_depth": 6,
+      "max_iter": 80,
+      "hidden_layer_sizes": "(90,)"
+    },
+    "scaling": "yes",
+    "n_neural_params": 11165
+  }
+}

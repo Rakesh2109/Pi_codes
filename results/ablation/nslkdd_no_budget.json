@@ -1,0 +1,12 @@
+{
+  "dataset": "NSL-KDD",
+  "variant": "no_budget",
+  "disable": [
+    "budget"
+  ],
+  "bits": 320,
+  "ok": true,
+  "wall": 38.240567307919264,
+  "acc": 0.99518583355777,
+  "macro_f1": 0.9281908857724177
+}

@@ -1,0 +1,12 @@
+{
+  "dataset": "WUSTL-EHMS-2020",
+  "variant": "no_gap",
+  "disable": [
+    "gap"
+  ],
+  "bits": 257,
+  "ok": true,
+  "wall": 13.160356566309929,
+  "acc": 0.9436274509803921,
+  "macro_f1": 0.7878508561062021
+}

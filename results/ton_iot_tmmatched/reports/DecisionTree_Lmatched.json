@@ -1,0 +1,106 @@
+{
+  "model": "DecisionTree_Lmatched",
+  "metrics": {
+    "accuracy": 0.794522495202445,
+    "macro_f1": 0.7191420837134948,
+    "weighted_f1": 0.7990818730003884,
+    "per_class": [
+      {
+        "class": "backdoor",
+        "precision": 1.0,
+        "recall": 0.992,
+        "f1": 0.9959839357429718,
+        "support": 4000
+      },
+      {
+        "class": "ddos",
+        "precision": 1.0,
+        "recall": 0.24725,
+        "f1": 0.3964722389256364,
+        "support": 4000
+      },
+      {
+        "class": "dos",
+        "precision": 0.9502868068833652,
+        "recall": 0.86975,
+        "f1": 0.908236522647174,
+        "support": 4000
+      },
+      {
+        "class": "injection",
+        "precision": 0.9420995670995671,
+        "recall": 0.8705,
+        "f1": 0.9048856548856549,
+        "support": 4000
+      },
+      {
+        "class": "mitm",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 209
+      },
+      {
+        "class": "normal",
+        "precision": 0.8765252434792343,
+        "recall": 0.783,
+        "f1": 0.8271272381556013,
+        "support": 10000
+      },
+      {
+        "class": "password",
+        "precision": 0.9921671018276762,
+        "recall": 0.95,
+        "f1": 0.9706257982120051,
+        "support": 4000
+      },
+      {
+        "class": "ransomware",
+        "precision": 0.9790491539081386,
+        "recall": 0.6075,
+        "f1": 0.7497685899413761,
+        "support": 4000
+      },
+      {
+        "class": "scanning",
+        "precision": 0.8807424593967518,
+        "recall": 0.949,
+        "f1": 0.913598074608905,
+        "support": 4000
+      },
+      {
+        "class": "xss",
+        "precision": 0.3638649772705291,
+        "recall": 0.9405,
+        "f1": 0.5247227840156218,
+        "support": 4000
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 0.16665376583114266,
+    "predict_time": 0.004005916882306337,
+    "per_sample_predict_us": 0.0949066995737008,
+    "total_train_time": 0.16665376583114266
+  },
+  "size_kb": 9.890625,
+  "extra": {
+    "kind": "dt",
+    "feature_space": "raw",
+    "tm_source": {
+      "C": 100,
+      "T": 15,
+      "s": 20,
+      "L": 25,
+      "Lf": 8,
+      "E": 200
+    },
+    "derived_hp": {
+      "n_estimators": 100,
+      "max_depth": 5,
+      "max_iter": 200,
+      "hidden_layer_sizes": "(200, 100)"
+    },
+    "scaling": "no"
+  }
+}

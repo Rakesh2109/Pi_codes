@@ -1,0 +1,43 @@
+{
+  "model": "XGBoost",
+  "metrics": {
+    "accuracy": 0.9405637254901961,
+    "macro_f1": 0.7589845362364899,
+    "weighted_f1": 0.923923315283275,
+    "per_class": [
+      {
+        "class": "Data Alteration",
+        "precision": 0.9682539682539683,
+        "recall": 0.9945652173913043,
+        "f1": 0.9812332439678284,
+        "support": 184
+      },
+      {
+        "class": "Spoofing",
+        "precision": 0.8363636363636363,
+        "recall": 0.20444444444444446,
+        "f1": 0.32857142857142857,
+        "support": 225
+      },
+      {
+        "class": "normal",
+        "precision": 0.9407284768211921,
+        "recall": 0.9950963222416812,
+        "f1": 0.9671489361702128,
+        "support": 2855
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 1.6725282124243677,
+    "predict_time": 0.01477323705330491,
+    "per_sample_predict_us": 4.526114293291946,
+    "total_train_time": 1.6725282124243677
+  },
+  "size_kb": 615.2978515625,
+  "extra": {
+    "kind": "xgboost",
+    "params": "{'n_estimators': 100, 'max_depth': 6, 'learning_rate': 0.1}",
+    "scaling": "no"
+  }
+}

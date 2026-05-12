@@ -1,0 +1,43 @@
+{
+  "model": "GaussianNB",
+  "metrics": {
+    "accuracy": 0.12928921568627452,
+    "macro_f1": 0.3642593267838186,
+    "weighted_f1": 0.0713100162826304,
+    "per_class": [
+      {
+        "class": "Data Alteration",
+        "precision": 0.8975609756097561,
+        "recall": 1.0,
+        "f1": 0.9460154241645244,
+        "support": 184
+      },
+      {
+        "class": "Spoofing",
+        "precision": 0.0735632183908046,
+        "recall": 0.9955555555555555,
+        "f1": 0.13700305810397553,
+        "support": 225
+      },
+      {
+        "class": "normal",
+        "precision": 1.0,
+        "recall": 0.004903677758318739,
+        "f1": 0.009759498082955734,
+        "support": 2855
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 0.004144200123846531,
+    "predict_time": 0.0013158959336578846,
+    "per_sample_predict_us": 0.4031543914393029,
+    "total_train_time": 0.004144200123846531
+  },
+  "size_kb": 2.947265625,
+  "extra": {
+    "kind": "nb",
+    "params": "{}",
+    "scaling": "yes"
+  }
+}

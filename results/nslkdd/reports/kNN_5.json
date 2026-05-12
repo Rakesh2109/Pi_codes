@@ -1,0 +1,57 @@
+{
+  "model": "kNN_5",
+  "metrics": {
+    "accuracy": 0.9894290331268516,
+    "macro_f1": 0.8855055183842746,
+    "weighted_f1": 0.9893266426236275,
+    "per_class": [
+      {
+        "class": "DoS",
+        "precision": 0.9926078413025171,
+        "recall": 0.9989641209153405,
+        "f1": 0.9957758377921713,
+        "support": 10619
+      },
+      {
+        "class": "Normal",
+        "precision": 0.9917387375758359,
+        "recall": 0.9932773109243698,
+        "f1": 0.992507427980881,
+        "support": 15470
+      },
+      {
+        "class": "Probe",
+        "precision": 0.9836897426603842,
+        "recall": 0.9641207815275311,
+        "f1": 0.9738069608898458,
+        "support": 2815
+      },
+      {
+        "class": "R2L",
+        "precision": 0.9261744966442953,
+        "recall": 0.8891752577319587,
+        "f1": 0.9072978303747534,
+        "support": 776
+      },
+      {
+        "class": "U2R",
+        "precision": 0.631578947368421,
+        "recall": 0.5,
+        "f1": 0.5581395348837209,
+        "support": 24
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 0.054363610688596964,
+    "predict_time": 17.617188380099833,
+    "per_sample_predict_us": 593.0914482931536,
+    "total_train_time": 0.054363610688596964
+  },
+  "size_kb": 110462.97265625,
+  "extra": {
+    "kind": "knn",
+    "params": "{'n_neighbors': 5, 'weights': 'uniform', 'metric': 'minkowski'}",
+    "scaling": "yes"
+  }
+}

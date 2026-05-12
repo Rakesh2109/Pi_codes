@@ -1,0 +1,49 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# --- Numba JIT cache ---
+*.nbi
+*.nbc
+
+# --- Compiled / native ---
+*.so
+*.o
+*.dylib
+
+# --- Archives / large bundles (regenerable, not source) ---
+*.zip
+pi_bundle/
+
+# --- Generated model binaries & data caches (regenerate via the runners) ---
+results/**/*.pkl
+results/**/*.fbz
+results/**/*.zst
+results/**/*.npz
+pi_bench/assets/
+
+# --- Local dataset dir (datasets live elsewhere; set PAPER2_DATA_ROOT) ---
+Datasets/
+
+# --- LaTeX build artefacts (if compiling locally) ---
+*.aux
+*.log
+*.out
+*.bbl
+*.blg
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# --- Editor / OS ---
+.DS_Store
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,98 @@
+{
+  "model": "GLADE_FPTM",
+  "metrics": {
+    "accuracy": 0.970598687483712,
+    "macro_f1": 0.9428708326422847,
+    "weighted_f1": 0.9709160408787615,
+    "per_class": [
+      {
+        "class": "backdoor",
+        "precision": 0.9997498123592694,
+        "recall": 0.999,
+        "f1": 0.9993747655370764,
+        "support": 4000
+      },
+      {
+        "class": "ddos",
+        "precision": 0.9810012836970475,
+        "recall": 0.95525,
+        "f1": 0.9679544015199494,
+        "support": 4000
+      },
+      {
+        "class": "dos",
+        "precision": 0.9918805657412257,
+        "recall": 0.94675,
+        "f1": 0.9687899718598106,
+        "support": 4000
+      },
+      {
+        "class": "injection",
+        "precision": 0.9714139867279225,
+        "recall": 0.9515,
+        "f1": 0.9613538772417277,
+        "support": 4000
+      },
+      {
+        "class": "mitm",
+        "precision": 0.5868852459016394,
+        "recall": 0.8564593301435407,
+        "f1": 0.6964980544747081,
+        "support": 209
+      },
+      {
+        "class": "normal",
+        "precision": 0.9783725064191191,
+        "recall": 0.9907,
+        "f1": 0.9844976647123124,
+        "support": 10000
+      },
+      {
+        "class": "password",
+        "precision": 0.995382247306311,
+        "recall": 0.97,
+        "f1": 0.9825272220815396,
+        "support": 4000
+      },
+      {
+        "class": "ransomware",
+        "precision": 0.9208986660425931,
+        "recall": 0.98375,
+        "f1": 0.9512873201982353,
+        "support": 4000
+      },
+      {
+        "class": "scanning",
+        "precision": 0.9846306395637084,
+        "recall": 0.993,
+        "f1": 0.9887976101568334,
+        "support": 4000
+      },
+      {
+        "class": "xss",
+        "precision": 0.9340937896070975,
+        "recall": 0.92125,
+        "f1": 0.9276274386406546,
+        "support": 4000
+      }
+    ]
+  },
+  "timings": {
+    "binarize_fit_time": 0.11822125315666199,
+    "tm_fit_time": 26.469248932,
+    "tm_predict_time": 0.123364405,
+    "tm_predict_us_per_sample": 2.9227038072449005,
+    "total_train_time": 26.58747018515666
+  },
+  "size_kb": 159.0283203125,
+  "extra": {
+    "n_bits": 122,
+    "glade_size_kb": "1.48",
+    "tm_rules_json_kb": "157.55",
+    "tm_rules_pkl_kb": "74.72",
+    "tm_rules_pkl_zst_kb": "26.74",
+    "tm_rules_zst_kb": "26.74",
+    "total_size_kb": "159.03",
+    "hyperparameters": "{\"CLAUSES\": 100, \"T\": 15, \"S\": 20, \"L\": 25, \"LF\": 8, \"EPOCHS\": 200, \"STATES_NUM\": 256, \"INCLUDE_LIMIT\": 200}"
+  }
+}

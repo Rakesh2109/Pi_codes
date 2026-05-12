@@ -1,0 +1,31 @@
+===========================================================================
+  MODEL: MLP_tiny
+===========================================================================
+
+Accuracy:         93.38%
+Macro F1:         0.7130
+Weighted F1:      0.9115
+
+Timing:
+  fit_time               2.3377s
+  predict_time           0.0009s
+  per_sample_predict_us  0.2755s
+  total_train_time       2.3377s
+
+Model size:       42.93 KB
+
+Extra:
+  kind: mlp
+  params: {'hidden_layer_sizes': (32,), 'activation': 'relu', 'max_iter': 200}
+  n_neural_params: 995
+  param_size_kb_float32: 3.89
+  param_size_kb_int8: 0.97
+
+===========================================================================
+  PER-CLASS REPORT
+===========================================================================
+Class                      Precision     Recall         F1    Support
+----------------------------------------------------------------------
+Data Alteration               0.9684     1.0000     0.9840        184
+Spoofing                      0.6944     0.1111     0.1916        225
+normal                        0.9345     0.9944     0.9635       2855

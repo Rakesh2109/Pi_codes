@@ -1,0 +1,31 @@
+===========================================================================
+  MODEL: XGBoost
+===========================================================================
+
+Accuracy:         97.68%
+Macro F1:         0.8984
+Weighted F1:      0.9767
+
+Timing:
+  fit_time               23.0403s
+  predict_time           0.5565s
+  per_sample_predict_us  5.0173s
+  total_train_time       23.0403s
+
+Model size:       1700.72 KB
+
+Extra:
+  kind: xgboost
+  params: {'n_estimators': 100, 'max_depth': 6, 'learning_rate': 0.1}
+  scaling: no
+
+===========================================================================
+  PER-CLASS REPORT
+===========================================================================
+Class                      Precision     Recall         F1    Support
+----------------------------------------------------------------------
+Benign                        0.9387     0.9923     0.9648       2469
+Exfiltration                  0.9231     0.7741     0.8421       5183
+Initial access                0.9951     0.9960     0.9955      20418
+Lateral movement              0.6582     0.7480     0.7002       2500
+Reconnaissance                0.9876     0.9917     0.9896      80337

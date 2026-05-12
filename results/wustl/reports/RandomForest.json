@@ -1,0 +1,43 @@
+{
+  "model": "RandomForest",
+  "metrics": {
+    "accuracy": 0.9393382352941176,
+    "macro_f1": 0.7500625077836635,
+    "weighted_f1": 0.9214806547540166,
+    "per_class": [
+      {
+        "class": "Data Alteration",
+        "precision": 0.9735449735449735,
+        "recall": 1.0,
+        "f1": 0.9865951742627346,
+        "support": 184
+      },
+      {
+        "class": "Spoofing",
+        "precision": 0.803921568627451,
+        "recall": 0.18222222222222223,
+        "f1": 0.2971014492753623,
+        "support": 225
+      },
+      {
+        "class": "normal",
+        "precision": 0.939484126984127,
+        "recall": 0.9950963222416812,
+        "f1": 0.9664908998128934,
+        "support": 2855
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 1.7306139287538826,
+    "predict_time": 0.03542787488549948,
+    "per_sample_predict_us": 10.854128335018222,
+    "total_train_time": 1.7306139287538826
+  },
+  "size_kb": 14384.8564453125,
+  "extra": {
+    "kind": "rf",
+    "params": "{'n_estimators': 100, 'max_depth': None}",
+    "scaling": "no"
+  }
+}

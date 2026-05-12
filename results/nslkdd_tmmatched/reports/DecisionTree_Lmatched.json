@@ -1,0 +1,71 @@
+{
+  "model": "DecisionTree_Lmatched",
+  "metrics": {
+    "accuracy": 0.9746162133046055,
+    "macro_f1": 0.7277437889618016,
+    "weighted_f1": 0.973041964270322,
+    "per_class": [
+      {
+        "class": "DoS",
+        "precision": 0.9870919464970536,
+        "recall": 0.9937847254920426,
+        "f1": 0.9904270295635852,
+        "support": 10619
+      },
+      {
+        "class": "Normal",
+        "precision": 0.9688370914618698,
+        "recall": 0.9887524240465417,
+        "f1": 0.9786934544756543,
+        "support": 15470
+      },
+      {
+        "class": "Probe",
+        "precision": 0.9766666666666667,
+        "recall": 0.9367673179396092,
+        "f1": 0.9563009972801451,
+        "support": 2815
+      },
+      {
+        "class": "R2L",
+        "precision": 0.8838095238095238,
+        "recall": 0.5979381443298969,
+        "f1": 0.7132974634896234,
+        "support": 776
+      },
+      {
+        "class": "U2R",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 24
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 0.374650564044714,
+    "predict_time": 0.005973658990114927,
+    "per_sample_predict_us": 0.2011062143184395,
+    "total_train_time": 0.374650564044714
+  },
+  "size_kb": 11.34765625,
+  "extra": {
+    "kind": "dt",
+    "feature_space": "raw",
+    "tm_source": {
+      "C": 90,
+      "T": 12,
+      "s": 200,
+      "L": 40,
+      "Lf": 8,
+      "E": 80
+    },
+    "derived_hp": {
+      "n_estimators": 90,
+      "max_depth": 6,
+      "max_iter": 80,
+      "hidden_layer_sizes": "(180, 90)"
+    },
+    "scaling": "no"
+  }
+}

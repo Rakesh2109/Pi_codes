@@ -1,0 +1,242 @@
+[
+  {
+    "dataset": "nslkdd",
+    "human": "NSL-KDD",
+    "codec": "zstd-1",
+    "raw_bytes": 31318,
+    "size": 14048,
+    "comp_us": 86.279206443578,
+    "decomp_us": 33.9660351164639,
+    "ratio": 2.229
+  },
+  {
+    "dataset": "nslkdd",
+    "human": "NSL-KDD",
+    "codec": "zstd-5",
+    "raw_bytes": 31318,
+    "size": 14794,
+    "comp_us": 338.92167499288917,
+    "decomp_us": 36.15662921220064,
+    "ratio": 2.117
+  },
+  {
+    "dataset": "nslkdd",
+    "human": "NSL-KDD",
+    "codec": "zstd-22",
+    "raw_bytes": 31318,
+    "size": 13323,
+    "comp_us": 7547.250809147954,
+    "decomp_us": 26.341385673731565,
+    "ratio": 2.351
+  },
+  {
+    "dataset": "nslkdd",
+    "human": "NSL-KDD",
+    "codec": "gzip-9",
+    "raw_bytes": 31318,
+    "size": 14513,
+    "comp_us": 16080.950309988111,
+    "decomp_us": 158.26014801859856,
+    "ratio": 2.158
+  },
+  {
+    "dataset": "nslkdd",
+    "human": "NSL-KDD",
+    "codec": "lzma-9",
+    "raw_bytes": 31318,
+    "size": 13432,
+    "comp_us": 30507.569736801088,
+    "decomp_us": 653.2575446180999,
+    "ratio": 2.332
+  },
+  {
+    "dataset": "nslkdd",
+    "human": "NSL-KDD",
+    "codec": "brotli-11",
+    "raw_bytes": 31318,
+    "size": 12651,
+    "comp_us": 54782.39699732512,
+    "decomp_us": 216.62668092176318,
+    "ratio": 2.476
+  },
+  {
+    "dataset": "ton_iot",
+    "human": "TON_IoT",
+    "codec": "zstd-1",
+    "raw_bytes": 34060,
+    "size": 16619,
+    "comp_us": 76.99277950450778,
+    "decomp_us": 30.635450966656208,
+    "ratio": 2.049
+  },
+  {
+    "dataset": "ton_iot",
+    "human": "TON_IoT",
+    "codec": "zstd-5",
+    "raw_bytes": 34060,
+    "size": 17505,
+    "comp_us": 321.90907979384065,
+    "decomp_us": 37.8631753847003,
+    "ratio": 1.946
+  },
+  {
+    "dataset": "ton_iot",
+    "human": "TON_IoT",
+    "codec": "zstd-22",
+    "raw_bytes": 34060,
+    "size": 15972,
+    "comp_us": 7454.207702539861,
+    "decomp_us": 28.353524394333363,
+    "ratio": 2.132
+  },
+  {
+    "dataset": "ton_iot",
+    "human": "TON_IoT",
+    "codec": "gzip-9",
+    "raw_bytes": 34060,
+    "size": 17324,
+    "comp_us": 15520.624406635761,
+    "decomp_us": 181.1461616307497,
+    "ratio": 1.966
+  },
+  {
+    "dataset": "ton_iot",
+    "human": "TON_IoT",
+    "codec": "lzma-9",
+    "raw_bytes": 34060,
+    "size": 16176,
+    "comp_us": 29550.56589562446,
+    "decomp_us": 757.3387306183577,
+    "ratio": 2.106
+  },
+  {
+    "dataset": "ton_iot",
+    "human": "TON_IoT",
+    "codec": "brotli-11",
+    "raw_bytes": 34060,
+    "size": 15634,
+    "comp_us": 63835.0591994822,
+    "decomp_us": 241.76362669095397,
+    "ratio": 2.179
+  },
+  {
+    "dataset": "medsec",
+    "human": "MedSec-25",
+    "codec": "zstd-1",
+    "raw_bytes": 38452,
+    "size": 12619,
+    "comp_us": 79.67059034854174,
+    "decomp_us": 32.59181510657072,
+    "ratio": 3.047
+  },
+  {
+    "dataset": "medsec",
+    "human": "MedSec-25",
+    "codec": "zstd-5",
+    "raw_bytes": 38452,
+    "size": 12830,
+    "comp_us": 300.1193096861243,
+    "decomp_us": 34.007285721600056,
+    "ratio": 2.997
+  },
+  {
+    "dataset": "medsec",
+    "human": "MedSec-25",
+    "codec": "zstd-22",
+    "raw_bytes": 38452,
+    "size": 11624,
+    "comp_us": 12085.231696255505,
+    "decomp_us": 28.585074469447136,
+    "ratio": 3.308
+  },
+  {
+    "dataset": "medsec",
+    "human": "MedSec-25",
+    "codec": "gzip-9",
+    "raw_bytes": 38452,
+    "size": 12170,
+    "comp_us": 22228.229839820415,
+    "decomp_us": 148.9217090420425,
+    "ratio": 3.16
+  },
+  {
+    "dataset": "medsec",
+    "human": "MedSec-25",
+    "codec": "lzma-9",
+    "raw_bytes": 38452,
+    "size": 11324,
+    "comp_us": 33884.51479841024,
+    "decomp_us": 583.8599195703864,
+    "ratio": 3.396
+  },
+  {
+    "dataset": "medsec",
+    "human": "MedSec-25",
+    "codec": "brotli-11",
+    "raw_bytes": 38452,
+    "size": 10651,
+    "comp_us": 64304.32421620935,
+    "decomp_us": 182.35178431496024,
+    "ratio": 3.61
+  },
+  {
+    "dataset": "wustl",
+    "human": "WUSTL-EHMS-2020",
+    "codec": "zstd-1",
+    "raw_bytes": 13776,
+    "size": 7237,
+    "comp_us": 36.74858482554555,
+    "decomp_us": 15.800290275365114,
+    "ratio": 1.904
+  },
+  {
+    "dataset": "wustl",
+    "human": "WUSTL-EHMS-2020",
+    "codec": "zstd-5",
+    "raw_bytes": 13776,
+    "size": 7330,
+    "comp_us": 135.51129028201103,
+    "decomp_us": 15.655714087188244,
+    "ratio": 1.879
+  },
+  {
+    "dataset": "wustl",
+    "human": "WUSTL-EHMS-2020",
+    "codec": "zstd-22",
+    "raw_bytes": 13776,
+    "size": 7129,
+    "comp_us": 2457.529166713357,
+    "decomp_us": 17.90028065443039,
+    "ratio": 1.932
+  },
+  {
+    "dataset": "wustl",
+    "human": "WUSTL-EHMS-2020",
+    "codec": "gzip-9",
+    "raw_bytes": 13776,
+    "size": 7387,
+    "comp_us": 3710.3124102577567,
+    "decomp_us": 70.78031077980995,
+    "ratio": 1.865
+  },
+  {
+    "dataset": "wustl",
+    "human": "WUSTL-EHMS-2020",
+    "codec": "lzma-9",
+    "raw_bytes": 13776,
+    "size": 6816,
+    "comp_us": 24888.098519295454,
+    "decomp_us": 315.8054035156965,
+    "ratio": 2.021
+  },
+  {
+    "dataset": "wustl",
+    "human": "WUSTL-EHMS-2020",
+    "codec": "brotli-11",
+    "raw_bytes": 13776,
+    "size": 6363,
+    "comp_us": 20625.123055651784,
+    "decomp_us": 96.73967957496643,
+    "ratio": 2.165
+  }
+]

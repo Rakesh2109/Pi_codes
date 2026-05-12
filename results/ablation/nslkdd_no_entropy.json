@@ -1,0 +1,12 @@
+{
+  "dataset": "NSL-KDD",
+  "variant": "no_entropy",
+  "disable": [
+    "entropy"
+  ],
+  "bits": 253,
+  "ok": true,
+  "wall": 34.724376678001136,
+  "acc": 0.9950511715593859,
+  "macro_f1": 0.9355877151973184
+}

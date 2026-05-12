@@ -1,0 +1,71 @@
+{
+  "model": "XGBoost_Cmatched",
+  "metrics": {
+    "accuracy": 0.9753216659002588,
+    "macro_f1": 0.8925950684013898,
+    "weighted_f1": 0.9752520426867473,
+    "per_class": [
+      {
+        "class": "Benign",
+        "precision": 0.9272658035034272,
+        "recall": 0.9862292426083434,
+        "f1": 0.9558390578999019,
+        "support": 2469
+      },
+      {
+        "class": "Exfiltration",
+        "precision": 0.9280524958987579,
+        "recall": 0.7640362724290951,
+        "f1": 0.8380952380952381,
+        "support": 5183
+      },
+      {
+        "class": "Initial access",
+        "precision": 0.9937426671881111,
+        "recall": 0.9955921245959447,
+        "f1": 0.9946665361843715,
+        "support": 20418
+      },
+      {
+        "class": "Lateral movement",
+        "precision": 0.6395429362880887,
+        "recall": 0.7388,
+        "f1": 0.6855976243504083,
+        "support": 2500
+      },
+      {
+        "class": "Reconnaissance",
+        "precision": 0.986736085285732,
+        "recall": 0.9908261448647572,
+        "f1": 0.9887768854770289,
+        "support": 80337
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 29.360442971345037,
+    "predict_time": 0.3770750523544848,
+    "per_sample_predict_us": 3.399921126299375,
+    "total_train_time": 29.360442971345037
+  },
+  "size_kb": 938.966796875,
+  "extra": {
+    "kind": "xgboost",
+    "feature_space": "raw",
+    "tm_source": {
+      "C": 80,
+      "T": 12,
+      "s": 75,
+      "L": 30,
+      "Lf": 8,
+      "E": 300
+    },
+    "derived_hp": {
+      "n_estimators": 80,
+      "max_depth": 5,
+      "max_iter": 300,
+      "hidden_layer_sizes": "(160, 80)"
+    },
+    "scaling": "no"
+  }
+}

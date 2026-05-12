@@ -1,0 +1,57 @@
+{
+  "model": "LogisticRegression",
+  "metrics": {
+    "accuracy": 0.9416808677540642,
+    "macro_f1": 0.7769369781559259,
+    "weighted_f1": 0.9431065207210825,
+    "per_class": [
+      {
+        "class": "Benign",
+        "precision": 0.830575256107171,
+        "recall": 0.8537869582827056,
+        "f1": 0.8420211703614939,
+        "support": 2469
+      },
+      {
+        "class": "Exfiltration",
+        "precision": 0.8401880141010576,
+        "recall": 0.5518039745321243,
+        "f1": 0.6661232095027367,
+        "support": 5183
+      },
+      {
+        "class": "Initial access",
+        "precision": 0.9367504283266704,
+        "recall": 0.9640023508668821,
+        "f1": 0.9501810282404055,
+        "support": 20418
+      },
+      {
+        "class": "Lateral movement",
+        "precision": 0.3612399316573102,
+        "recall": 0.592,
+        "f1": 0.4486887979384569,
+        "support": 2500
+      },
+      {
+        "class": "Reconnaissance",
+        "precision": 0.9806151071929473,
+        "recall": 0.9747438913576558,
+        "f1": 0.9776706847365365,
+        "support": 80337
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 48.68561903294176,
+    "predict_time": 0.012380057014524937,
+    "per_sample_predict_us": 0.11162556930153135,
+    "total_train_time": 48.68561903294176
+  },
+  "size_kb": 4.810546875,
+  "extra": {
+    "kind": "logreg",
+    "params": "{'C': 1.0, 'solver': 'lbfgs', 'max_iter': 1000}",
+    "scaling": "yes"
+  }
+}

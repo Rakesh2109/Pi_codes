@@ -1,0 +1,45 @@
+{
+  "model": "MLP_med",
+  "metrics": {
+    "accuracy": 0.9522058823529411,
+    "macro_f1": 0.8331265571988626,
+    "weighted_f1": 0.9442178895056478,
+    "per_class": [
+      {
+        "class": "Data Alteration",
+        "precision": 0.9735449735449735,
+        "recall": 1.0,
+        "f1": 0.9865951742627346,
+        "support": 184
+      },
+      {
+        "class": "Spoofing",
+        "precision": 0.8476190476190476,
+        "recall": 0.39555555555555555,
+        "f1": 0.5393939393939394,
+        "support": 225
+      },
+      {
+        "class": "normal",
+        "precision": 0.9545454545454546,
+        "recall": 0.9929947460595446,
+        "f1": 0.9733905579399141,
+        "support": 2855
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 8.172176632098854,
+    "predict_time": 0.002826100680977106,
+    "per_sample_predict_us": 0.8658396694170056,
+    "total_train_time": 8.172176632098854
+  },
+  "size_kb": 387.8857421875,
+  "extra": {
+    "kind": "mlp",
+    "params": "{'hidden_layer_sizes': (128, 64), 'activation': 'relu', 'max_iter': 200}",
+    "n_neural_params": 12035,
+    "param_size_kb_float32": "47.01",
+    "param_size_kb_int8": "11.75"
+  }
+}

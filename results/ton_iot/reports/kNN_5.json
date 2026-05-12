@@ -1,0 +1,92 @@
+{
+  "model": "kNN_5",
+  "metrics": {
+    "accuracy": 0.9742471984647824,
+    "macro_f1": 0.9441327045228215,
+    "weighted_f1": 0.9744855887759486,
+    "per_class": [
+      {
+        "class": "backdoor",
+        "precision": 0.99925,
+        "recall": 0.99925,
+        "f1": 0.99925,
+        "support": 4000
+      },
+      {
+        "class": "ddos",
+        "precision": 0.9802831142568251,
+        "recall": 0.9695,
+        "f1": 0.9748617395676219,
+        "support": 4000
+      },
+      {
+        "class": "dos",
+        "precision": 0.9843946639818777,
+        "recall": 0.97775,
+        "f1": 0.9810610811488775,
+        "support": 4000
+      },
+      {
+        "class": "injection",
+        "precision": 0.9712048497095226,
+        "recall": 0.96125,
+        "f1": 0.9662017841437367,
+        "support": 4000
+      },
+      {
+        "class": "mitm",
+        "precision": 0.6636771300448431,
+        "recall": 0.7081339712918661,
+        "f1": 0.6851851851851852,
+        "support": 209
+      },
+      {
+        "class": "normal",
+        "precision": 0.9942971485742872,
+        "recall": 0.9938,
+        "f1": 0.994048512128032,
+        "support": 10000
+      },
+      {
+        "class": "password",
+        "precision": 0.9893563101875317,
+        "recall": 0.976,
+        "f1": 0.9826327712056381,
+        "support": 4000
+      },
+      {
+        "class": "ransomware",
+        "precision": 0.9852586437952292,
+        "recall": 0.919,
+        "f1": 0.9509765877635493,
+        "support": 4000
+      },
+      {
+        "class": "scanning",
+        "precision": 0.9848107569721115,
+        "recall": 0.98875,
+        "f1": 0.9867764471057884,
+        "support": 4000
+      },
+      {
+        "class": "xss",
+        "precision": 0.8775510204081632,
+        "recall": 0.9675,
+        "f1": 0.920332936979786,
+        "support": 4000
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 0.021313277073204517,
+    "predict_time": 21.36913337185979,
+    "per_sample_predict_us": 506.26959586485793,
+    "total_train_time": 0.021313277073204517
+  },
+  "size_kb": 51444.125,
+  "extra": {
+    "kind": "knn",
+    "params": "{'n_neighbors': 5, 'weights': 'uniform', 'metric': 'minkowski'}",
+    "scaling": "yes"
+  }
+}

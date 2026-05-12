@@ -1,0 +1,12 @@
+{
+  "dataset": "WUSTL-EHMS-2020",
+  "variant": "no_budget",
+  "disable": [
+    "budget"
+  ],
+  "bits": 256,
+  "ok": true,
+  "wall": 12.333244368899614,
+  "acc": 0.9424019607843137,
+  "macro_f1": 0.7736458527784865
+}

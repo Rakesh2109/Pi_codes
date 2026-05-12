@@ -1,0 +1,31 @@
+===========================================================================
+  MODEL: LinearSVM
+===========================================================================
+
+Accuracy:         85.38%
+Macro F1:         0.5146
+Weighted F1:      0.8241
+
+Timing:
+  fit_time               2203.9786s
+  predict_time           0.0131s
+  per_sample_predict_us  0.1177s
+  total_train_time       2203.9786s
+
+Model size:       4.70 KB
+
+Extra:
+  kind: svm
+  params: {'C': 1.0, 'loss': 'squared_hinge', 'max_iter': 1000, 'dual': False}
+  scaling: yes
+
+===========================================================================
+  PER-CLASS REPORT
+===========================================================================
+Class                      Precision     Recall         F1    Support
+----------------------------------------------------------------------
+Benign                        0.8809     0.5630     0.6869       2469
+Exfiltration                  0.5290     0.0475     0.0871       5183
+Initial access                0.8808     0.6395     0.7410      20418
+Lateral movement              0.3505     0.0872     0.1397       2500
+Reconnaissance                0.8540     0.9931     0.9183      80337

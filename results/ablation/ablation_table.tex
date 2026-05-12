@@ -1,0 +1,26 @@
+\begin{table*}[t]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\small
+\caption{GLADE component ablation: each stage is disabled in isolation, the binariser is re-fitted, and the FPTM is re-trained with the per-dataset configuration of Table~\ref{tab:tm_hparams} ($n_\text{bins}=15$). Each cell is bits/accuracy/macro-F1. The entropy-pruning stage (Step~3) leaves the thresholds unchanged on every dataset except WUSTL-EHMS-2020 and is therefore removed from the final pipeline.}
+\label{tab:ablation}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|ccc|ccc|ccc|ccc|}
+\hline
+ & \multicolumn{3}{c|}{\textbf{NSL-KDD}} & \multicolumn{3}{c|}{\textbf{TON\_IoT}} & \multicolumn{3}{c|}{\textbf{MedSec-25}} & \multicolumn{3}{c|}{\textbf{WUSTL-EHMS-2020}} \\
+\hline
+\textbf{Configuration} & Bits & Acc & F1 & Bits & Acc & F1 & Bits & Acc & F1 & Bits & Acc & F1 \\
+\hline
+GLADE (full pipeline) & 253 & 0.9951 & 0.9356 & 122 & 0.9708 & 0.9410 & 351 & 0.9706 & 0.8697 & 256 & 0.9424 & 0.7736 \\
+\hline
+\quad $-$ adaptive bit budget (Step~1) & 320 & 0.9952 & 0.9282 & 152 & 0.9724 & 0.9422 & 613 & 0.9728 & 0.8797 & 256 & 0.9424 & 0.7736 \\
+\hline
+\quad $-$ gap-aware placement (Step~2) & 254 & 0.9947 & 0.9233 & 122 & 0.9705 & 0.9426 & 351 & 0.9707 & 0.8701 & 257 & 0.9436 & 0.7879 \\
+\hline
+\quad $-$ entropy-based pruning (Step~3) & 253 & 0.9951 & 0.9356 & 122 & 0.9708 & 0.9410 & 351 & 0.9706 & 0.8697 & 256 & 0.9421 & 0.7868 \\
+\hline
+\quad $-$ local refinement (Step~4) & 253 & 0.9950 & 0.9349 & 122 & 0.9647 & 0.9367 & 351 & 0.9723 & 0.8804 & 256 & 0.9449 & 0.7889 \\
+\hline
+\end{tabular}
+}
+\end{table*}

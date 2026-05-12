@@ -1,0 +1,33 @@
+===========================================================================
+  MODEL: GaussianNB
+===========================================================================
+
+Accuracy:         76.73%
+Macro F1:         0.4218
+Weighted F1:      0.7387
+
+Timing:
+  fit_time               0.4657s
+  predict_time           0.2224s
+  per_sample_predict_us  2.0053s
+  total_train_time       0.4657s
+
+Model size:       6.83 KB
+
+Extra:
+  kind: nb
+  feature_space: raw
+  tm_source: {'C': 80, 'T': 12, 's': 75, 'L': 30, 'Lf': 8, 'E': 300}
+  derived_hp: {'n_estimators': 80, 'max_depth': 5, 'max_iter': 300, 'hidden_layer_sizes': '(160, 80)'}
+  scaling: yes
+
+===========================================================================
+  PER-CLASS REPORT
+===========================================================================
+Class                      Precision     Recall         F1    Support
+----------------------------------------------------------------------
+Benign                        0.3537     0.7019     0.4703       2469
+Exfiltration                  0.1092     0.0668     0.0829       5183
+Initial access                0.8734     0.2057     0.3330      20418
+Lateral movement              0.2088     0.6612     0.3173       2500
+Reconnaissance                0.8564     0.9606     0.9055      80337

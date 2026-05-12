@@ -1,0 +1,42 @@
+===========================================================================
+  MODEL: GLADE_FPTM
+===========================================================================
+
+Accuracy:         97.06%
+Macro F1:         0.9429
+Weighted F1:      0.9709
+
+Timing:
+  binarize_fit_time      0.1182s
+  tm_fit_time            26.4692s
+  tm_predict_time        0.1234s
+  tm_predict_us_per_sample 2.9227s
+  total_train_time       26.5875s
+
+Model size:       159.03 KB
+
+Extra:
+  n_bits: 122
+  glade_size_kb: 1.48
+  tm_rules_json_kb: 157.55
+  tm_rules_pkl_kb: 74.72
+  tm_rules_pkl_zst_kb: 26.74
+  tm_rules_zst_kb: 26.74
+  total_size_kb: 159.03
+  hyperparameters: {"CLAUSES": 100, "T": 15, "S": 20, "L": 25, "LF": 8, "EPOCHS": 200, "STATES_NUM": 256, "INCLUDE_LIMIT": 200}
+
+===========================================================================
+  PER-CLASS REPORT
+===========================================================================
+Class                      Precision     Recall         F1    Support
+----------------------------------------------------------------------
+backdoor                      0.9997     0.9990     0.9994       4000
+ddos                          0.9810     0.9553     0.9680       4000
+dos                           0.9919     0.9467     0.9688       4000
+injection                     0.9714     0.9515     0.9614       4000
+mitm                          0.5869     0.8565     0.6965        209
+normal                        0.9784     0.9907     0.9845      10000
+password                      0.9954     0.9700     0.9825       4000
+ransomware                    0.9209     0.9838     0.9513       4000
+scanning                      0.9846     0.9930     0.9888       4000
+xss                           0.9341     0.9213     0.9276       4000

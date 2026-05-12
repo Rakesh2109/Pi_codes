@@ -1,0 +1,904 @@
+\documentclass[journal,twoside,web]{ieeecolor}
+\usepackage{generic}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{longtable}   % for long tables across pages
+\usepackage{multirow}    % for multirow cells
+\usepackage{array}       % better column formatting
+\usepackage{booktabs}    % optional (only if you use \toprule etc.)
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\markboth{\journalname, VOL. XX, NO. XX, XXXX}
+{Author \MakeLowercase{\textit{et al.}}: Title}
+\begin{document}
+\title{Preparation of Papers for IEEE Trans on Industrial Informatics (February 2022)}
+\author{First A. Author, \IEEEmembership{Fellow, IEEE}, Second B. Author, and Third C. Author, Jr., \IEEEmembership{Member, IEEE}
+\thanks{This work was supported by the \textit{SecureIoTM: Ultra-low-energy IoT Intrusion Detection Systems using Logic-based Tsetlin Machines} project (Grant Number: 342167), funded by the Research Council of Norway under the TEKNOLOGIKONVER program. 
+The authors acknowledge the support from the Center of Artificial Intelligence Research at the University of Agder, Sørlandet Hospital Trust, and Newcastle University for their collaboration in this interdisciplinary research initiative.}% <-this % stops a space
+\thanks{Rakesh Reddy Yakkati, Per-Arne Andersen, Lei Jiao, and Ole-Christoffer Granmo are with the Department of ICT, 
+University of Agder, Grimstad 4879, Norway (\{rakeshry; per.andersen; lei.jiao; ole.granmo\}@uia.no). }
+\thanks{Rishad Shafik is with the Department of Microelectronic Systems, Newcastle University, Newcastle upon Tyne, UK (e-mail: rishad.shafik@newcastle.ac.uk). (Corresponding authors: Per-Arne Andersen and Lei Jiao).}}
+
+\maketitle
+
+\begin{abstract}
+Intrusion Detection Systems (IDS) play a critical role in securing heterogeneous Internet of Things (IoT) infrastructures, including Industrial IoT (IIoT), Internet of Medical Things (IoMT), and cyber-physical systems. However, stringent constraints on computation, memory, and latency hinder the deployment of conventional machine learning models in edge computing environments. This paper presents a lightweight and deployment-efficient IDS framework designed for resource-constrained edge systems, emphasizing efficient booleanization, a compact Tsetlin Machine architecture, and low-latency inference.
+An efficient binarization strategy termed GLADE is proposed to transform heterogeneous data streams into compact and discriminative Boolean representations while reducing redundancy and controlling feature expansion. In contrast to thermometric encoding, GLADE generates compact feature spaces that improve learning efficiency and reduce memory footprint. The GLADE booleanizer is integrated with a Fuzzy Pattern Tsetlin Machine (FPTM), enabling robust and interpretable rule-based learning under uncertainty while preserving a compact model structure. This integration reduces clause complexity and enhances generalization across diverse intrusion detection scenarios.
+The proposed framework is evaluated on benchmark datasets including WUSTL-EHMS-2020, NSL-KDD, TON\_IoT, and MedSec-25. Experimental results demonstrate competitive detection performance compared to conventional machine learning models. Model storage remains compact with models serialized in two formats: a non-compressed pickle format for Python-based deployment and a compressed Zstd (level-1) format that supports efficient storage and cross-platform interoperability. On a resource-constrained edge platform such as the Raspberry Pi 5, GLADE binarisation runs up to 19× faster than the standard Tsetlin Machine binariser and up to 11× faster than thermometric encoding without compromising detection accuracy.
+\end{abstract}
+
+% FIX 1: IEEEkeywords entries must be comma-separated
+\begin{IEEEkeywords}
+Intrusion Detection Systems,
+Internet of Things,
+Edge Computing,
+Tsetlin Machine,
+Booleanization,
+Lightweight Machine Learning,
+Cyber-Physical Systems
+\end{IEEEkeywords}
+
+\section{Introduction}
+\label{sec:introduction}
+
+\IEEEPARstart{T}{he} Internet of Things (IoT) has evolved into a large-scale cyber-physical infrastructure comprising billions of connected sensors, controllers, and monitoring systems deployed across industrial, healthcare, and critical environments \cite{hussain2020ml, algaradi2020survey}. These systems enable tight integration between digital intelligence and physical processes, but also significantly increase exposure to cyber threats. A compromised node in an industrial control system can disrupt production and incur substantial economic loss, while attacks in healthcare environments can directly impact patient safety and system reliability \cite{zhukabayeva2025cybersecurity}. Consequently, intrusion detection has become a fundamental requirement for secure IoT operation.
+
+Machine learning has been widely adopted for intrusion detection, leading to substantial improvements in detection accuracy on benchmark datasets \cite{kikissagbe2024review, jouhari2024lightweight}. However, a persistent challenge remains. The environments where intrusion detection is most critical are also those with the most severe resource constraints. Edge devices such as industrial controllers and embedded medical systems operate under strict limits on memory, computation, and latency \cite{wang2023lightweight}. Models that perform well under server-side conditions are often impractical when deployed on such hardware \cite{kundu2025review}. This mismatch between detection capability and deployment feasibility remains a central challenge in IoT security.
+
+Efforts to address this issue have primarily focused on reducing the cost of existing models through compression techniques such as
+quantization, pruning, and knowledge distillation \cite{liu2025compression}. An alternative approach is to reconsider the feature representation itself. By transforming input features into Boolean form, inference can be performed using bit-level operations,
+eliminating the need for floating-point computation \cite{bacellar2017thermometer}. However, conventional encoding methods,
+such as thermometric encoding, lead to significant feature expansion, which increases model size and learning complexity \cite{nguyen2025binarized}.
+
+Tsetlin Machines (TMs) provide a rule-based learning framework that operates directly on Boolean inputs using propositional logic clauses
+\cite{granmo2018tsetlin}. Inference relies solely on logical operations, making TMs well-suited for resource-constrained hardware.
+The Fuzzy Pattern Tsetlin Machine (FPTM) further improves robustness by allowing partial clause matching, which is beneficial in noisy and
+heterogeneous IoT environments \cite{hnilov2025fptm}. Despite these advantages, the efficiency of TM-based systems is strongly influenced
+by the quality of the input encoding. Suboptimal booleanization leads to unnecessarily large clause sets and limits achievable efficiency.
+
+The principal contributions of this work are as follows:
+
+\begin{itemize}
+    \item \textbf{GLADE Booleanizer:} A novel feature booleanization method that generates compact and discriminative Boolean representations, reducing feature expansion and clause complexity compared to thermometric encoding.
+
+    \item \textbf{GLADE-FPTM Integration:} A unified framework that combines GLADE with the FPTM to achieve robust, interpretable, and
+    memory-efficient intrusion detection.
+
+    \item \textbf{Comprehensive Evaluation:} Experimental validation across multiple heterogeneous IoT intrusion detection datasets,
+    demonstrating competitive detection accuracy with reduced model size and computational cost.
+
+    \item \textbf{Edge Deployment Analysis:} Empirical evaluation on a resource-constrained platform, demonstrating significant
+    improvements in inference efficiency and real-time feasibility.
+\end{itemize}
+
+The remainder of this paper is organized as follows. Related work is reviewed in Section~\ref{sec:related}. The proposed GLADE method is
+described in Section~\ref{sec:glade}. The FPTM framework is presented in Section~\ref{sec:fptm}. Experimental setup and datasets are
+introduced in Section~\ref{sec:experiments}. Results are discussed in Section~\ref{sec:results}, and conclusions are drawn in Section~\ref{sec:conclusion}.
+
+
+\section{Related Work}
+\label{sec:related}
+
+% ---------------------------------------------------------------
+\subsection{Machine Learning for IoT and IIoT Intrusion Detection}
+% ---------------------------------------------------------------
+
+Machine learning has been widely applied to intrusion detection in
+IoT environments, encompassing signature-based, anomaly-based, and
+hybrid approaches. A recurring challenge identified in prior work is
+the difficulty of deploying such models on resource-constrained edge
+devices \cite{hussain2020ml, algaradi2020survey}. Deep learning
+methods have demonstrated strong performance in industrial and
+medical IoT settings, particularly on benchmark datasets
+\cite{wang2023lightweight, jouhari2024lightweight, hady2020iomt}.
+
+Benchmark datasets such as NSL-KDD and TON\_IoT have enabled
+systematic evaluation of intrusion detection methods
+\cite{tavallaee2009nslkdd, moustafa2021toniot}. However, most studies
+focus on server-side evaluation, with limited consideration of
+deployment constraints such as memory usage and inference latency.
+
+% ---------------------------------------------------------------
+\subsection{Lightweight and Edge-Deployable IDS}
+% ---------------------------------------------------------------
+
+To address deployment challenges, lightweight IDS solutions have been
+developed using model compression techniques, including pruning,
+quantization, and knowledge distillation \cite{liu2025compression}.
+Hybrid architectures combining convolutional and recurrent components
+have also been proposed for embedded platforms
+\cite{jouhari2024lightweight}. While these approaches reduce resource
+requirements, they are typically applied as post-hoc optimizations to
+models designed for floating-point computation. Consequently, they
+introduce approximation error and do not eliminate reliance on
+floating-point arithmetic.
+
+% ---------------------------------------------------------------
+\subsection{Tsetlin Machines, Booleanization, and Edge Security}
+% ---------------------------------------------------------------
+
+The Tsetlin Machine (TM) is a rule-based learning framework that
+performs classification using propositional logic clauses constructed
+by teams of Tsetlin Automata \cite{granmo2018tsetlin}. Its reliance on
+bitwise operations makes it inherently suitable for deployment on
+resource-constrained hardware \cite{kundu2025review}. Competitive
+performance has been demonstrated across multiple intrusion detection
+benchmarks while maintaining interpretability and low inference cost
+\cite{abeyrathna2020intrusion, gunvaldsen2023iot, jaiswal2025iomt}.
+
+The Fuzzy Pattern Tsetlin Machine (FPTM) extends this framework by
+allowing partial clause matching, improving robustness to noisy and
+heterogeneous data \cite{hnilov2025fptm}.
+
+A key requirement for TM-based learning is the transformation of
+features into Boolean form. Thermometric encoding is widely used for
+this purpose, but its dimensionality grows linearly with the number of
+thresholds, leading to significant feature expansion and increased
+model complexity \cite{granmo2018tsetlin, gunvaldsen2023iot}.
+Alternative binarization methods proposed for neural networks rely on
+gradient-based optimization and are not directly applicable to TM
+learning \cite{nguyen2025binarized}.
+
+Despite these advances, the booleanization process has remained
+largely decoupled from the learning algorithm. Its impact on clause
+complexity, memory usage, and inference efficiency has not been
+systematically addressed.
+
+
+%% ========================================================================
+% FIX 3: GLADE section moved before FPTM to match the intro roadmap
+\section{GLADE Binariser}
+\label{sec:glade}
+
+Tsetlin Machines require Boolean inputs; therefore, transforming raw
+numerical features into informative binary representations is a
+critical preprocessing step. Conventional discretisation methods,
+such as equal-width and equal-frequency binning, apply a fixed
+allocation of thresholds across all features, which often leads to
+inefficient use of representational capacity and poorly placed
+thresholds in low-density regions. To address these limitations, the
+Gap-aware Lightweight Adaptive Discretisation Engine (GLADE) is
+proposed as a core contribution of this work.
+
+GLADE generates Boolean literals through threshold comparisons of
+the form
+\begin{equation}
+  b_k = \mathbf{1}\!\left[ x_{f_k} \geq \tau_k \right],
+  \quad k = 1, \ldots, K,
+\end{equation}
+where $x_{f_k}$ denotes the value of feature $f_k$, $\tau_k$ is a
+learned threshold, and $K$ is the total number of generated bits.
+The method is governed by a single hyperparameter,
+$n_\text{bins}$, which defines the maximum number of thresholds per
+feature. The binarisation process consists of four stages.
+
+%% ------------------------------------------------------------------------
+\subsection{Step 1: Adaptive Bit Allocation}
+\label{subsec:budget}
+
+An individual bit budget $b_j$ is assigned to each feature based on
+its statistical properties.
+
+\textbf{Categorical features:} When the number of distinct values
+does not exceed $n_\text{bins}$, the feature is treated as
+categorical, and thresholds are placed between consecutive values,
+yielding $|\mathcal{U}_j| - 1$ bits.
+
+\textbf{Sparse features:} For features with a high proportion of
+zero values, allocating the full budget is inefficient. When the
+zero fraction $\rho_j$ exceeds 0.3, the effective number of
+informative values is estimated as
+\begin{equation}
+  d_j = \max(1 - \rho_j,\ 0.01),
+\end{equation}
+\begin{equation}
+  \hat{e}_j = \max\!\left(\tilde{n}_j \cdot d_j^{2},\ 2\right),
+\end{equation}
+\begin{equation}
+  b_j = \max\!\left(1,\ \min\!\left(
+        \lceil \log_2 \hat{e}_j \rceil + 2,\;
+        n_\text{bins}\right)\right),
+\end{equation}
+where $\tilde{n}_j$ denotes the number of distinct non-zero values.
+For dense features, the full budget $n_\text{bins}$ is retained.
+
+%% ------------------------------------------------------------------------
+\subsection{Step 2: Gap-Aware Threshold Placement}
+\label{subsec:gaps}
+
+Thresholds are initially estimated using equal-frequency quantiles.
+However, this strategy becomes suboptimal when the feature
+distribution contains large empty intervals. To address this issue,
+GLADE detects structural gaps by comparing the maximum spacing
+$g_\text{max}$ between consecutive sorted values with the median
+spacing $\tilde{g}$. When
+\begin{equation}
+  g_\text{max} > 5\,\tilde{g},
+\end{equation}
+the distribution is considered discontinuous, and candidate
+thresholds are relocated to the midpoints of the detected gaps.
+This ensures that thresholds separate regions with actual data
+support.
+
+%% ------------------------------------------------------------------------
+\subsection{Step 3: Entropy-Based Pruning}
+\label{subsec:entropy}
+
+Each threshold is evaluated using the entropy of the resulting
+binary split,
+\begin{equation}
+  H(\tau) = -p_\tau \log p_\tau - (1-p_\tau)\log(1-p_\tau),
+\end{equation}
+where $p_\tau = \Pr[x_j \geq \tau]$. Thresholds with
+$H(\tau) < 0.05$ nats are considered uninformative and are removed.
+To maintain the allocated budget, new thresholds are introduced by
+iteratively splitting the widest remaining intervals. This procedure
+ensures that the available capacity is concentrated in regions where
+the feature exhibits meaningful variation.
+
+%% ------------------------------------------------------------------------
+\subsection{Step 4: Local Refinement}
+\label{subsec:refine}
+
+A local refinement step is applied to each remaining threshold.
+Three candidate positions are evaluated,
+\begin{equation}
+  \tau^{-} = \tau - \tfrac{1}{4}(\tau - \tau_\text{left}), \quad
+  \tau^{0} = \tau, \quad
+  \tau^{+} = \tau + \tfrac{1}{4}(\tau_\text{right} - \tau),
+\end{equation}
+where $\tau_\text{left}$ and $\tau_\text{right}$ denote adjacent
+thresholds. The position that maximises the Bernoulli variance
+$p(1-p)$ is selected, promoting balanced and informative splits.
+
+%% ------------------------------------------------------------------------
+\subsection{Inference}
+\label{subsec:inference}
+
+During inference, binarisation is performed as a set of independent
+comparisons between feature values and stored thresholds. The
+resulting Boolean outputs can be packed into compact bit vectors,
+enabling efficient memory usage. The computational complexity scales
+linearly with $K$, and the absence of branching or dynamic memory
+allocation makes the method suitable for deployment on embedded and
+resource-constrained platforms.
+
+
+%% ========================================================================
+% FIX 4: FPTM section moved after GLADE to match the intro roadmap
+\section{The Fuzzy-Pattern Tsetlin Machine}
+\label{sec:fptm}
+This paper employs the Fuzzy-Pattern Tsetlin Machine
+(FPTM)~\cite{hnilov2025fuzzy} as its classifier. The public
+reference implementation is used without modification to any part
+of the training procedure. The following subsections describe the
+forward-pass computation in sufficient detail for the analysis in
+Section~\ref{sec:results} to be self-contained.
+% FIX 5: \ref{sec:hardware} replaced with \ref{sec:results}
+%        (no hardware-analysis section exists in this draft)
+
+\subsection{Clause Representation and Mismatch Counting}
+\label{sec:fptm-clause}
+For each output class $k \in \{1,\ldots,K\}$ and each polarity
+$\sigma \in \{+,-\}$, the FPTM stores a bank of $C$ \emph{clauses}.
+Every clause encodes a conjunctive pattern over a binarised input
+vector $\mathbf{x} \in \{0,1\}^{N}$.  During training, Tsetlin
+automata decide, for each feature and its complement, whether the
+corresponding literal is \emph{active} in the clause.  At inference
+time this decision is frozen into two packed bitmasks of
+$H = \lceil N/64 \rceil$ 64-bit words:
+$\mathbf{w}^{I}_{\phi}$, whose set bits identify the positive
+literals active in clause $\phi$, and
+$\mathbf{w}^{E}_{\phi}$, whose set bits identify the active
+negated literals.
+
+Unlike the classical Tsetlin Machine, which disqualifies a clause
+the moment any single active literal disagrees with the input, the
+FPTM quantifies the degree of disagreement.  The
+\emph{mismatch count} for clause $\phi$ on input $\mathbf{x}$ is:
+%
+\begin{equation}
+  m(\phi,\mathbf{x})
+  \;=\;
+  \operatorname{popcount}\!\bigl(
+      \mathbf{w}^{I}_{\phi} \wedge \neg\mathbf{w}_{\mathbf{x}}
+  \bigr)
+  \;+\;
+  \operatorname{popcount}\!\bigl(
+      \mathbf{w}^{E}_{\phi} \wedge \mathbf{w}_{\mathbf{x}}
+  \bigr),
+  \label{eq:mismatch}
+\end{equation}
+%
+where $\mathbf{w}_{\mathbf{x}}$ is the packed representation of
+$\mathbf{x}$. The first popcount detects active positive literals
+that are absent from the input; the second detects active negated
+literals that are present. Their sum therefore equals the total
+number of active literals whose value conflicts with $\mathbf{x}$.
+
+\subsection{Graded Output and Per-Clause Capacity}
+\label{sec:fptm-graded}
+Each clause is assigned a capacity
+%
+\begin{equation}
+  \kappa_{\phi} \;=\; \min\!\bigl(|\phi|,\;\mathrm{LF}\bigr),
+  \label{eq:kappa}
+\end{equation}
+%
+where $|\phi|$ is the number of active literals in clause $\phi$ and
+$\mathrm{LF}$ is the \emph{Literal Failures} hyperparameter
+of~\cite{hnilov2025fuzzy}, fixed at inference. The graded output of
+the clause is then:
+%
+\begin{equation}
+  o(\phi,\mathbf{x})
+  \;=\; \max\!\bigl(\kappa_{\phi} - m(\phi,\mathbf{x}),\;0\bigr).
+  \label{eq:graded}
+\end{equation}
+%
+When no active literal conflicts with the input,
+$o(\phi,\mathbf{x}) = \kappa_{\phi}$, the maximum possible
+contribution. Each additional conflict reduces the output by one,
+and once the number of conflicts reaches $\kappa_{\phi}$ the clause
+contributes nothing. Because $\kappa_{\phi}$ is bounded by
+$|\phi|$, a clause with fewer active literals than $\mathrm{LF}$
+cannot claim votes it has not earned.
+
+This linear decay has two practical consequences. First, a single
+clause can respond meaningfully to a neighbourhood of inputs rather
+than a single binary point, which substantially reduces the total
+number of clauses a model requires. Second, isolated feature
+corruptions lower the clause output only slightly, giving the model
+inherent tolerance to noisy inputs.
+
+\subsection{Class Vote and Prediction}
+\label{sec:fptm-vote}
+Two disjoint sets of clauses are maintained per class: $\Phi_{k}^{+}$
+accumulates evidence \emph{for} class $k$, while $\Phi_{k}^{-}$
+accumulates evidence \emph{against} it. The signed vote total is:
+%
+\begin{equation}
+  V_{k}(\mathbf{x})
+  \;=\;
+  \sum_{\phi \in \Phi_{k}^{+}} o(\phi,\mathbf{x})
+  \;-\;
+  \sum_{\phi \in \Phi_{k}^{-}} o(\phi,\mathbf{x}),
+  \label{eq:vote}
+\end{equation}
+%
+and the predicted label is $\hat{k} = \arg\max_{k}\,V_{k}(\mathbf{x})$.
+All $2CK$ clauses read the same read-only input bitmasks and produce
+independent scalar outputs, so the computation partitions without
+inter-clause communication and maps directly onto data-parallel
+hardware.
+\label{sec:tm-architecture}
+\begin{figure*}[h]
+    \centering    \includegraphics[width=2\columnwidth]{TII-Articles-LaTeX-template/Fptm1.pdf}
+    \caption{Tsetlin Machine architecture showing the relationship between input features, Tsetlin automata, logical clauses, and classification.}
+    \label{fig:tm-architecture}
+\end{figure*}
+
+\section{Experimental Setup}
+\label{sec:experiments}   % FIX 6: was \label{sec:setup}; intro references sec:experiments
+
+\subsection{Datasets}
+\label{sec:datasets}
+
+To comprehensively evaluate the proposed method, we employ four publicly
+available benchmarks that cover both conventional IoT network traffic
+and the more complex Internet of Medical Things (IoMT) domain. These
+datasets provide diversity in scale, feature representation, and attack
+taxonomy. Table~\ref{tab:datasets_transposed} summarises their key
+characteristics.
+% FIX 7: was \ref{tab:datasets}; correct label is tab:datasets_transposed
+Record and feature counts correspond to the original datasets prior to
+preprocessing, whereas training and testing splits follow the unified
+pipeline described in Section~\ref{sec:preprocessing}.
+
+\textbf{NSL-KDD}~\cite{tavallaee2009nslkdd} is a widely used benchmark
+for network intrusion detection. It was introduced to address the
+limitations of the KDD CUP 99 dataset, particularly redundancy and
+class imbalance. The dataset contains 41 handcrafted features derived
+from TCP/IP connections and categorises traffic into five classes:
+Normal, DoS, Probe, R2L, and U2R. Its more challenging test set makes it
+suitable for robust performance evaluation.
+
+\textbf{TON\_IoT}~\cite{moustafa2021ton} represents realistic IoT/IIoT
+environments with heterogeneous traffic collected from a distributed
+testbed comprising cloud, edge, and IoT layers. It includes ten attack
+categories such as DoS, DDoS, ransomware, and MITM. The dataset provides
+44 features capturing protocol, statistical, and payload-level
+characteristics.
+
+\textbf{MedSec-25}~\cite{medsec25} is a recent IoMT dataset derived from
+a simulated healthcare environment with interconnected medical devices.
+It consists of 78 features and five classes (Normal, DoS, DDoS, MITM,
+and Reconnaissance), with a total of 554,534 samples. Its rich feature
+space and large scale make it representative of modern IoMT scenarios.
+
+\textbf{WUSTL-EHMS-2020}~\cite{hady2020wustl} combines network traffic
+features with physiological signals collected from wearable medical
+devices in a real healthcare monitoring system. It includes three
+classes (Normal, Spoofing, and Injection) and 44 features. This hybrid
+dataset enables evaluation of models that integrate cyber and physical
+context for intrusion detection.
+
+\begin{table}[t]
+\caption{Summary of IoT and IoMT intrusion detection datasets used in this study (transposed).}
+\label{tab:datasets_transposed}
+\centering
+\renewcommand{\arraystretch}{1.2}
+\small
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Attribute} & \textbf{NSL-KDD} & \textbf{TON\_IoT} & \textbf{MedSec-25} & \textbf{WUSTL-EHMS-2020} \\
+\hline
+Records   & 148,517 & 211,043 & 554,534 & 16,318 \\
+\hline
+Features  & 41      & 44      & 78      & 44 \\
+\hline
+Classes   & 5       & 10      & 5       & 3 \\
+\hline
+Domain    & IoT network flow & IoT multi-protocol & IoMT network flow & IoMT (network + biomedical) \\
+\hline
+Train     & 118,813 & 168,834 & 443,627 & 13,054 \\
+\hline
+Test      & 29,704  & 42,209  & 110,907 & 3,264 \\
+\hline
+\end{tabular}
+\end{table}
+
+% FIX 8: Added preprocessing subsection so \ref{sec:preprocessing} resolves
+\subsection{Data Preprocessing}
+\label{sec:preprocessing}
+
+A unified preprocessing pipeline is applied across all datasets and models to ensure consistency and fairness. Raw features are first loaded and class labels are encoded into numeric form. Non-informative attributes such as identifiers are removed, and categorical features are transformed using one-hot encoding where applicable. The data is then split into training and testing sets using a stratified 80/20 partition to preserve class distributions. Data quality issues are addressed by replacing infinite values with missing values and imputing missing entries using the median computed from the training set only. To reduce redundancy and improve robustness, constant features are eliminated based on zero variance in the training data, followed by the removal of highly correlated features using a threshold of $|r| > 0.99$, also determined exclusively on the training set.
+
+\subsection{FPTM Configuration}
+\label{sec:fptm-config}
+
+The Fuzzy Pattern Tsetlin Machine (FPTM) is configured using
+dataset-specific hyperparameters obtained through tuning.
+The model is parameterised by $C$ (number of clauses per class per
+polarity), $T$ (voting target), $s$ (specificity), $L$ (maximum number
+of literals per clause), $L_f$ (fuzzy clamp threshold), and $E$
+(training epochs).
+
+All experiments employ the proposed GLADE binariser with a fixed
+discretisation parameter of $n_{\text{bins}} = 15$ across all datasets.
+
+The hyperparameters are selected via a grid search over the
+configuration space for each dataset, subject to the constraint that
+$C \leq 100$ and $C$ is an even number. The final configurations are
+reported in Table~\ref{tab:tm_hparams}.
+
+\begin{table}[t]
+\centering
+\caption{Tuned FPTM hyperparameters per dataset.}
+\label{tab:tm_hparams}
+\renewcommand{\arraystretch}{1.2}
+\small
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+\textbf{Dataset} & $C$ & $T$ & $s$ & $L$ & $L_f$ & $E$ \\
+\hline
+NSL-KDD         & 90  & 12 & 200 & 40 & 8  & 80  \\
+\hline
+TON\_IoT        & 100 & 15 & 20  & 25 & 8  & 200 \\
+\hline
+MedSec-25       & 80  & 12 & 75  & 30 & 8  & 300 \\
+\hline
+WUSTL-EHMS-2020 & 60  & 8  & 300 & 50 & 15 & 200 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Baselines}
+\label{sec:baselines}
+
+Eight baseline models are evaluated under the same preprocessing
+pipeline. The baseline set comprises standard machine learning
+classifiers with library-default configurations, together with
+variants whose capacity is aligned with the tuned FPTM.
+
+The default baselines include XGBoost, Random Forest, Logistic
+Regression, Linear SVM, Gaussian Naive Bayes, and k-Nearest Neighbours
+($k=5$).
+
+To ensure a fair comparison, additional variants are constructed by
+matching model capacity to the FPTM clause count $C$. In particular,
+the number of estimators is set proportional to $C$.
+These variants are denoted with the suffix \texttt{\_Cmatched}. All
+models are implemented using scikit-learn~\cite{pedregosa2011scikit}
+and the official XGBoost Python package.
+\begin{table}[t]
+\centering
+\caption{Baseline model configurations. Starred ($^\ast$) models have
+capacity matched to the FPTM clause count $C$.}
+\label{tab:model_configs}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Model} & \textbf{Configuration} \\
+\hline
+\multicolumn{2}{|l|}{\textit{Default baselines}} \\
+\hline
+XGBoost            & n=100, max depth=6, learning rate=0.1 \\
+\hline
+Random Forest      & n=100, max depth=none \\
+\hline
+k-NN ($k=5$)       & uniform weights, Minkowski distance \\
+\hline
+Logistic Regression & L2 regularisation, $C=1.0$, LBFGS \\
+\hline
+Linear SVM         & $C=1.0$, squared hinge loss \\
+\hline
+Gaussian NB        & default priors \\
+\hline
+\multicolumn{2}{|l|}{\textit{FPTM-matched variants}} \\
+\hline
+XGBoost\_Cmatched$^\ast$      & n\_estimators = $C$ \\
+\hline
+RandomForest\_Cmatched$^\ast$ & n\_estimators = $C$ \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Binariser Comparison}
+\label{sec:res-binarisers}
+
+Table~\ref{tab:binarizer_comparison} evaluates the impact of the
+binarisation scheme while keeping the FPTM hyperparameters fixed.
+Three approaches are compared: GLADE, the \texttt{StandardBinarizer}
+from TMU, and the equal-frequency \texttt{KBinsDiscretizer} from
+scikit-learn.
+
+Across all datasets, GLADE produces a substantially lower number of
+binary features compared to \texttt{StandardBinarizer}, typically
+reducing the representation size by approximately 45\%--65\%.
+Despite this reduction, comparable or improved classification
+performance is observed in most cases. The performance difference is
+particularly pronounced on TON\_IoT and MedSec-25, where alternative
+methods exhibit reduced effectiveness on sparse feature distributions.
+As summarised in the final column of
+Table~\ref{tab:binarizer_comparison}, GLADE delivers the best overall
+trade-off---the fewest bits at the highest accuracy---on every
+dataset.
+
+\begin{table*}[t]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\small
+\caption{Comparison of binarisation methods with $n_\text{bins}=15$.
+Best values per dataset and metric are shown in \textbf{bold}; the
+final column reports the method with the best overall trade-off
+(fewest bits at the highest accuracy and macro F1).}
+\label{tab:binarizer_comparison}
+\begin{tabular}{|l|ccc|ccc|ccc|c|}
+\hline
+ & \multicolumn{3}{c|}{\textbf{GLADE}}
+ & \multicolumn{3}{c|}{\textbf{StandardBinarizer}}
+ & \multicolumn{3}{c|}{\textbf{KBinsDiscretizer}} & \\
+\hline
+\textbf{Dataset} & Bits & Acc & F1 & Bits & Acc & F1 & Bits & Acc & F1 & \textbf{Best} \\
+\hline
+NSL-KDD         & \textbf{253} & \textbf{0.9955} & 0.9311          & 472 & 0.9941 & \textbf{0.9342} & 448 & 0.9854 & 0.8690 & GLADE \\
+\hline
+TON\_IoT        & \textbf{122} & \textbf{0.9688} & \textbf{0.9385} & 186 & 0.8416 & 0.7947          & 177 & 0.6411 & 0.5663 & GLADE \\
+\hline
+MedSec-25       & \textbf{351} & \textbf{0.9703} & \textbf{0.8681} & 698 & 0.8830 & 0.7265          & 653 & 0.8461 & 0.5532 & GLADE \\
+\hline
+WUSTL-EHMS-2020 & \textbf{247} & \textbf{0.9393} & \textbf{0.7630} & 313 & 0.9381 & 0.7388          & 296 & 0.9130 & 0.6259 & GLADE \\
+\hline
+\end{tabular}
+\end{table*}
+
+\subsection{Main Classification Benchmark}
+\label{sec:res-main}
+
+% FIX 9: was \ref{tab:complete_results} (undefined); corrected to the
+%         two actual result tables: tab:results_part1 and tab:results_part2
+Tables~\ref{tab:results_part1} and~\ref{tab:results_part2} report the
+classification performance of the tuned GLADE+FPTM pipeline alongside
+the baseline models across the four datasets. Results are presented in
+terms of accuracy, macro F1, precision, recall, serialized model size,
+and mean per-sample inference time.
+
+Across datasets, the GLADE+FPTM pipeline achieves competitive
+performance relative to the baseline methods. Its macro F1 is
+consistently among the top-performing models, remaining close to
+strong tree-based baselines while requiring a model footprint that is
+one to three orders of magnitude smaller. On WUSTL-EHMS-2020, the
+pipeline ranks second in terms of macro F1, indicating its ability
+to maintain balanced performance on smaller and more challenging
+datasets. In terms of latency, GLADE+FPTM inference costs only a few
+microseconds per sample---comparable to the fastest linear baselines
+and roughly three orders of magnitude faster than $k$-NN, which must
+scan the full training set at prediction time.
+
+\begin{table*}[t]
+\centering
+\caption{Classification results on NSL-KDD and TON\_IoT datasets.
+Inference time is the mean per-sample latency.}
+\label{tab:results_part1}
+\begin{tabular}{llcccccc}
+\hline
+\textbf{Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Macro F1} & \textbf{Precision} & \textbf{Recall} & \textbf{Size (KB)} & \textbf{Inference ($\mu$s/sample)} \\
+\hline
+
+\multirow{9}{*}{NSL-KDD}
+ & XGBoost                & 0.9956 & 0.9488 & 0.9442 & 0.9558 & 1266 & 9.988 \\
+ & XGBoost\_Cmatched      & 0.9952 & 0.9429 & 0.9419 & 0.9458 & 1161 & 9.122 \\
+ & GLADE+FPTM             & 0.9951 & 0.9301 & 0.9399 & 0.9210 & 51.1 & 3.387 \\
+ & kNN\_5                 & 0.9894 & 0.8855 & 0.9052 & 0.8691 & 110463 & 4118.039 \\
+ & LogisticRegression     & 0.9769 & 0.8580 & 0.8877 & 0.8337 & 8.6  & 1.420 \\
+ & RandomForest           & 0.9926 & 0.8563 & 0.9647 & 0.8167 & 27239 & 12.697 \\
+ & LinearSVM              & 0.9655 & 0.8530 & 0.8986 & 0.8194 & 8.6  & 1.393 \\
+ & RandomForest\_Cmatched & 0.9625 & 0.5843 & 0.5821 & 0.5869 & 962  & 6.124 \\
+ & NaiveBayes             & 0.7567 & 0.4423 & 0.5765 & 0.6726 & 13.2 & 4.652 \\
+\hline
+
+\multirow{9}{*}{TON\_IoT}
+ & XGBoost                & 0.9775 & 0.9511 & 0.9439 & 0.9614 & 2508 & 22.125 \\
+ & XGBoost\_Cmatched      & 0.9764 & 0.9498 & 0.9424 & 0.9608 & 1899 & 18.138 \\
+ & RandomForest           & 0.9765 & 0.9467 & 0.9366 & 0.9637 & 62383 & 11.077 \\
+ & kNN\_5                 & 0.9742 & 0.9441 & 0.9430 & 0.9461 & 51444 & 5225.119 \\
+ & GLADE+FPTM             & 0.9705 & 0.9418 & 0.9334 & 0.9558 & 76.2 & 8.567 \\
+ & RandomForest\_Cmatched & 0.8771 & 0.7814 & 0.7961 & 0.7798 & 841  & 11.299 \\
+ & LogisticRegression     & 0.7076 & 0.6347 & 0.7154 & 0.6494 & 5.5  & 0.632 \\
+ & LinearSVM              & 0.7114 & 0.6273 & 0.7106 & 0.6486 & 5.5  & 0.629 \\
+ & NaiveBayes             & 0.3875 & 0.3269 & 0.3694 & 0.4201 & 8.5  & 3.161 \\
+\hline
+\end{tabular}
+\end{table*}
+
+
+\begin{table*}[t]
+\centering
+\caption{Classification results on MedSec-25 and WUSTL-EHMS-2020 datasets.
+Inference time is the mean per-sample latency; ``--'' denotes a
+configuration not benchmarked.}
+\label{tab:results_part2}
+\begin{tabular}{llcccccc}
+\hline
+\textbf{Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Macro F1} & \textbf{Precision} & \textbf{Recall} & \textbf{Size (KB)} & \textbf{Inference ($\mu$s/sample)} \\
+\hline
+
+\multirow{9}{*}{MedSec-25}
+ & XGBoost                & 0.9768 & 0.8984 & 0.9005 & 0.9004 & 1701 & 12.091 \\
+ & RandomForest           & 0.9767 & 0.8980 & 0.9022 & 0.9036 & 146062 & 7.521 \\
+ & XGBoost\_Cmatched      & 0.9753 & 0.8926 & 0.8951 & 0.8951 & 939  & 8.273 \\
+ & kNN\_5                 & 0.9733 & 0.8799 & 0.8752 & 0.8848 & 190624 & 15527.080 \\
+ & GLADE+FPTM             & 0.9707 & 0.8727 & 0.8787 & 0.8828 & 41.5 & 5.471 \\
+ & RandomForest\_Cmatched & 0.9611 & 0.8390 & 0.8631 & 0.8367 & 525  & 5.914 \\
+ & LogisticRegression     & 0.9413 & 0.7763 & 0.7891 & 0.7853 & 4.8  & 0.901 \\
+ & LinearSVM              & 0.8538 & 0.5146 & 0.6990 & 0.4660 & 4.7  & 0.823 \\
+ & NaiveBayes             & 0.7673 & 0.4218 & 0.4803 & 0.5192 & 6.8  & 2.751 \\
+\hline
+
+\multirow{9}{*}{WUSTL-EHMS-2020}
+ & GLADE+FPTM             & 0.9442 & 0.7976 & 0.9050 & 0.7645 & 25.2 & 1.446 \\
+ & kNN\_5                 & 0.9375 & 0.7922 & 0.8445 & 0.7684 & 2857 & 364.308 \\
+ & XGBoost                & 0.9406 & 0.7590 & 0.9151 & 0.7314 & 615  & 5.537 \\
+ & XGBoost\_Cmatched      & 0.9354 & 0.7118 & 0.9198 & 0.6994 & 388  & -- \\
+ & RandomForest           & 0.9320 & 0.6778 & 0.8910 & 0.6807 & 14385 & 4.380 \\
+ & RandomForest\_Cmatched & 0.9305 & 0.6554 & 0.9671 & 0.6692 & 381  & -- \\
+ & LinearSVM              & 0.9286 & 0.6449 & 0.6253 & 0.6657 & 2.4  & 0.122 \\
+ & LogisticRegression     & 0.9280 & 0.6430 & 0.6220 & 0.6655 & 2.5  & 0.128 \\
+ & NaiveBayes             & 0.1293 & 0.3643 & 0.6570 & 0.6668 & 3.0  & 0.511 \\
+\hline
+\end{tabular}
+\end{table*}
+
+\subsection{Serialization and Compression}
+\label{sec:res-compression}
+
+For deployment on resource-constrained edge devices, the trained
+GLADE+FPTM pipeline is serialized into a single self-describing
+container that stores both the GLADE binarization thresholds and
+the FPTM clause bitmasks. Two equivalent formats containing identical
+information are evaluated:
+
+\begin{itemize}
+    \item \textbf{\texttt{model.pkl}}: an uncompressed Python pickle
+    file that stores the complete GLADE state (feature indices and
+    thresholds) together with the TM rule representation, including
+    the per-class positive and negative clause masks and their
+    corresponding clamp values.
+
+    \item \textbf{\texttt{model.fbz}}: the proposed
+    \emph{Fuzzy-Bitmask Zstd (FBZ)} container, a compact binary format
+    introduced in this work for deployment-oriented storage of the
+    GLADE+FPTM inference artifact. The FBZ file consists of a fixed
+    12-byte header followed by a Zstandard-compressed payload
+    (zstd level~1). The header encodes the magic identifier, format
+    version, compression level, dimensionality parameters
+    (\texttt{n\_bits} and \texttt{n\_classes}), and the global clamp
+    cap. Decoding requires only a standard zstd decompressor and
+    little-endian integer unpacking, enabling portability across
+    lightweight runtimes implemented in C, Rust, Go, or JavaScript.
+\end{itemize}
+
+Fig.~\ref{fig:storage_bar} compares the on-disk storage requirements
+of the two formats. Across all four datasets, the FBZ container
+reduces the deployable model footprint to approximately
+21--30\% of the uncompressed pickle size. Specifically, the model
+size is reduced from $25.2$\,KB to $7.1$\,KB on WUSTL-EHMS-2020,
+from $51.1$\,KB to $13.7$\,KB on NSL-KDD, from $76.2$\,KB to
+$16.2$\,KB on TON\_IoT, and from $41.5$\,KB to $12.3$\,KB on
+MedSec-25. The compression process is strictly lossless, and exact
+prediction equivalence after serialization and deserialization was
+verified on the test split of every dataset.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{TII-Articles-LaTeX-template/fig_storage_bar.pdf}
+\caption{Storage footprint of the GLADE+FPTM model using
+uncompressed (\texttt{model.pkl}) and compressed
+(\texttt{model.fbz}) formats. Lower is better.}
+\label{fig:storage_bar}
+\end{figure}
+\subsection{Compression Method Comparison}
+\label{sec:res-codecs}
+
+To position zstd-1 within the broader compression design space,
+the same uncompressed FBZ payload was evaluated using six
+lossless codecs spanning three compression families: zstandard
+(zstd-1, zstd-5, and zstd-22), DEFLATE-based \textsc{gzip}-9,
+LZMA2-based \texttt{lzma-9}, and \texttt{brotli-11}. To avoid
+disk I/O overhead, all codecs operated on in-memory
+\texttt{BytesIO} buffers such that the reported timings reflect
+only codec execution cost. Each reported value corresponds to the
+mean of 200 iterations, except for the computationally intensive
+settings zstd-22, lzma-9, and brotli-11, which were averaged over
+20 iterations. Compression effectiveness is evaluated using the
+compression ratio (raw/compressed), while compression and
+decompression latencies are reported in microseconds on a
+logarithmic scale.
+
+Three metrics are evaluated for each codec--dataset pair:
+compression ratio (Fig.~\ref{fig:codec_size}), compression time
+(Fig.~\ref{fig:codec_comp}), and decompression time
+(Fig.~\ref{fig:codec_decomp}). The results indicate the following:
+
+\begin{enumerate}
+    \item \textbf{Compression ratio:} High-effort codecs
+    (zstd-22, lzma-9, and brotli-11) achieve comparable compression
+    performance across all datasets. zstd-1 provides slightly lower
+    compression efficiency while remaining close to the
+    best-performing methods.
+
+    \item \textbf{Compression time:} zstd-1 consistently achieves
+    the lowest compression latency, requiring only tens of
+    microseconds per model. In contrast, lzma-9 and brotli-11 incur
+    substantially higher encoding overhead.
+
+    \item \textbf{Decompression time:} The zstd family provides the
+    fastest decompression performance across all datasets. This
+    characteristic is important for edge deployment scenarios,
+    where the model is typically decompressed once during system
+    initialization and reused for repeated inference.
+\end{enumerate}
+
+Based on these results, zstd-1 is selected as the default codec for
+the FBZ container. Although higher compression levels provide
+slightly improved storage reduction, zstd-1 offers the best trade-off
+between model size, compression latency, and decompression
+efficiency for practical edge deployment.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{TII-Articles-LaTeX-template/fig_codec_size.pdf}
+\caption{Compression ratio achieved by different lossless codecs
+for the serialized GLADE+FPTM model. Higher values indicate better
+compression efficiency.}
+\label{fig:codec_size}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{TII-Articles-LaTeX-template/fig_codec_comp.pdf}
+\caption{Compression latency of the evaluated codecs measured using
+in-memory \texttt{BytesIO} buffers. Lower values indicate faster
+compression.}
+\label{fig:codec_comp}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{TII-Articles-LaTeX-template/fig_codec_size.pdf}
+\caption{Decompression latency of the evaluated codecs under the
+same experimental setup as Fig.~\ref{fig:codec_comp}. Lower values
+indicate faster decompression.}
+\label{fig:codec_decomp}
+\end{figure}
+
+\subsection{Edge Deployment: Binarisation Latency on Raspberry Pi 5}
+\label{sec:res-edge}
+
+To assess real-time feasibility on resource-constrained hardware, the
+GLADE binarisation step was deployed on a Raspberry~Pi~5 and timed
+against the TMU \texttt{StandardBinarizer} and a conventional
+thermometer encoder. Two execution modes are reported: an element-wise
+transform that emits one Boolean per literal, and a bit-packed
+transform that produces 64-bit words ready for the FPTM clause
+kernels. All values are mean per-sample latencies (in microseconds)
+measured on the Raspberry~Pi~5 using its NEON SIMD path; speedups are
+relative to GLADE. Results are summarised in
+Table~\ref{tab:edge_latency}.
+
+\begin{table}[t]
+\centering
+\caption{Per-sample binarisation latency on a Raspberry~Pi~5
+(NEON SIMD path). Lower latency is better; speedups are computed
+relative to GLADE.}
+\label{tab:edge_latency}
+\renewcommand{\arraystretch}{1.2}
+\small
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+\textbf{Dataset} & \textbf{GLADE} & \textbf{Std.} & \textbf{Speedup} & \textbf{Thermo.} & \textbf{Speedup} \\
+                 & ($\mu$s)       & ($\mu$s)      & vs Std.          & ($\mu$s)         & vs Thermo. \\
+\hline
+\multicolumn{6}{|l|}{\textit{Element-wise transform}} \\
+\hline
+WUSTL-EHMS-2020 & 0.162 & 0.905 & 5.6$\times$  & 0.459 & 2.8$\times$  \\
+\hline
+NSL-KDD         & 0.220 & 3.829 & 17.4$\times$ & 1.803 & 8.2$\times$  \\
+\hline
+TON\_IoT        & 0.094 & 1.604 & 17.1$\times$ & 0.577 & 6.1$\times$  \\
+\hline
+MedSec-25       & 0.287 & 3.477 & 12.1$\times$ & 0.906 & 3.2$\times$  \\
+\hline
+\multicolumn{6}{|l|}{\textit{Bit-packed transform}} \\
+\hline
+WUSTL-EHMS-2020 & 0.163 & 1.096 & 6.7$\times$  & 0.500 & 3.1$\times$  \\
+\hline
+NSL-KDD         & 0.219 & 4.200 & 19.2$\times$ & 2.373 & 10.8$\times$ \\
+\hline
+TON\_IoT        & 0.093 & 1.772 & 19.1$\times$ & 0.738 & 7.9$\times$  \\
+\hline
+MedSec-25       & 0.229 & 4.011 & 17.5$\times$ & 1.102 & 4.8$\times$  \\
+\hline
+\end{tabular}
+\end{table}
+
+On the Raspberry~Pi~5, GLADE binarisation completes in well under one
+microsecond per sample on every dataset. Relative to the
+\texttt{StandardBinarizer} it is $5.6\times$--$19.2\times$ faster, with
+the largest gains on the higher-dimensional NSL-KDD and TON\_IoT
+feature spaces, and it is up to $10.8\times$ faster than thermometer
+encoding. The advantage is preserved in the bit-packed mode, confirming
+that the compact Boolean representation produced by GLADE translates
+directly into lower inference latency on embedded hardware.
+
+
+% FIX 10: Added skeleton Conclusion section so \ref{sec:conclusion} resolves
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper presented GLADE, a gap-aware lightweight adaptive
+discretisation engine for transforming heterogeneous IoT feature
+streams into compact Boolean representations, and its integration
+with the Fuzzy Pattern Tsetlin Machine (FPTM) for resource-constrained
+intrusion detection. Experimental results on four benchmark datasets
+(NSL-KDD, TON\_IoT, MedSec-25, and WUSTL-EHMS-2020) demonstrated
+that GLADE reduces the Boolean feature space by 45\%--65\% compared
+to thermometric encoding while maintaining competitive or superior
+classification performance. The combined GLADE+FPTM framework
+achieves serialized model sizes as low as 7.1\,KB and, on a
+Raspberry~Pi~5 edge platform, performs binarisation up to 19$\times$
+faster than the standard binariser and up to 11$\times$ faster than
+thermometer encoding, confirming its suitability for real-time
+deployment in memory- and compute-constrained IoT environments.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,71 @@
+{
+  "model": "LogReg",
+  "metrics": {
+    "accuracy": 0.9413292217804106,
+    "macro_f1": 0.7762640495307773,
+    "weighted_f1": 0.9426609377029884,
+    "per_class": [
+      {
+        "class": "Benign",
+        "precision": 0.8361965641230523,
+        "recall": 0.8477116241393277,
+        "f1": 0.8419147224456959,
+        "support": 2469
+      },
+      {
+        "class": "Exfiltration",
+        "precision": 0.8286541244573082,
+        "recall": 0.5523827898900251,
+        "f1": 0.6628849270664505,
+        "support": 5183
+      },
+      {
+        "class": "Initial access",
+        "precision": 0.9371690281952197,
+        "recall": 0.9620922715251249,
+        "f1": 0.9494671210034076,
+        "support": 20418
+      },
+      {
+        "class": "Lateral movement",
+        "precision": 0.36352418558736427,
+        "recall": 0.5892,
+        "f1": 0.44963369963369965,
+        "support": 2500
+      },
+      {
+        "class": "Reconnaissance",
+        "precision": 0.9798713971176941,
+        "recall": 0.9749803950857014,
+        "f1": 0.9774197775046327,
+        "support": 80337
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 23.25892404327169,
+    "predict_time": 0.012402686290442944,
+    "per_sample_predict_us": 0.11182960760315348,
+    "total_train_time": 23.25892404327169
+  },
+  "size_kb": 4.861328125,
+  "extra": {
+    "kind": "logreg",
+    "feature_space": "raw",
+    "tm_source": {
+      "C": 80,
+      "T": 12,
+      "s": 75,
+      "L": 30,
+      "Lf": 8,
+      "E": 300
+    },
+    "derived_hp": {
+      "n_estimators": 80,
+      "max_depth": 5,
+      "max_iter": 300,
+      "hidden_layer_sizes": "(160, 80)"
+    },
+    "scaling": "yes"
+  }
+}

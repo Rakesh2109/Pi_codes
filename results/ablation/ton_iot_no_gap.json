@@ -1,0 +1,12 @@
+{
+  "dataset": "TON_IoT",
+  "variant": "no_gap",
+  "disable": [
+    "gap"
+  ],
+  "bits": 122,
+  "ok": true,
+  "wall": 263.4853155068122,
+  "acc": 0.9705039209647232,
+  "macro_f1": 0.9426356696741511
+}

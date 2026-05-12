@@ -1,0 +1,59 @@
+{
+  "model": "MLP_med",
+  "metrics": {
+    "accuracy": 0.9687305580351105,
+    "macro_f1": 0.8672924963682366,
+    "weighted_f1": 0.9707382227729197,
+    "per_class": [
+      {
+        "class": "Benign",
+        "precision": 0.8926739926739927,
+        "recall": 0.9870392871607938,
+        "f1": 0.9374879784573956,
+        "support": 2469
+      },
+      {
+        "class": "Exfiltration",
+        "precision": 0.9816958277254374,
+        "recall": 0.7036465367547752,
+        "f1": 0.8197347718588447,
+        "support": 5183
+      },
+      {
+        "class": "Initial access",
+        "precision": 0.9907638176220496,
+        "recall": 0.9929473993535116,
+        "f1": 0.9918544066925956,
+        "support": 20418
+      },
+      {
+        "class": "Lateral movement",
+        "precision": 0.47623529411764703,
+        "recall": 0.8096,
+        "f1": 0.5997037037037037,
+        "support": 2500
+      },
+      {
+        "class": "Reconnaissance",
+        "precision": 0.9913227752072127,
+        "recall": 0.9840671172685064,
+        "f1": 0.9876816211286433,
+        "support": 80337
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 185.37031902279705,
+    "predict_time": 0.3539452669210732,
+    "per_sample_predict_us": 3.191369948885762,
+    "total_train_time": 185.37031902279705
+  },
+  "size_kb": 498.7578125,
+  "extra": {
+    "kind": "mlp",
+    "params": "{'hidden_layer_sizes': (128, 64), 'activation': 'relu', 'max_iter': 200}",
+    "n_neural_params": 15621,
+    "param_size_kb_float32": "61.02",
+    "param_size_kb_int8": "15.25"
+  }
+}

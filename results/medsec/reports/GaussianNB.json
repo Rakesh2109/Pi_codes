@@ -1,0 +1,57 @@
+{
+  "model": "GaussianNB",
+  "metrics": {
+    "accuracy": 0.7673185642024399,
+    "macro_f1": 0.4218127509694195,
+    "weighted_f1": 0.7387012129035513,
+    "per_class": [
+      {
+        "class": "Benign",
+        "precision": 0.3536734693877551,
+        "recall": 0.7019036046982584,
+        "f1": 0.4703487583118469,
+        "support": 2469
+      },
+      {
+        "class": "Exfiltration",
+        "precision": 0.10921717171717171,
+        "recall": 0.06675670461122901,
+        "f1": 0.08286432762543408,
+        "support": 5183
+      },
+      {
+        "class": "Initial access",
+        "precision": 0.8733887733887734,
+        "recall": 0.20574982858262317,
+        "f1": 0.3330426510226732,
+        "support": 20418
+      },
+      {
+        "class": "Lateral movement",
+        "precision": 0.2087648396059611,
+        "recall": 0.6612,
+        "f1": 0.3173353810712229,
+        "support": 2500
+      },
+      {
+        "class": "Reconnaissance",
+        "precision": 0.8563660374427096,
+        "recall": 0.9605536676749195,
+        "f1": 0.9054726368159204,
+        "support": 80337
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 0.37055141711607575,
+    "predict_time": 0.12764114700257778,
+    "per_sample_predict_us": 1.1508844978457426,
+    "total_train_time": 0.37055141711607575
+  },
+  "size_kb": 6.7802734375,
+  "extra": {
+    "kind": "nb",
+    "params": "{}",
+    "scaling": "yes"
+  }
+}

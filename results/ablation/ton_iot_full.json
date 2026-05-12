@@ -1,0 +1,10 @@
+{
+  "dataset": "TON_IoT",
+  "variant": "full",
+  "disable": [],
+  "bits": 122,
+  "ok": true,
+  "wall": 261.15970790199935,
+  "acc": 0.9707645288919424,
+  "macro_f1": 0.9409537481010342
+}

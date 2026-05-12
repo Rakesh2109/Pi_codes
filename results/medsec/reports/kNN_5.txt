@@ -1,0 +1,31 @@
+===========================================================================
+  MODEL: kNN_5
+===========================================================================
+
+Accuracy:         97.33%
+Macro F1:         0.8799
+Weighted F1:      0.9734
+
+Timing:
+  fit_time               0.0919s
+  predict_time           166.4860s
+  per_sample_predict_us  1501.1320s
+  total_train_time       0.0919s
+
+Model size:       190623.66 KB
+
+Extra:
+  kind: knn
+  params: {'n_neighbors': 5, 'weights': 'uniform', 'metric': 'minkowski'}
+  scaling: yes
+
+===========================================================================
+  PER-CLASS REPORT
+===========================================================================
+Class                      Precision     Recall         F1    Support
+----------------------------------------------------------------------
+Benign                        0.9338     0.9708     0.9519       2469
+Exfiltration                  0.8201     0.8159     0.8180       5183
+Initial access                0.9912     0.9941     0.9926      20418
+Lateral movement              0.6403     0.6552     0.6477       2500
+Reconnaissance                0.9904     0.9881     0.9893      80337

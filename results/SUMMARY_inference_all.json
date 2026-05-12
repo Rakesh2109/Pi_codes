@@ -1,0 +1,362 @@
+[
+  {
+    "dataset": "wustl",
+    "human": "WUSTL-EHMS-2020",
+    "model": "XGBoost",
+    "size_kb": 514.1630859375,
+    "us_per_sample": 2.4708843899562076,
+    "accuracy": 0.9359681372549019,
+    "macro_f1": 0.6991566881344439
+  },
+  {
+    "dataset": "wustl",
+    "human": "WUSTL-EHMS-2020",
+    "model": "MLP_med",
+    "size_kb": 114.59375,
+    "us_per_sample": 0.33745406350741786,
+    "accuracy": 0.07383578431372549,
+    "macro_f1": 0.07403324036514326
+  },
+  {
+    "dataset": "wustl",
+    "human": "WUSTL-EHMS-2020",
+    "model": "MLP_small",
+    "size_kb": 49.1298828125,
+    "us_per_sample": 0.24165038827478008,
+    "accuracy": 0.08915441176470588,
+    "macro_f1": 0.09784644238194945
+  },
+  {
+    "dataset": "wustl",
+    "human": "WUSTL-EHMS-2020",
+    "model": "MLP_tiny",
+    "size_kb": 22.5419921875,
+    "us_per_sample": 0.194239535131583,
+    "accuracy": 0.5707720588235294,
+    "macro_f1": 0.5797509711267205
+  },
+  {
+    "dataset": "wustl",
+    "human": "WUSTL-EHMS-2020",
+    "model": "MLP_C",
+    "size_kb": 82.5068359375,
+    "us_per_sample": 0.3462101791656631,
+    "accuracy": 0.12990196078431374,
+    "macro_f1": 0.12973372025648325
+  },
+  {
+    "dataset": "wustl",
+    "human": "WUSTL-EHMS-2020",
+    "model": "MLP_2C",
+    "size_kb": 157.7509765625,
+    "us_per_sample": 0.5878950925726517,
+    "accuracy": 0.7086397058823529,
+    "macro_f1": 0.46836247425308847
+  },
+  {
+    "dataset": "wustl",
+    "human": "WUSTL-EHMS-2020",
+    "model": "LogisticRegression",
+    "size_kb": 1.51953125,
+    "us_per_sample": 0.08268041568169114,
+    "accuracy": 0.9381127450980392,
+    "macro_f1": 0.7201345556795794
+  },
+  {
+    "dataset": "wustl",
+    "human": "WUSTL-EHMS-2020",
+    "model": "LinearSVM",
+    "size_kb": 1.4384765625,
+    "us_per_sample": 0.07803464541211724,
+    "accuracy": 0.9381127450980392,
+    "macro_f1": 0.7214072569522806
+  },
+  {
+    "dataset": "wustl",
+    "human": "WUSTL-EHMS-2020",
+    "model": "DecisionTree",
+    "size_kb": 17.5615234375,
+    "us_per_sample": 0.04842278191491085,
+    "accuracy": 0.9378063725490197,
+    "macro_f1": 0.7198105918041818
+  },
+  {
+    "dataset": "wustl",
+    "human": "WUSTL-EHMS-2020",
+    "model": "GLADE+FPTM",
+    "size_kb": 7.2744140625,
+    "us_per_sample": 0.6498229078145004,
+    "accuracy": 0.6948529411764706,
+    "macro_f1": 0.38563049676920413
+  },
+  {
+    "dataset": "nslkdd",
+    "human": "NSL-KDD",
+    "model": "XGBoost",
+    "size_kb": 1272.1416015625,
+    "us_per_sample": 5.044207152344413,
+    "accuracy": 0.8757069754915163,
+    "macro_f1": 0.5955990743757676
+  },
+  {
+    "dataset": "nslkdd",
+    "human": "NSL-KDD",
+    "model": "MLP_med",
+    "size_kb": 242.0810546875,
+    "us_per_sample": 0.4567765219926176,
+    "accuracy": 0.6789657958524105,
+    "macro_f1": 0.39964300268513625
+  },
+  {
+    "dataset": "nslkdd",
+    "human": "NSL-KDD",
+    "model": "MLP_small",
+    "size_kb": 114.4248046875,
+    "us_per_sample": 0.5079836495834686,
+    "accuracy": 0.7530635604632373,
+    "macro_f1": 0.46959281125554797
+  },
+  {
+    "dataset": "nslkdd",
+    "human": "NSL-KDD",
+    "model": "MLP_tiny",
+    "size_kb": 55.9453125,
+    "us_per_sample": 0.32866409401101565,
+    "accuracy": 0.8572246162133046,
+    "macro_f1": 0.5887330017765267
+  },
+  {
+    "dataset": "nslkdd",
+    "human": "NSL-KDD",
+    "model": "MLP_C",
+    "size_kb": 273.85546875,
+    "us_per_sample": 0.41494057698131664,
+    "accuracy": 0.5659170482089955,
+    "macro_f1": 0.41404489144919215
+  },
+  {
+    "dataset": "nslkdd",
+    "human": "NSL-KDD",
+    "model": "MLP_2C",
+    "size_kb": 540.537109375,
+    "us_per_sample": 1.4169239128044102,
+    "accuracy": 0.31457042822515485,
+    "macro_f1": 0.2542195489744352
+  },
+  {
+    "dataset": "nslkdd",
+    "human": "NSL-KDD",
+    "model": "LogisticRegression",
+    "size_kb": 5.38671875,
+    "us_per_sample": 0.19561614863295584,
+    "accuracy": 0.9779827632642069,
+    "macro_f1": 0.8709358093906465
+  },
+  {
+    "dataset": "nslkdd",
+    "human": "NSL-KDD",
+    "model": "LinearSVM",
+    "size_kb": 5.3056640625,
+    "us_per_sample": 0.2075280415266953,
+    "accuracy": 0.9666711553999461,
+    "macro_f1": 0.8507914722505975
+  },
+  {
+    "dataset": "nslkdd",
+    "human": "NSL-KDD",
+    "model": "DecisionTree",
+    "size_kb": 44.322265625,
+    "us_per_sample": 0.07391300648370587,
+    "accuracy": 0.8035281443576623,
+    "macro_f1": 0.5136409078768374
+  },
+  {
+    "dataset": "nslkdd",
+    "human": "NSL-KDD",
+    "model": "GLADE+FPTM",
+    "size_kb": 13.6279296875,
+    "us_per_sample": 1.3281795378837613,
+    "accuracy": 0.5179100457850795,
+    "macro_f1": 0.23245160168743548
+  },
+  {
+    "dataset": "toniot",
+    "human": "TON_IoT",
+    "model": "XGBoost",
+    "size_kb": 2490.8994140625,
+    "us_per_sample": 9.962852598832342,
+    "accuracy": 0.3150276007486555,
+    "macro_f1": 0.12640278787847867
+  },
+  {
+    "dataset": "toniot",
+    "human": "TON_IoT",
+    "model": "MLP_med",
+    "size_kb": 124.2861328125,
+    "us_per_sample": 0.32684382825871683,
+    "accuracy": 0.47674666540311306,
+    "macro_f1": 0.31296600060960106
+  },
+  {
+    "dataset": "toniot",
+    "human": "TON_IoT",
+    "model": "MLP_small",
+    "size_kb": 54.392578125,
+    "us_per_sample": 0.2767141865072436,
+    "accuracy": 0.4313535028074581,
+    "macro_f1": 0.30319292643818513
+  },
+  {
+    "dataset": "toniot",
+    "human": "TON_IoT",
+    "model": "MLP_tiny",
+    "size_kb": 26.7041015625,
+    "us_per_sample": 0.21735781204409854,
+    "accuracy": 0.534080409391362,
+    "macro_f1": 0.3856506807080032
+  },
+  {
+    "dataset": "toniot",
+    "human": "TON_IoT",
+    "model": "MLP_C",
+    "size_kb": 101.8310546875,
+    "us_per_sample": 0.3457135524427846,
+    "accuracy": 0.4390769741050487,
+    "macro_f1": 0.2621274765160567
+  },
+  {
+    "dataset": "toniot",
+    "human": "TON_IoT",
+    "model": "MLP_2C",
+    "size_kb": 195.587890625,
+    "us_per_sample": 0.630719585662322,
+    "accuracy": 0.5799710962117084,
+    "macro_f1": 0.4862891011251066
+  },
+  {
+    "dataset": "toniot",
+    "human": "TON_IoT",
+    "model": "LogisticRegression",
+    "size_kb": 3.8046875,
+    "us_per_sample": 0.08764142809670183,
+    "accuracy": 0.6845222582861475,
+    "macro_f1": 0.5819494074498524
+  },
+  {
+    "dataset": "toniot",
+    "human": "TON_IoT",
+    "model": "LinearSVM",
+    "size_kb": 3.7236328125,
+    "us_per_sample": 0.08959745041989504,
+    "accuracy": 0.6815134213082518,
+    "macro_f1": 0.5809921852125861
+  },
+  {
+    "dataset": "toniot",
+    "human": "TON_IoT",
+    "model": "DecisionTree",
+    "size_kb": 85.1396484375,
+    "us_per_sample": 0.04967232086391924,
+    "accuracy": 0.15726503826198204,
+    "macro_f1": 0.10920433933274094
+  },
+  {
+    "dataset": "toniot",
+    "human": "TON_IoT",
+    "model": "GLADE+FPTM",
+    "size_kb": 16.107421875,
+    "us_per_sample": 2.0693809105749565,
+    "accuracy": 0.7138051126536995,
+    "macro_f1": 0.6232059048349989
+  },
+  {
+    "dataset": "medsec",
+    "human": "MedSec-25",
+    "model": "XGBoost",
+    "size_kb": 1717.8212890625,
+    "us_per_sample": 5.373248476288704,
+    "accuracy": 0.17040403220716457,
+    "macro_f1": 0.0675772515002519
+  },
+  {
+    "dataset": "medsec",
+    "human": "MedSec-25",
+    "model": "MLP_med",
+    "size_kb": 162.162109375,
+    "us_per_sample": 0.6373348005846687,
+    "accuracy": 0.09077876058319133,
+    "macro_f1": 0.11069553795022713
+  },
+  {
+    "dataset": "medsec",
+    "human": "MedSec-25",
+    "model": "MLP_small",
+    "size_kb": 72.94921875,
+    "us_per_sample": 0.46338757610611686,
+    "accuracy": 0.7234079003128747,
+    "macro_f1": 0.19368146579258508
+  },
+  {
+    "dataset": "medsec",
+    "human": "MedSec-25",
+    "model": "MLP_tiny",
+    "size_kb": 34.9462890625,
+    "us_per_sample": 0.3955744288057153,
+    "accuracy": 0.146699486957541,
+    "macro_f1": 0.07648409198980965
+  },
+  {
+    "dataset": "medsec",
+    "human": "MedSec-25",
+    "model": "MLP_C",
+    "size_kb": 144.5166015625,
+    "us_per_sample": 0.7913898903462487,
+    "accuracy": 0.14801590521788527,
+    "macro_f1": 0.11885158232457287
+  },
+  {
+    "dataset": "medsec",
+    "human": "MedSec-25",
+    "model": "MLP_2C",
+    "size_kb": 281.3837890625,
+    "us_per_sample": 0.9553002870344476,
+    "accuracy": 0.10979469285076686,
+    "macro_f1": 0.13872247059152182
+  },
+  {
+    "dataset": "medsec",
+    "human": "MedSec-25",
+    "model": "LogisticRegression",
+    "size_kb": 3.31640625,
+    "us_per_sample": 0.29596691112749535,
+    "accuracy": 0.8663023975042152,
+    "macro_f1": 0.6012841002579299
+  },
+  {
+    "dataset": "medsec",
+    "human": "MedSec-25",
+    "model": "LinearSVM",
+    "size_kb": 3.2353515625,
+    "us_per_sample": 0.2942149259806834,
+    "accuracy": 0.8494955232762584,
+    "macro_f1": 0.5216223666390969
+  },
+  {
+    "dataset": "medsec",
+    "human": "MedSec-25",
+    "model": "DecisionTree",
+    "size_kb": 69.9248046875,
+    "us_per_sample": 0.03665587388141804,
+    "accuracy": 0.022613541074954693,
+    "macro_f1": 0.009047393342486722
+  },
+  {
+    "dataset": "medsec",
+    "human": "MedSec-25",
+    "model": "GLADE+FPTM",
+    "size_kb": 11.853515625,
+    "us_per_sample": 1.641736777265083,
+    "accuracy": 0.22176237748744443,
+    "macro_f1": 0.3336189106133721
+  }
+]

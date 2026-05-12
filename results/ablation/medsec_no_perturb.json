@@ -1,0 +1,12 @@
+{
+  "dataset": "MedSec-25",
+  "variant": "no_perturb",
+  "disable": [
+    "perturb"
+  ],
+  "bits": 351,
+  "ok": true,
+  "wall": 562.5035154777579,
+  "acc": 0.9723011171522086,
+  "macro_f1": 0.8804334174320738
+}

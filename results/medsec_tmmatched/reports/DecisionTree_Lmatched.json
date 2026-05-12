@@ -1,0 +1,71 @@
+{
+  "model": "DecisionTree_Lmatched",
+  "metrics": {
+    "accuracy": 0.939237379065343,
+    "macro_f1": 0.7202679001687307,
+    "weighted_f1": 0.9311969058236234,
+    "per_class": [
+      {
+        "class": "Benign",
+        "precision": 0.777824798984342,
+        "recall": 0.7444309437019037,
+        "f1": 0.7607615894039735,
+        "support": 2469
+      },
+      {
+        "class": "Exfiltration",
+        "precision": 0.9861523244312562,
+        "recall": 0.5770789118271271,
+        "f1": 0.7280915287244402,
+        "support": 5183
+      },
+      {
+        "class": "Initial access",
+        "precision": 0.9551729256345555,
+        "recall": 0.9454892741698502,
+        "f1": 0.9503064313667577,
+        "support": 20418
+      },
+      {
+        "class": "Lateral movement",
+        "precision": 0.36995515695067266,
+        "recall": 0.132,
+        "f1": 0.1945754716981132,
+        "support": 2500
+      },
+      {
+        "class": "Reconnaissance",
+        "precision": 0.9442706852431049,
+        "recall": 0.992120691586691,
+        "f1": 0.9676044796503688,
+        "support": 80337
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 2.37092331238091,
+    "predict_time": 0.011751486919820309,
+    "per_sample_predict_us": 0.10595802717430197,
+    "total_train_time": 2.37092331238091
+  },
+  "size_kb": 7.2509765625,
+  "extra": {
+    "kind": "dt",
+    "feature_space": "raw",
+    "tm_source": {
+      "C": 80,
+      "T": 12,
+      "s": 75,
+      "L": 30,
+      "Lf": 8,
+      "E": 300
+    },
+    "derived_hp": {
+      "n_estimators": 80,
+      "max_depth": 5,
+      "max_iter": 300,
+      "hidden_layer_sizes": "(160, 80)"
+    },
+    "scaling": "no"
+  }
+}

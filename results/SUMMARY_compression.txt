@@ -1,0 +1,18 @@
+RLE vs zstd-1 (raw vs compressed) — measured results
+Note: raw rows show size only; zstd rows show avg over 200 iterations.
+
+TM rules pickle bytes
+Dataset            Raw       zstd-1   Compress  Decompress   Ratio
+--------------------------------------------------------------------
+nslkdd         49396 B      23032 B       112 us        39 us   2.14x
+ton_iot        76509 B      27386 B       195 us        61 us   2.79x
+medsec         38537 B      16935 B        84 us        31 us   2.28x
+wustl          22836 B      11213 B        51 us        20 us   2.04x
+
+TM compact bitmask block (FBZ-like, no quantization)
+Dataset            Raw       zstd-1   Compress  Decompress   Ratio
+--------------------------------------------------------------------
+nslkdd         29270 B      13269 B        70 us        27 us   2.21x
+ton_iot        33040 B      16206 B        77 us        29 us   2.04x
+medsec         35620 B      11094 B        76 us        30 us   3.21x
+wustl          11712 B       6154 B        34 us        13 us   1.90x

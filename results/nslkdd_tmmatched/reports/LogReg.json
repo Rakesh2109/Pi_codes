@@ -1,0 +1,71 @@
+{
+  "model": "LogReg",
+  "metrics": {
+    "accuracy": 0.9774441152706707,
+    "macro_f1": 0.8636623717539635,
+    "weighted_f1": 0.9769562568916097,
+    "per_class": [
+      {
+        "class": "DoS",
+        "precision": 0.9920262664165104,
+        "recall": 0.9958564836613617,
+        "f1": 0.9939376850415903,
+        "support": 10619
+      },
+      {
+        "class": "Normal",
+        "precision": 0.9762103238217378,
+        "recall": 0.9840982546864899,
+        "f1": 0.9801384194431032,
+        "support": 15470
+      },
+      {
+        "class": "Probe",
+        "precision": 0.9625225225225226,
+        "recall": 0.9488454706927176,
+        "f1": 0.9556350626118068,
+        "support": 2815
+      },
+      {
+        "class": "R2L",
+        "precision": 0.8399390243902439,
+        "recall": 0.7100515463917526,
+        "f1": 0.7695530726256983,
+        "support": 776
+      },
+      {
+        "class": "U2R",
+        "precision": 0.7222222222222222,
+        "recall": 0.5416666666666666,
+        "f1": 0.6190476190476191,
+        "support": 24
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 2.726700961124152,
+    "predict_time": 0.009276661090552807,
+    "per_sample_predict_us": 0.31230343019636436,
+    "total_train_time": 2.726700961124152
+  },
+  "size_kb": 8.69140625,
+  "extra": {
+    "kind": "logreg",
+    "feature_space": "raw",
+    "tm_source": {
+      "C": 90,
+      "T": 12,
+      "s": 200,
+      "L": 40,
+      "Lf": 8,
+      "E": 80
+    },
+    "derived_hp": {
+      "n_estimators": 90,
+      "max_depth": 6,
+      "max_iter": 80,
+      "hidden_layer_sizes": "(180, 90)"
+    },
+    "scaling": "yes"
+  }
+}

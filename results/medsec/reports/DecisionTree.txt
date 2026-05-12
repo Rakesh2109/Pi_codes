@@ -1,0 +1,31 @@
+===========================================================================
+  MODEL: DecisionTree
+===========================================================================
+
+Accuracy:         97.55%
+Macro F1:         0.8936
+Weighted F1:      0.9755
+
+Timing:
+  fit_time               4.9837s
+  predict_time           0.0168s
+  per_sample_predict_us  0.1515s
+  total_train_time       4.9837s
+
+Model size:       1507.91 KB
+
+Extra:
+  kind: dt
+  params: {'max_depth': None, 'criterion': 'gini'}
+  scaling: no
+
+===========================================================================
+  PER-CLASS REPORT
+===========================================================================
+Class                      Precision     Recall         F1    Support
+----------------------------------------------------------------------
+Benign                        0.9516     0.9559     0.9537       2469
+Exfiltration                  0.8390     0.8283     0.8336       5183
+Initial access                0.9939     0.9948     0.9943      20418
+Lateral movement              0.6998     0.6948     0.6973       2500
+Reconnaissance                0.9888     0.9895     0.9892      80337

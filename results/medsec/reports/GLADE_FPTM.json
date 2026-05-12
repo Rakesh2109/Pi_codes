@@ -1,0 +1,63 @@
+{
+  "model": "GLADE_FPTM",
+  "metrics": {
+    "accuracy": 0.9704978044668056,
+    "macro_f1": 0.8686825746113614,
+    "weighted_f1": 0.9707279894283287,
+    "per_class": [
+      {
+        "class": "Benign",
+        "precision": 0.9144587433762301,
+        "recall": 0.9785338193600648,
+        "f1": 0.9454118567794952,
+        "support": 2469
+      },
+      {
+        "class": "Exfiltration",
+        "precision": 0.9539706626201315,
+        "recall": 0.7277638433339765,
+        "f1": 0.8256539345518222,
+        "support": 5183
+      },
+      {
+        "class": "Initial access",
+        "precision": 0.9904747948417351,
+        "recall": 0.9930943285336468,
+        "f1": 0.9917828319882612,
+        "support": 20418
+      },
+      {
+        "class": "Lateral movement",
+        "precision": 0.5346598202824133,
+        "recall": 0.6664,
+        "f1": 0.5933048433048432,
+        "support": 2500
+      },
+      {
+        "class": "Reconnaissance",
+        "precision": 0.9848989755088389,
+        "recall": 0.9896311786598951,
+        "f1": 0.9872594064323855,
+        "support": 80337
+      }
+    ]
+  },
+  "timings": {
+    "binarize_fit_time": 0.9967302521690726,
+    "tm_fit_time": 87.246100182,
+    "tm_predict_time": 0.183131885,
+    "tm_predict_us_per_sample": 1.6512202566113952,
+    "total_train_time": 88.24283043416908
+  },
+  "size_kb": 82.671875,
+  "extra": {
+    "n_bits": 351,
+    "glade_size_kb": "5.37",
+    "tm_rules_json_kb": "77.31",
+    "tm_rules_pkl_kb": "37.63",
+    "tm_rules_pkl_zst_kb": "16.54",
+    "tm_rules_zst_kb": "16.54",
+    "total_size_kb": "82.67",
+    "hyperparameters": "{\"CLAUSES\": 80, \"T\": 12, \"S\": 75, \"L\": 30, \"LF\": 8, \"EPOCHS\": 300, \"STATES_NUM\": 256, \"INCLUDE_LIMIT\": 200}"
+  }
+}

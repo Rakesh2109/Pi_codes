@@ -1,0 +1,33 @@
+===========================================================================
+  MODEL: DecisionTree_Lmatched
+===========================================================================
+
+Accuracy:         93.92%
+Macro F1:         0.7203
+Weighted F1:      0.9312
+
+Timing:
+  fit_time               2.3709s
+  predict_time           0.0118s
+  per_sample_predict_us  0.1060s
+  total_train_time       2.3709s
+
+Model size:       7.25 KB
+
+Extra:
+  kind: dt
+  feature_space: raw
+  tm_source: {'C': 80, 'T': 12, 's': 75, 'L': 30, 'Lf': 8, 'E': 300}
+  derived_hp: {'n_estimators': 80, 'max_depth': 5, 'max_iter': 300, 'hidden_layer_sizes': '(160, 80)'}
+  scaling: no
+
+===========================================================================
+  PER-CLASS REPORT
+===========================================================================
+Class                      Precision     Recall         F1    Support
+----------------------------------------------------------------------
+Benign                        0.7778     0.7444     0.7608       2469
+Exfiltration                  0.9862     0.5771     0.7281       5183
+Initial access                0.9552     0.9455     0.9503      20418
+Lateral movement              0.3700     0.1320     0.1946       2500
+Reconnaissance                0.9443     0.9921     0.9676      80337

@@ -1,0 +1,57 @@
+{
+  "model": "LinearSVM",
+  "metrics": {
+    "accuracy": 0.9654591974144896,
+    "macro_f1": 0.8530487014510264,
+    "weighted_f1": 0.9643081842500681,
+    "per_class": [
+      {
+        "class": "DoS",
+        "precision": 0.9882431023039727,
+        "recall": 0.981542518127884,
+        "f1": 0.9848814135878295,
+        "support": 10619
+      },
+      {
+        "class": "Normal",
+        "precision": 0.9591797987469147,
+        "recall": 0.9797026502908855,
+        "f1": 0.9693326084870967,
+        "support": 15470
+      },
+      {
+        "class": "Probe",
+        "precision": 0.9468963042698242,
+        "recall": 0.9374777975133215,
+        "f1": 0.9421635130310604,
+        "support": 2815
+      },
+      {
+        "class": "R2L",
+        "precision": 0.8090909090909091,
+        "recall": 0.5734536082474226,
+        "f1": 0.6711915535444947,
+        "support": 776
+      },
+      {
+        "class": "U2R",
+        "precision": 0.7894736842105263,
+        "recall": 0.625,
+        "f1": 0.6976744186046512,
+        "support": 24
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 76.8327427059412,
+    "predict_time": 0.014732588082551956,
+    "per_sample_predict_us": 0.4959799381413936,
+    "total_train_time": 76.8327427059412
+  },
+  "size_kb": 8.5322265625,
+  "extra": {
+    "kind": "svm",
+    "params": "{'C': 1.0, 'loss': 'squared_hinge', 'max_iter': 1000, 'dual': False}",
+    "scaling": "yes"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "dataset": "TON_IoT",
+  "variant": "no_perturb",
+  "disable": [
+    "perturb"
+  ],
+  "bits": 122,
+  "ok": true,
+  "wall": 270.93224777979776,
+  "acc": 0.9647231633064038,
+  "macro_f1": 0.9366542518962634
+}

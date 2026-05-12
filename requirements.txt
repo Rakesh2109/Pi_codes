@@ -1,0 +1,10 @@
+# Python dependencies for the GLADE + FPTM paper code.
+# Julia (>= 1.10) with the JSON package is also required for FPTM training
+# (see README.md). Datasets are not included; set PAPER2_DATA_ROOT.
+numpy>=1.24
+scikit-learn>=1.3
+xgboost>=2.0
+numba>=0.58
+zstandard>=0.22
+brotli>=1.1
+matplotlib>=3.7

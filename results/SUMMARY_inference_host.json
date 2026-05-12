@@ -1,0 +1,38 @@
+[
+  {
+    "dataset": "nslkdd",
+    "human": "NSL-KDD",
+    "n_samples": 29704,
+    "load_us": 10665.124747902155,
+    "mean_us_per_sample": 106.08398264179691,
+    "median_us_per_sample": 106.09457941152458,
+    "fbz_bytes": 14060
+  },
+  {
+    "dataset": "ton_iot",
+    "human": "TON_IoT",
+    "n_samples": 42209,
+    "load_us": 12196.22464850545,
+    "mean_us_per_sample": 118.2941812957911,
+    "median_us_per_sample": 118.04148565348795,
+    "fbz_bytes": 16631
+  },
+  {
+    "dataset": "medsec",
+    "human": "MedSec-25",
+    "n_samples": 110907,
+    "load_us": 12808.172032237053,
+    "mean_us_per_sample": 161.03322426695595,
+    "median_us_per_sample": 161.10890571326973,
+    "fbz_bytes": 12631
+  },
+  {
+    "dataset": "wustl",
+    "human": "WUSTL-EHMS-2020",
+    "n_samples": 3264,
+    "load_us": 4538.970068097115,
+    "mean_us_per_sample": 42.85519577987383,
+    "median_us_per_sample": 42.82915595503451,
+    "fbz_bytes": 7249
+  }
+]

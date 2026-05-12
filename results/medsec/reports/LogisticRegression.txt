@@ -1,0 +1,31 @@
+===========================================================================
+  MODEL: LogisticRegression
+===========================================================================
+
+Accuracy:         94.17%
+Macro F1:         0.7769
+Weighted F1:      0.9431
+
+Timing:
+  fit_time               48.6856s
+  predict_time           0.0124s
+  per_sample_predict_us  0.1116s
+  total_train_time       48.6856s
+
+Model size:       4.81 KB
+
+Extra:
+  kind: logreg
+  params: {'C': 1.0, 'solver': 'lbfgs', 'max_iter': 1000}
+  scaling: yes
+
+===========================================================================
+  PER-CLASS REPORT
+===========================================================================
+Class                      Precision     Recall         F1    Support
+----------------------------------------------------------------------
+Benign                        0.8306     0.8538     0.8420       2469
+Exfiltration                  0.8402     0.5518     0.6661       5183
+Initial access                0.9368     0.9640     0.9502      20418
+Lateral movement              0.3612     0.5920     0.4487       2500
+Reconnaissance                0.9806     0.9747     0.9777      80337

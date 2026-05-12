@@ -1,0 +1,253 @@
+% =====================================================================
+%  references.bib  --  bibliography for ieee_tii_v2.tex
+% =====================================================================
+%
+%  Almost every entry below has been resolved to a real publication and
+%  cross-checked against Crossref / arXiv / DBLP.  One key could not be
+%  identified and is left as a clearly marked placeholder:
+%
+%    nguyen2025binarized   -- [TODO] no matching paper found; supply the
+%                             intended reference (or, if a generic
+%                             binary-neural-network source was meant,
+%                             e.g. Hubara et al., NeurIPS 2016, or Qin
+%                             et al., Pattern Recognition 2020).
+%
+%  Two entries were renamed/duplicated in the .tex during clean-up:
+%    \cite{moustafa2021ton}  -> \cite{moustafa2021toniot}
+%    \cite{hnilov2025fuzzy}  -> \cite{hnilov2025fptm}
+%    \cite{hady2020iomt}     -> \cite{hady2020wustl}
+%  so only the canonical keys appear here.
+%
+%  British English is used in the comments.  Published titles are
+%  reproduced as printed and so keep the original spelling/capitalisation.
+%
+%  [VERIFY] flags below mark details worth a final check (page numbers,
+%  whether a candidate DOI really points to the paper that was meant).
+% =====================================================================
+
+
+% ---------------------------------------------------------------------
+%  Foundational / tooling
+% ---------------------------------------------------------------------
+
+@misc{granmo2018tsetlin,
+  author       = {Granmo, Ole-Christoffer},
+  title        = {The {Tsetlin} {Machine} -- A Game Theoretic Bandit Driven Approach to Optimal Pattern Recognition with Propositional Logic},
+  howpublished = {arXiv:1804.01508 [cs.AI]},
+  year         = {2018}
+}
+
+@article{pedregosa2011scikit,
+  author  = {Pedregosa, Fabian and Varoquaux, Ga{\"e}l and Gramfort, Alexandre and Michel, Vincent and Thirion, Bertrand and Grisel, Olivier and Blondel, Mathieu and Prettenhofer, Peter and Weiss, Ron and Dubourg, Vincent and Vanderplas, Jake and Passos, Alexandre and Cournapeau, David and Brucher, Matthieu and Perrot, Matthieu and Duchesnay, {\'E}douard},
+  title   = {Scikit-learn: Machine Learning in {Python}},
+  journal = {Journal of Machine Learning Research},
+  volume  = {12},
+  pages   = {2825--2830},
+  year    = {2011}
+}
+
+
+% ---------------------------------------------------------------------
+%  Datasets / benchmarks
+% ---------------------------------------------------------------------
+
+@inproceedings{tavallaee2009nslkdd,
+  author    = {Tavallaee, Mahbod and Bagheri, Ebrahim and Lu, Wei and Ghorbani, Ali A.},
+  title     = {A Detailed Analysis of the {KDD} {CUP} 99 Data Set},
+  booktitle = {Proc. IEEE Symp. Computational Intelligence for Security and Defense Applications (CISDA)},
+  pages     = {1--6},
+  year      = {2009},
+  doi       = {10.1109/CISDA.2009.5356528}
+}
+
+@article{moustafa2021toniot,
+  author  = {Moustafa, Nour},
+  title   = {A New Distributed Architecture for Evaluating {AI}-Based Security Systems at the Edge: Network {TON\_IoT} Datasets},
+  journal = {Sustainable Cities and Society},
+  volume  = {72},
+  pages   = {102994},
+  year    = {2021},
+  doi     = {10.1016/j.scs.2021.102994}
+}
+
+% Source paper for the WUSTL-EHMS-2020 dataset. (Also used where the
+% .tex previously cited the key "hady2020iomt".)
+@article{hady2020wustl,
+  author  = {Hady, Anar A. and Ghubaish, Ali and Salman, Tara and Unal, Devrim and Jain, Raj},
+  title   = {Intrusion Detection System for Healthcare Systems Using Medical and Network Data: A Comparison Study},
+  journal = {IEEE Access},
+  volume  = {8},
+  pages   = {106576--106584},
+  year    = {2020},
+  doi     = {10.1109/ACCESS.2020.3000421}
+}
+
+@inproceedings{medsec25,
+  author    = {Almobaideen, Wesam and Abdullah, Muhammad and Alam, Umar and Hussain, Syed Basit and Bouharrat, Abderrahim},
+  title     = {{MedSec-25}: Creating an {IoMT} Dataset for a Healthcare {IoT} Environment},
+  booktitle = {Proc. 7th Int. Conf. Blockchain Computing and Applications (BCCA)},
+  pages     = {628--634},
+  year      = {2025},
+  doi       = {10.1109/BCCA66705.2025.11229535}
+}
+
+
+% ---------------------------------------------------------------------
+%  Machine learning for IoT / IIoT / IoMT intrusion detection (surveys)
+% ---------------------------------------------------------------------
+
+@article{hussain2020ml,
+  author  = {Hussain, Fatima and Hussain, Rasheed and Hassan, Syed Ali and Hossain, Ekram},
+  title   = {Machine Learning in {IoT} Security: Current Solutions and Future Challenges},
+  journal = {IEEE Communications Surveys \& Tutorials},
+  volume  = {22},
+  number  = {3},
+  pages   = {1686--1721},
+  year    = {2020},
+  doi     = {10.1109/COMST.2020.2986444}
+}
+
+@article{algaradi2020survey,
+  author  = {Al-Garadi, Mohammed Ali and Mohamed, Amr and Al-Ali, Abdulla Khalid and Du, Xiaojiang and Ali, Ihsan and Guizani, Mohsen},
+  title   = {A Survey of Machine and Deep Learning Methods for {Internet} of {Things} ({IoT}) Security},
+  journal = {IEEE Communications Surveys \& Tutorials},
+  volume  = {22},
+  number  = {3},
+  pages   = {1646--1685},
+  year    = {2020},
+  doi     = {10.1109/COMST.2020.2988293}
+}
+
+@article{kikissagbe2024review,
+  author  = {Kikissagbe, Brunel Rolack and Adda, Meddi},
+  title   = {Machine Learning-Based Intrusion Detection Methods in {IoT} Systems: A Comprehensive Review},
+  journal = {Electronics},
+  volume  = {13},
+  number  = {18},
+  pages   = {3601},
+  year    = {2024},
+  doi     = {10.3390/electronics13183601}
+}
+
+@article{zhukabayeva2025cybersecurity,
+  author  = {Zhukabayeva, Tamara and Zholshiyeva, Lazzat and Karabayev, Nurdaulet and Khan, Shafiullah and Alnazzawi, Noha},
+  title   = {Cybersecurity Solutions for Industrial {Internet} of {Things}--Edge Computing Integration: Challenges, Threats, and Future Directions},
+  journal = {Sensors},
+  volume  = {25},
+  number  = {1},
+  pages   = {213},
+  year    = {2025},
+  doi     = {10.3390/s25010213}
+}
+
+
+% ---------------------------------------------------------------------
+%  Lightweight / edge-deployable IDS and model compression
+% ---------------------------------------------------------------------
+
+@inproceedings{jouhari2024lightweight,
+  author    = {Jouhari, Mohammed and Guizani, Mohsen},
+  title     = {Lightweight {CNN-BiLSTM} Based Intrusion Detection Systems for Resource-Constrained {IoT} Devices},
+  booktitle = {Proc. Int. Wireless Communications and Mobile Computing (IWCMC)},
+  pages     = {1558--1563},
+  year      = {2024},
+  doi       = {10.1109/IWCMC61514.2024.10592352}
+}
+
+% [VERIFY] The .tex key suggests a "Wang, 2023" paper; the candidate DOI
+% (carried over from an earlier lookup) actually resolves to the He et
+% al. (2024) paper below -- which is on exactly this topic and has a
+% co-author named Wang. Confirm this is the reference that was intended,
+% otherwise replace with the correct "Wang 2023" paper.
+@article{wang2023lightweight,
+  author  = {He, Mingshu and Huang, Yuanming and Wang, Xinlei and Wei, Peng and Wang, Xiaojuan},
+  title   = {A Lightweight and Efficient {IoT} Intrusion Detection Method Based on Feature Grouping},
+  journal = {IEEE Internet of Things Journal},
+  volume  = {11},
+  number  = {2},
+  pages   = {2935--2949},
+  year    = {2024},
+  doi     = {10.1109/JIOT.2023.3294259}
+}
+
+@misc{liu2025compression,
+  author  = {Liu, Defu and Zhu, Yixiao and Liu, Zhe and Liu, Yi and Han, Changlin and Tian, Jinkai and Li, Ruihao and Yi, Wei},
+  title   = {A Survey of Model Compression Techniques: Past, Present, and Future},
+  journal = {Frontiers in Robotics and AI},
+  volume  = {12},
+  pages   = {1518965},
+  year    = {2025},
+  doi     = {10.3389/frobt.2025.1518965}
+}
+
+
+% ---------------------------------------------------------------------
+%  Tsetlin Machines, booleanisation, and edge security
+% ---------------------------------------------------------------------
+
+% NB: the bibkey says 2017, but this paper is ESANN 2022. The key is
+% kept (the .tex cites \cite{bacellar2017thermometer}); rename both if
+% you prefer. Add the proceedings page numbers when finalising.
+@inproceedings{bacellar2017thermometer,
+  author    = {Bacellar, Alan T. L. and Susskind, Zachary and Villon, Luis A. Q. and Miranda, Igor D. S. and de Ara{\'u}jo, Leandro Santiago and Dutra, Diego Leonel Cadette and Breternitz~Jr., Maur{\'\i}cio and John, Lizy K. and Lima, Priscila M. V. and Fran{\c{c}}a, Felipe M. G.},
+  title     = {Distributive Thermometer: A New Unary Encoding for Weightless Neural Networks},
+  booktitle = {Proc. 30th European Symp. Artificial Neural Networks, Computational Intelligence and Machine Learning (ESANN)},
+  address   = {Bruges, Belgium},
+  year      = {2022}
+}
+
+% [TODO] Could not identify a matching paper. The .tex cites this for
+% (i) thermometer-style encodings causing feature expansion and (ii)
+% gradient-based neural-network binarisation not transferring to TM
+% learning. Supply the intended reference, or substitute a standard
+% binary-neural-network source.
+@misc{nguyen2025binarized,
+  author       = {{[author -- to be supplied]}},
+  title        = {[TODO -- binarised / binary neural networks; gradient-based binarisation. Replace with the intended reference]},
+  year         = {2025}
+}
+
+% "Fuzzy-Pattern Tsetlin Machine" -- also used where the .tex
+% previously cited the key "hnilov2025fuzzy".
+@misc{hnilov2025fptm,
+  author       = {Hnilov, Artem},
+  title        = {Fuzzy-Pattern {Tsetlin} {Machine}},
+  howpublished = {arXiv:2508.08350 [cs.LG]},
+  year         = {2025}
+}
+
+@inproceedings{abeyrathna2020intrusion,
+  author    = {Abeyrathna, K. Darshana and Pussewalage, Harsha S. Gardiyawasam and Ranasinghe, Sasanka N. and Oleshchuk, Vladimir A. and Granmo, Ole-Christoffer},
+  title     = {Intrusion Detection with Interpretable Rules Generated Using the {Tsetlin} {Machine}},
+  booktitle = {Proc. IEEE Symp. Series on Computational Intelligence (SSCI)},
+  pages     = {1121--1130},
+  year      = {2020},
+  doi       = {10.1109/SSCI47803.2020.9308206}
+}
+
+@inproceedings{gunvaldsen2023iot,
+  author    = {Gunvaldsen, Ole and Thorsen, Henning Blomfeldt and Andersen, Per-Arne and Granmo, Ole-Christoffer and Goodwin, Morten},
+  title     = {Towards {IoT} Anomaly Detection with {Tsetlin} {Machines}},
+  booktitle = {Proc. Int. Symp. on the Tsetlin Machine (ISTM)},
+  pages     = {1--8},
+  year      = {2023},
+  doi       = {10.1109/ISTM58889.2023.10455063}
+}
+
+% [VERIFY] The bibkey says 2025; the available version is the arXiv
+% preprint below, posted in 2026. Update to a published venue/year if
+% one exists. (Same author group as the present paper.)
+@misc{jaiswal2025iomt,
+  author       = {Jaiswal, Rahul and Andersen, Per-Arne and Cenkeramaddi, Linga Reddy and Jiao, Lei and Granmo, Ole-Christoffer},
+  title        = {A {Tsetlin} {Machine}-Driven Intrusion Detection System for Next-Generation {IoMT} Security},
+  howpublished = {arXiv:2604.03205 [cs.CR]},
+  year         = {2026}
+}
+
+@misc{kundu2025review,
+  author       = {Kundu, Souraja and Patkar, Shruti S. and Mishra, Saras Mani and Trivedi, Gaurav and Merchant, Farhad},
+  title        = {A 360-Degree Review of {Tsetlin} {Machines}: Concepts, Applications, Analysis, and the Future},
+  howpublished = {TechRxiv (preprint)},
+  year         = {2025},
+  doi          = {10.36227/techrxiv.174831914.40673470/v1}
+}

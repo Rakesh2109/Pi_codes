@@ -1,0 +1,33 @@
+===========================================================================
+  MODEL: MLP_med
+===========================================================================
+
+Accuracy:         96.87%
+Macro F1:         0.8673
+Weighted F1:      0.9707
+
+Timing:
+  fit_time               185.3703s
+  predict_time           0.3539s
+  per_sample_predict_us  3.1914s
+  total_train_time       185.3703s
+
+Model size:       498.76 KB
+
+Extra:
+  kind: mlp
+  params: {'hidden_layer_sizes': (128, 64), 'activation': 'relu', 'max_iter': 200}
+  n_neural_params: 15621
+  param_size_kb_float32: 61.02
+  param_size_kb_int8: 15.25
+
+===========================================================================
+  PER-CLASS REPORT
+===========================================================================
+Class                      Precision     Recall         F1    Support
+----------------------------------------------------------------------
+Benign                        0.8927     0.9870     0.9375       2469
+Exfiltration                  0.9817     0.7036     0.8197       5183
+Initial access                0.9908     0.9929     0.9919      20418
+Lateral movement              0.4762     0.8096     0.5997       2500
+Reconnaissance                0.9913     0.9841     0.9877      80337

@@ -1,0 +1,57 @@
+{
+  "model": "RandomForest",
+  "metrics": {
+    "accuracy": 0.980686521139333,
+    "macro_f1": 0.9152506047639184,
+    "weighted_f1": 0.9806402885917772,
+    "per_class": [
+      {
+        "class": "Benign",
+        "precision": 0.9503404084901882,
+        "recall": 0.9611178614823815,
+        "f1": 0.9556987515102698,
+        "support": 2469
+      },
+      {
+        "class": "Exfiltration",
+        "precision": 0.9165239726027398,
+        "recall": 0.8261624541771175,
+        "f1": 0.8690005073566718,
+        "support": 5183
+      },
+      {
+        "class": "Initial access",
+        "precision": 0.9945684086905461,
+        "recall": 0.9954451954158096,
+        "f1": 0.9950066088999853,
+        "support": 20418
+      },
+      {
+        "class": "Lateral movement",
+        "precision": 0.733039970663733,
+        "recall": 0.7996,
+        "f1": 0.7648746891142146,
+        "support": 2500
+      },
+      {
+        "class": "Reconnaissance",
+        "precision": 0.990207880856345,
+        "recall": 0.9931413918866774,
+        "f1": 0.9916724669384508,
+        "support": 80337
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 52.02999428892508,
+    "predict_time": 0.7400270490907133,
+    "per_sample_predict_us": 6.672500825833476,
+    "total_train_time": 52.02999428892508
+  },
+  "size_kb": 146062.376953125,
+  "extra": {
+    "kind": "rf",
+    "params": "{'n_estimators': 100, 'max_depth': None}",
+    "scaling": "no"
+  }
+}

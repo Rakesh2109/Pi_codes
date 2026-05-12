@@ -1,0 +1,92 @@
+{
+  "model": "DecisionTree",
+  "metrics": {
+    "accuracy": 0.9765215949205146,
+    "macro_f1": 0.9495712219600347,
+    "weighted_f1": 0.9765364930060642,
+    "per_class": [
+      {
+        "class": "backdoor",
+        "precision": 0.9994997498749375,
+        "recall": 0.999,
+        "f1": 0.9992498124531133,
+        "support": 4000
+      },
+      {
+        "class": "ddos",
+        "precision": 0.9808805031446541,
+        "recall": 0.97475,
+        "f1": 0.9778056426332289,
+        "support": 4000
+      },
+      {
+        "class": "dos",
+        "precision": 0.9822366775081312,
+        "recall": 0.9815,
+        "f1": 0.9818682005752157,
+        "support": 4000
+      },
+      {
+        "class": "injection",
+        "precision": 0.9659829914957478,
+        "recall": 0.9655,
+        "f1": 0.9657414353588397,
+        "support": 4000
+      },
+      {
+        "class": "mitm",
+        "precision": 0.7064220183486238,
+        "recall": 0.7368421052631579,
+        "f1": 0.7213114754098361,
+        "support": 209
+      },
+      {
+        "class": "normal",
+        "precision": 0.9959923855325118,
+        "recall": 0.9941,
+        "f1": 0.995045293028377,
+        "support": 10000
+      },
+      {
+        "class": "password",
+        "precision": 0.9896412329459323,
+        "recall": 0.97925,
+        "f1": 0.9844181955265142,
+        "support": 4000
+      },
+      {
+        "class": "ransomware",
+        "precision": 0.9232754575316753,
+        "recall": 0.98375,
+        "f1": 0.952553861050593,
+        "support": 4000
+      },
+      {
+        "class": "scanning",
+        "precision": 0.9869967491872969,
+        "recall": 0.98675,
+        "f1": 0.9868733591698963,
+        "support": 4000
+      },
+      {
+        "class": "xss",
+        "precision": 0.9523934083180748,
+        "recall": 0.91025,
+        "f1": 0.9308449443947335,
+        "support": 4000
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 0.31974467961117625,
+    "predict_time": 0.005652767140418291,
+    "per_sample_predict_us": 0.13392326613798694,
+    "total_train_time": 0.31974467961117625
+  },
+  "size_kb": 705.1083984375,
+  "extra": {
+    "kind": "dt",
+    "params": "{'max_depth': None, 'criterion': 'gini'}",
+    "scaling": "no"
+  }
+}

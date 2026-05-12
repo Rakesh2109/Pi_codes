@@ -1,0 +1,12 @@
+{
+  "dataset": "NSL-KDD",
+  "variant": "no_perturb",
+  "disable": [
+    "perturb"
+  ],
+  "bits": 253,
+  "ok": true,
+  "wall": 34.10851654410362,
+  "acc": 0.9949501750605979,
+  "macro_f1": 0.9348937311664312
+}

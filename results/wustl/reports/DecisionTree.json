@@ -1,0 +1,43 @@
+{
+  "model": "DecisionTree",
+  "metrics": {
+    "accuracy": 0.9237132352941176,
+    "macro_f1": 0.8111582201095144,
+    "weighted_f1": 0.925910676907228,
+    "per_class": [
+      {
+        "class": "Data Alteration",
+        "precision": 0.9786096256684492,
+        "recall": 0.9945652173913043,
+        "f1": 0.9865229110512129,
+        "support": 184
+      },
+      {
+        "class": "Spoofing",
+        "precision": 0.4609375,
+        "recall": 0.5244444444444445,
+        "f1": 0.49064449064449067,
+        "support": 225
+      },
+      {
+        "class": "normal",
+        "precision": 0.9620701878766394,
+        "recall": 0.9506129597197899,
+        "f1": 0.95630725863284,
+        "support": 2855
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 0.15882429899647832,
+    "predict_time": 0.0005168719217181206,
+    "per_sample_predict_us": 0.1583553681734438,
+    "total_train_time": 0.15882429899647832
+  },
+  "size_kb": 131.2587890625,
+  "extra": {
+    "kind": "dt",
+    "params": "{'max_depth': None, 'criterion': 'gini'}",
+    "scaling": "no"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "model": "RandomForest_Cmatched",
+  "metrics": {
+    "accuracy": 0.9611115619392825,
+    "macro_f1": 0.839046764219517,
+    "weighted_f1": 0.9609304841402334,
+    "per_class": [
+      {
+        "class": "Benign",
+        "precision": 0.8529411764705882,
+        "recall": 0.8456865127582017,
+        "f1": 0.8492983526540574,
+        "support": 2469
+      },
+      {
+        "class": "Exfiltration",
+        "precision": 0.9990950226244344,
+        "recall": 0.639012155122516,
+        "f1": 0.7794775241233232,
+        "support": 5183
+      },
+      {
+        "class": "Initial access",
+        "precision": 0.947695325269696,
+        "recall": 0.993877950827701,
+        "f1": 0.9702373837584567,
+        "support": 20418
+      },
+      {
+        "class": "Lateral movement",
+        "precision": 0.5314251991737976,
+        "recall": 0.7204,
+        "f1": 0.6116488368143997,
+        "support": 2500
+      },
+      {
+        "class": "Reconnaissance",
+        "precision": 0.9845410868537005,
+        "recall": 0.9846023625477676,
+        "f1": 0.9845717237473472,
+        "support": 80337
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 18.469681498594582,
+    "predict_time": 0.20134711591526866,
+    "per_sample_predict_us": 1.8154590414966472,
+    "total_train_time": 18.469681498594582
+  },
+  "size_kb": 522.6767578125,
+  "extra": {
+    "kind": "rf",
+    "feature_space": "raw",
+    "tm_source": {
+      "C": 80,
+      "T": 12,
+      "s": 75,
+      "L": 30,
+      "Lf": 8,
+      "E": 300
+    },
+    "derived_hp": {
+      "n_estimators": 80,
+      "max_depth": 5,
+      "max_iter": 300,
+      "hidden_layer_sizes": "(160, 80)"
+    },
+    "scaling": "no"
+  }
+}

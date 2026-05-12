@@ -1,0 +1,33 @@
+===========================================================================
+  MODEL: RandomForest_Cmatched
+===========================================================================
+
+Accuracy:         96.11%
+Macro F1:         0.8390
+Weighted F1:      0.9609
+
+Timing:
+  fit_time               18.4697s
+  predict_time           0.2013s
+  per_sample_predict_us  1.8155s
+  total_train_time       18.4697s
+
+Model size:       522.68 KB
+
+Extra:
+  kind: rf
+  feature_space: raw
+  tm_source: {'C': 80, 'T': 12, 's': 75, 'L': 30, 'Lf': 8, 'E': 300}
+  derived_hp: {'n_estimators': 80, 'max_depth': 5, 'max_iter': 300, 'hidden_layer_sizes': '(160, 80)'}
+  scaling: no
+
+===========================================================================
+  PER-CLASS REPORT
+===========================================================================
+Class                      Precision     Recall         F1    Support
+----------------------------------------------------------------------
+Benign                        0.8529     0.8457     0.8493       2469
+Exfiltration                  0.9991     0.6390     0.7795       5183
+Initial access                0.9477     0.9939     0.9702      20418
+Lateral movement              0.5314     0.7204     0.6116       2500
+Reconnaissance                0.9845     0.9846     0.9846      80337

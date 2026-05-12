@@ -1,0 +1,57 @@
+{
+  "model": "DecisionTree",
+  "metrics": {
+    "accuracy": 0.9939402100727175,
+    "macro_f1": 0.8976278320032971,
+    "weighted_f1": 0.993928661108082,
+    "per_class": [
+      {
+        "class": "DoS",
+        "precision": 0.9977426636568849,
+        "recall": 0.9989641209153405,
+        "f1": 0.9983530186814739,
+        "support": 10619
+      },
+      {
+        "class": "Normal",
+        "precision": 0.9952125250695478,
+        "recall": 0.9943762120232709,
+        "f1": 0.9947941927765384,
+        "support": 15470
+      },
+      {
+        "class": "Probe",
+        "precision": 0.9918236757909705,
+        "recall": 0.9911190053285968,
+        "f1": 0.9914712153518124,
+        "support": 2815
+      },
+      {
+        "class": "R2L",
+        "precision": 0.9358974358974359,
+        "recall": 0.9407216494845361,
+        "f1": 0.9383033419023136,
+        "support": 776
+      },
+      {
+        "class": "U2R",
+        "precision": 0.5909090909090909,
+        "recall": 0.5416666666666666,
+        "f1": 0.5652173913043478,
+        "support": 24
+      }
+    ]
+  },
+  "timings": {
+    "fit_time": 0.9660964049398899,
+    "predict_time": 0.0072576748207211494,
+    "per_sample_predict_us": 0.24433324874498888,
+    "total_train_time": 0.9660964049398899
+  },
+  "size_kb": 158.369140625,
+  "extra": {
+    "kind": "dt",
+    "params": "{'max_depth': None, 'criterion': 'gini'}",
+    "scaling": "no"
+  }
+}
