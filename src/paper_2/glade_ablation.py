@@ -135,7 +135,7 @@ class GLADEAblation(GLADEBooleanizer):
     def _local_perturb(self, col, edges):
         if "perturb" in self.disable:
             return np.asarray(edges, dtype=np.float64)
-        return GLADEBooleanizer._local_perturb(col, edges)
+        return super()._local_perturb(col, edges)
 
 
 # ─────────────────────────────────────────────────────────────────────────────

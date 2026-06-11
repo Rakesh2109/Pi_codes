@@ -10,19 +10,23 @@ import numpy as np
 class GLADEBooleanizer:
     """Gap-aware Lightweight Adaptive Discretisation Engine.
 
-    The transformer learns threshold literals from a numeric matrix and turns
-    each row into Boolean features:
+    Each row becomes Boolean literals ``bit = X[feature] >= threshold``.
 
-    ``bit_j = X[feature_index_j] >= threshold_j``.
-
-    ``transform(..., pack_bits=True)`` returns the same Boolean matrix packed
-    along the feature axis with ``numpy.packbits``.
+    Steps 2 and 3 are conditional: each threshold is changed only when its
+    local gates fire (large gap for Step 2; low activation support for
+    Step 3). No dataset-specific branches.
     """
 
-    def __init__(self, n_bins: int = 15):
+    _LOCAL_FRAC: float = 0.25
+    _MIN_COUNT_FLOOR: int = 5
+
+    def __init__(self, n_bins: int = 15, gap_ratio: float = 1.0):
         if n_bins < 1:
             raise ValueError("n_bins must be >= 1")
+        if not (gap_ratio > 0):
+            raise ValueError("gap_ratio must be > 0 (use math.inf to disable snap)")
         self.n_bins = int(n_bins)
+        self.gap_ratio = float(gap_ratio)
         self._cat_cols: list[int] = []
         self._num_cols: list[int] = []
         self._cat_edges: list[np.ndarray] = []
@@ -134,6 +138,7 @@ class GLADEBooleanizer:
             "n_bits": int(thresholds.size),
             "feat_idx": self._feature_indices.tolist(),
             "n_bins_param": int(self.n_bins),
+            "gap_ratio": float(self.gap_ratio),
             "quantised": bool(quantise_int16),
         }
 
@@ -165,7 +170,10 @@ class GLADEBooleanizer:
 
     @classmethod
     def from_dict(cls, payload: dict[str, Any]) -> GLADEBooleanizer:
-        obj = cls(n_bins=int(payload["n_bins_param"]))
+        obj = cls(
+            n_bins=int(payload["n_bins_param"]),
+            gap_ratio=float(payload.get("gap_ratio", 1.0)),
+        )
         obj._feat_idx = np.asarray(payload["feat_idx"], dtype=np.int32)
         if payload.get("quantised", False):
             quantized = np.asarray(payload["thresh_q"], dtype=np.float64)
@@ -203,6 +211,11 @@ class GLADEBooleanizer:
         assert self._feat_idx is not None
         return self._feat_idx
 
+    @classmethod
+    def _support_floor(cls, n: int) -> int:
+        n = max(int(n), 2)
+        return max(cls._MIN_COUNT_FLOOR, int(np.ceil(np.log2(n))) + 2)
+
     def _hybrid_budget(self, col: np.ndarray) -> int:
         n_unique = np.unique(col).size
         if n_unique <= 1:
@@ -220,6 +233,17 @@ class GLADEBooleanizer:
             return max(1, min(budget, self.n_bins))
 
         return self.n_bins
+
+    @staticmethod
+    def _interval_for_tau(
+        unique_values: np.ndarray, tau: float
+    ) -> tuple[int, float, float, float]:
+        gaps = np.diff(unique_values)
+        idx = int(np.searchsorted(unique_values, tau, side="right") - 1)
+        idx = int(np.clip(idx, 0, gaps.size - 1))
+        u_lo = float(unique_values[idx])
+        u_hi = float(unique_values[idx + 1])
+        return idx, u_lo, u_hi, float(gaps[idx])
 
     def _find_edges(self, col: np.ndarray, n_edges: int) -> np.ndarray:
         unique = np.sort(np.unique(col))
@@ -253,17 +277,86 @@ class GLADEBooleanizer:
         raw_edges = np.percentile(work, percentiles)
         edges = self._snap_structural_gaps(work_unique, raw_edges)
         edges = self._local_perturb(work, edges)
-        edges = self._kill_dead_bits_entropy(work, edges, remaining)
         return np.sort(np.unique(prefix + edges.tolist()))[:n_edges]
 
-    @staticmethod
     def _snap_structural_gaps(
-        unique_values: np.ndarray, raw_edges: np.ndarray
+        self, unique_values: np.ndarray, raw_edges: np.ndarray
+    ) -> np.ndarray:
+        gaps = np.diff(unique_values)
+        if gaps.size == 0:
+            return np.unique(raw_edges)
+
+        median_gap = float(np.median(gaps))
+        if median_gap <= 0:
+            return np.unique(raw_edges)
+
+        out: list[float] = []
+        for tau in np.unique(raw_edges):
+            _, u_lo, u_hi, gap = self._interval_for_tau(unique_values, float(tau))
+            midpoint = (u_lo + u_hi) / 2.0
+
+            if gap <= self.gap_ratio * median_gap:
+                out.append(float(tau))
+                continue
+            if not (u_lo < float(tau) < u_hi):
+                out.append(float(tau))
+                continue
+
+            out.append(float(midpoint))
+
+        return np.unique(np.asarray(out, dtype=np.float64))
+
+    def _local_perturb(self, col: np.ndarray, edges: np.ndarray) -> np.ndarray:
+        if edges.size == 0:
+            return edges
+
+        n = int(col.size)
+        min_side = self._support_floor(n)
+        lam = self._LOCAL_FRAC
+        sorted_edges = np.sort(np.unique(edges))
+        lo = float(col.min())
+        hi = float(col.max())
+        out: list[float] = []
+
+        for i, edge in enumerate(sorted_edges):
+            k = int(np.count_nonzero(col >= edge))
+            p0 = k / n
+            var0 = p0 * (1.0 - p0)
+            if k >= min_side and (n - k) >= min_side:
+                out.append(float(edge))
+                continue
+
+            left = sorted_edges[i - 1] if i > 0 else lo
+            right = sorted_edges[i + 1] if i < sorted_edges.size - 1 else hi
+            span_left = float(edge - left)
+            span_right = float(right - edge)
+            candidates = [
+                edge - span_left * lam,
+                edge,
+                edge + span_right * lam,
+            ]
+
+            best_edge = float(edge)
+            best_variance = var0
+            for candidate in candidates:
+                p = float(np.mean(col >= candidate))
+                variance = p * (1.0 - p)
+                if variance > best_variance:
+                    best_variance = variance
+                    best_edge = float(candidate)
+
+            out.append(best_edge if best_variance > var0 else float(edge))
+
+        return np.asarray(out, dtype=np.float64)
+
+    # Legacy Step 2/3 (pre-gate) retained for ablation / analysis comparisons.
+    def _snap_structural_gaps_legacy(
+        self, unique_values: np.ndarray, raw_edges: np.ndarray
     ) -> np.ndarray:
         gaps = np.diff(unique_values)
         median_gap = np.median(gaps)
         max_gap = np.max(gaps)
-        has_structural_gap = (median_gap > 0) and (max_gap > 5.0 * median_gap)
+        has_structural_gap = (median_gap > 0) and (max_gap > self.gap_ratio * median_gap)
         if not has_structural_gap:
             return np.unique(raw_edges)
 
@@ -276,7 +369,7 @@ class GLADEBooleanizer:
         return np.unique(midpoints[best])
 
     @staticmethod
-    def _local_perturb(col: np.ndarray, edges: np.ndarray) -> np.ndarray:
+    def _local_perturb_legacy(col: np.ndarray, edges: np.ndarray) -> np.ndarray:
         if edges.size == 0:
             return edges
 
@@ -305,38 +398,6 @@ class GLADEBooleanizer:
             out.append(best_edge)
 
         return np.asarray(out, dtype=np.float64)
-
-    @staticmethod
-    def _kill_dead_bits_entropy(
-        col: np.ndarray, edges: np.ndarray, n_edges: int
-    ) -> np.ndarray:
-        if edges.size == 0:
-            return edges
-
-        floor_nats = 0.05
-
-        def entropy(edge: float) -> float:
-            p = float(np.mean(col >= edge))
-            if p <= 0.0 or p >= 1.0:
-                return 0.0
-            return float(-(p * np.log(p) + (1.0 - p) * np.log(1.0 - p)))
-
-        alive = np.asarray([entropy(float(edge)) >= floor_nats for edge in edges])
-        kept = edges[alive]
-        needed = min(n_edges, edges.size) - kept.size
-        if needed <= 0:
-            return kept
-        if kept.size == 0:
-            return edges[:n_edges]
-
-        bounds = np.concatenate([[col.min()], np.sort(kept), [col.max()]])
-        for _ in range(needed):
-            widths = np.diff(bounds)
-            widest = int(np.argmax(widths))
-            midpoint = (bounds[widest] + bounds[widest + 1]) / 2.0
-            kept = np.sort(np.append(kept, midpoint))
-            bounds = np.concatenate([[col.min()], kept, [col.max()]])
-        return kept[:n_edges]
 
     @staticmethod
     def _as_2d_float(X: np.ndarray) -> np.ndarray:
